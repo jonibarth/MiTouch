@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f7f7f7"
+    tools:context=".MenuActivity"
+    android:padding="40dp">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonGoogleDrive"
+        android:src="@drawable/ic_googledrive"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonCalendario"
+        android:src="@drawable/ic_googlecalendar"
+        android:layout_alignLeft="@+id/imageButtonGoogleDrive"
+        android:layout_alignStart="@+id/imageButtonGoogleDrive"
+        android:layout_below="@+id/imageButtonGoogleDrive"
+         />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonCalculadora"
+        android:src="@drawable/ic_calculator"
+        android:layout_alignLeft="@+id/imageButtonCalendario"
+        android:layout_alignStart="@+id/imageButtonCalendario"
+        android:layout_below="@+id/imageButtonCalendario"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonNavegador"
+        android:src="@drawable/ic_googlechrome"
+        android:layout_alignTop="@+id/imageButtonLogOff"
+        android:layout_alignLeft="@+id/imageButtonCalculadora"
+        android:layout_alignStart="@+id/imageButtonCalculadora"
+        android:layout_below="@+id/imageButtonCalculadora"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonGaleria"
+        android:src="@drawable/ic_picturesfolder"
+        android:layout_alignTop="@+id/imageButtonGoogleDrive"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonChat"
+        android:src="@drawable/ic_chat"
+        android:layout_alignTop="@+id/imageButtonCalendario"
+        android:layout_alignLeft="@+id/imageButtonGaleria"
+        android:layout_alignStart="@+id/imageButtonGaleria"
+        android:layout_below="@+id/imageButtonGaleria"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonConfiguracion"
+        android:src="@drawable/ic_services"
+        android:layout_alignTop="@+id/imageButtonCalculadora"
+        android:layout_alignLeft="@+id/imageButtonChat"
+        android:layout_alignStart="@+id/imageButtonChat"
+        android:layout_below="@+id/imageButtonChat"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonLogOff"
+        android:src="@drawable/ic_power_logoff"
+        android:layout_alignLeft="@+id/imageButtonConfiguracion"
+        android:layout_alignStart="@+id/imageButtonConfiguracion"
+        android:layout_below="@+id/imageButtonConfiguracion"
+        />
+
+</RelativeLayout>
