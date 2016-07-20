@@ -18,10 +18,6 @@ import java.util.List;
 
 public class MenuActivityGridView extends AppCompatActivity {
 
-    ImageButton salirDeAplicacion;
-    ImageButton iniciarNavegador;
-    ImageButton iniciarCalculadora;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +57,12 @@ public class MenuActivityGridView extends AppCompatActivity {
                     }
                 }
                 //Si es la posicion 5: Configuracion
+                if(position==5)
+                {
+                    Intent siguiente = new Intent(MenuActivityGridView.this, SettingActivity.class);
+                    startActivity(siguiente);
+                    finish();
+                }
                 //Si es la posicion 6: Navegador
                 if(position==6)
                 {
@@ -72,16 +74,10 @@ public class MenuActivityGridView extends AppCompatActivity {
                 //Si es la posicion 7: Salir
                 if(position == 7)
                     finish();
-
-
-           /*     R.drawable.ic_googledrive, R.drawable.ic_picturesfolder,
-                        R.drawable.ic_googlecalendar, R.drawable.ic_chat,
-                        R.drawable.ic_calculator, R.drawable.ic_services,
-                        R.drawable.ic_googlechrome, R.drawable.ic_power_logoff,
-             */
-
+                /* Boludes que venia por defecto
                 Toast.makeText(MenuActivityGridView.this, "" + position,
                         Toast.LENGTH_SHORT).show();
+                        */
             }
         });
     }

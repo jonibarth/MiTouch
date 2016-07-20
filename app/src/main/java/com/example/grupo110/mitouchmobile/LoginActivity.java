@@ -20,6 +20,8 @@ public class LoginActivity extends AppCompatActivity {
         pasarAMenu =(Button)findViewById(R.id.email_sign_in_button);
         pasarAMenu.setOnClickListener(new View.OnClickListener() {
             @Override
+
+ // Un harcode: si usuario: admin y password: admin entro al menu
             public void onClick(View v) {
                 EditText email = (EditText) findViewById(R.id.email);
                 EditText password = (EditText) findViewById(R.id.password);
@@ -34,16 +36,13 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
+// Cuando apretas sobre el texto " me olvide la contraseña"
         TextView pasarAForgotPassword;
         pasarAForgotPassword =(TextView)findViewById(R.id.textViewForgotYourPassword);
         pasarAForgotPassword.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Toast toast= Toast.makeText (getApplicationContext(), "puto! te olvidaste la contraseña!!" , Toast.LENGTH_SHORT);
-                toast.show();
-
                 EditText email = (EditText) findViewById(R.id.email);
                 Intent siguiente = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(siguiente);
@@ -54,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    // Si el usuario y pass son validas!
     public void IniciarPantalla()
     {
       //  Intent siguiente = new Intent(LoginActivity.this, MenuActivity.class);
@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    // Si el usuario y pass son INvalidas!
     private void ErrorLogueo(String email, String password) {
         Toast toast= Toast.makeText (getApplicationContext(), "email ingresado: " + email +" password ingresada: " + password , Toast.LENGTH_SHORT);
         toast.show();
