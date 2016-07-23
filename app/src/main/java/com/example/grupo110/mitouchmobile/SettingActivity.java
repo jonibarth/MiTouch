@@ -34,7 +34,7 @@ public class SettingActivity extends AppCompatActivity {
     public void IniciarPantalla()
     {
         //  Intent siguiente = new Intent(SettingActivity.this, MenuActivity.class);
-        Intent siguiente = new Intent(SettingActivity.this, MenuActivityGridView.class);
+        Intent siguiente = new Intent(SettingActivity.this, MenuActivity.class);
         startActivity(siguiente);
         finish();
     }

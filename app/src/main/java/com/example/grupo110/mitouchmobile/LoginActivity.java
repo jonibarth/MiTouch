@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
                     ErrorLogueo(email.getText().toString(), password.getText().toString());
                     email.setText("");
                     password.setText("");
-                }
+                    }
             }
         });
 // Cuando apretas sobre el texto " me olvide la contraseña"
@@ -56,8 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     // Si el usuario y pass son validas!
     public void IniciarPantalla()
     {
-      //  Intent siguiente = new Intent(LoginActivity.this, MenuActivity.class);
-        Intent siguiente = new Intent(LoginActivity.this, MenuActivityGridView.class);
+        Intent siguiente = new Intent(LoginActivity.this, MenuActivity.class);
         startActivity(siguiente);
         finish();
     }

@@ -25,19 +25,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Toast toast= Toast.makeText (getApplicationContext(), "puto! te olvidaste la contraseña!!" , Toast.LENGTH_SHORT);
-                toast.show();
-
                 EditText email = (EditText) findViewById(R.id.email);
                 Intent siguiente = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                 startActivity(siguiente);
                 finish();
             }
         });
-
-
-
-
     }
 
 }

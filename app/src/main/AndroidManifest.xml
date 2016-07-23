@@ -29,16 +29,8 @@
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MenuActivity"
-            android:label="@string/title_activity_menu"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".MenuActivityGridView"
-            android:label="@string/title_activity_menu_activity_grid_view"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <supports-screens
@@ -51,6 +43,10 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MenuActivity"
+            android:label="@string/title_activity_probando_layout"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

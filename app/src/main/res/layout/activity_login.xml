@@ -8,16 +8,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="LoginActivity">
+    tools:context="LoginActivity"
+    android:background="#000000"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -31,7 +27,6 @@
         android:layout_height="224dp"
         android:layout_gravity="center"
         >
-
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
@@ -40,8 +35,9 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                android:textColorHint="#00B159"
+                >
                 <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
@@ -49,13 +45,19 @@
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:backgroundTint="#00B159"
+                    android:textColor="#00B159"
+                    android:textStyle="bold"
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColorHint="#00B159"
+                >
 
                 <EditText
                     android:id="@+id/password"
@@ -67,7 +69,11 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:backgroundTint="#00B159"
+                    android:textColor="#00B159"
+                    android:textStyle="bold"
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -79,7 +85,9 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
                 android:textStyle="bold"
-               />
+                android:background="#00B159"
+                android:textSize="18sp"
+                android:textColor="#000000" />
 
         </LinearLayout>
     </ScrollView>
@@ -92,5 +100,8 @@
         android:id="@+id/textViewForgotYourPassword"
         android:layout_gravity="center_horizontal"
         android:linksClickable="false"
-        android:clickable="true" />
+        android:clickable="true"
+        android:textColor="#00b159"
+        android:textStyle="bold"
+        android:textSize="16sp" />
 </LinearLayout>

@@ -81,4 +81,5 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_menu_activity_grid_view">MenuActivityGridView</string>
     <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_probando_layout">ProbandoLayout</string>
 </resources>

@@ -10,7 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.grupo110.mitouchmobile.SettingActivity"
-    tools:showIn="@layout/activity_setting">
+    tools:showIn="@layout/activity_setting"
+    android:background="#000000"
+    >
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,7 +23,9 @@
         android:layout_marginTop="51dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textColor="#00B159"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -31,7 +35,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_toRightOf="@+id/textViewNombre"
-        android:layout_toEndOf="@+id/textViewNombre" />
+        android:layout_toEndOf="@+id/textViewNombre"
+        android:backgroundTint="#00B159"
+        android:textColor="#00B159"/>
 
 
 </RelativeLayout>
