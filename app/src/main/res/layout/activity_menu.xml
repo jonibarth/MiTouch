@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#00B159"
     tools:context=".MenuActivity"
+    android:background="#000000"
     >
     <LinearLayout
         android:layout_height="0dp"
