@@ -20,24 +20,86 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Nombre:"
         android:id="@+id/textViewNombre"
-        android:layout_marginTop="51dp"
+        android:layout_marginTop="17dp"
+        android:textColor="#00B159"
+        android:textStyle="bold"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="true" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextNombre"
+        android:textColor="#000000"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/textViewNombre"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Apellido:"
+        android:id="@+id/textViewApellido"
         android:textColor="#00B159"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_alignBottom="@+id/editTextApellido"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextApellido"
+        android:textColor="#000000"
+        android:layout_below="@+id/editTextNombre"
+        android:layout_toRightOf="@+id/textViewApellido"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="E-mail:   "
+        android:id="@+id/textViewEmail"
+        android:textColor="#00B159"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/textViewApellido"
+        android:layout_alignRight="@+id/textViewNombre"
+        android:layout_alignEnd="@+id/textViewNombre" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextnombre"
-        android:layout_alignBottom="@+id/textViewNombre"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/editTextEmail"
+        android:textColor="#000000"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/editTextApellido"
+        android:layout_toRightOf="@+id/textViewEmail"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/textViewNombre"
-        android:layout_toEndOf="@+id/textViewNombre"
-        android:backgroundTint="#00B159"
-        android:textColor="#00B159"/>
+        android:layout_alignParentEnd="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Aceptar"
+        android:id="@+id/buttonAceptarCambios"
+        android:layout_marginBottom="119dp"
+        android:textStyle="bold"
+        android:background="#00B159"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
