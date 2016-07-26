@@ -1,7 +1,9 @@
 package com.example.grupo110.mitouchmobile;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceScreen;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -14,8 +16,10 @@ public class LoginActivity extends AppCompatActivity {
     Button pasarAMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
 
         pasarAMenu =(Button)findViewById(R.id.email_sign_in_button);
         pasarAMenu.setOnClickListener(new View.OnClickListener() {
