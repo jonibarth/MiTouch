@@ -33,25 +33,33 @@ public class MenuActivity extends AppCompatActivity {
         iB_topleft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Abrir Google Drive
+                Intent siguiente = new Intent(MenuActivity.this, GoogleDrive.class);
+                startActivity(siguiente);
+                finish();
             }
         });
         iB_topright.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Abrir Galeria
+                Intent siguiente = new Intent(MenuActivity.this, GaleriaActivity.class);
+                startActivity(siguiente);
+                finish();
             }
         });
         iB_repeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Abrir Calendario
+                Intent siguiente = new Intent(MenuActivity.this, GoogleCalendarActivity.class);
+                startActivity(siguiente);
+                finish();
             }
         });
         iB_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Abrir Chat
+                Intent siguiente = new Intent(MenuActivity.this, ChatActivity.class);
+                startActivity(siguiente);
+                finish();
             }
         });
         iB_midleft.setOnClickListener(new View.OnClickListener() {

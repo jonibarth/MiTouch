@@ -82,4 +82,8 @@
     <string name="title_activity_menu_activity_grid_view">MenuActivityGridView</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_probando_layout">ProbandoLayout</string>
+    <string name="title_activity_google_drive">GoogleDrive</string>
+    <string name="title_activity_google_calendar">GoogleCalendarActivity</string>
+    <string name="title_activity_galeria">GaleriaActivity</string>
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>
