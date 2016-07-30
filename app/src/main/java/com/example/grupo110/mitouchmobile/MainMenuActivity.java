@@ -2,6 +2,8 @@ package com.example.grupo110.mitouchmobile;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -97,12 +103,26 @@ public class MainMenuActivity extends AppCompatActivity {
         vCalc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainIntent = new Intent();
-                mainIntent.setAction(Intent.ACTION_MAIN);
-                mainIntent.setComponent(new ComponentName(
-                        "com.android.calculator2",
-                        "com.android.calculator2.Calculator"));
-                startActivity(mainIntent);
+                ArrayList<HashMap<String,Object>> items =new ArrayList<HashMap<String,Object>>();
+                final PackageManager pm = getPackageManager();
+                List<PackageInfo> packs = pm.getInstalledPackages(0);
+                for (PackageInfo pi : packs) {
+                    if( pi.packageName.toString().toLowerCase().contains("calcul")){
+                        HashMap<String, Object> map = new HashMap<String, Object>();
+                        map.put("appName", pi.applicationInfo.loadLabel(pm));
+                        map.put("packageName", pi.packageName);
+                        items.add(map);
+                    }
+                }
+                if(items.size()>=1){
+                    String packageName = (String) items.get(0).get("packageName");
+                    Intent i = pm.getLaunchIntentForPackage(packageName);
+                    if (i != null)
+                        startActivity(i);
+                }
+                else{
+                    // Application not found
+                }
             }
         });
 

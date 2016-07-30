@@ -17,10 +17,10 @@
     <!-- Login progress -->
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="223dp"
+        android:layout_height="178dp"
         android:id="@+id/imageView"
-        android:src="@drawable/splash_screen"/>
+        android:src="@drawable/login_verde"/>
 
     <ScrollView
         android:id="@+id/login_form"

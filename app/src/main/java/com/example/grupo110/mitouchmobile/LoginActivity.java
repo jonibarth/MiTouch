@@ -37,8 +37,10 @@ public class LoginActivity extends AppCompatActivity {
                     ErrorLogueo(email.getText().toString(), password.getText().toString());
                     email.setText("");
                     password.setText("");
+                    // Pierdo el foco!
+                    password.clearFocus();
+                    email.clearFocus();}
                     }
-            }
         });
 // Cuando apretas sobre el texto " me olvide la contraseña"
         TextView pasarAForgotPassword;

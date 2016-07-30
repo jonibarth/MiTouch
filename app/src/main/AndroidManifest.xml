@@ -33,13 +33,6 @@
             android:label="@string/title_activity_forgot_password"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <supports-screens
-            android:anyDensity="true"
-            android:largeScreens="true"
-            android:normalScreens="true"
-            android:smallScreens="true"
-            android:xlargeScreens="true" />
-
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
@@ -59,10 +52,12 @@
         <activity
             android:name=".ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".MainMenuActivity"
-            android:label="@string/title_activity_probando_layout"></activity>
+            android:label="@string/title_activity_probando_layout">
+
+        </activity>
     </application>
 
 </manifest>
