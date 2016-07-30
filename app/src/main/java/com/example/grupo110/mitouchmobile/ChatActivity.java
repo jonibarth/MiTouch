@@ -23,7 +23,7 @@ public class ChatActivity extends AppCompatActivity {
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent siguiente = new Intent(ChatActivity.this, MenuActivity.class);
+                Intent siguiente = new Intent(ChatActivity.this, MainMenuActivity.class);
                 startActivity(siguiente);
                 finish();
             }

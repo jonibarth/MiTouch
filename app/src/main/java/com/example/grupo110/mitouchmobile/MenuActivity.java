@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -24,11 +25,18 @@ public class MenuActivity extends AppCompatActivity {
     ImageButton iB_midright;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
-        addImageButtons();
-        setImageNextAndRepeat();
+        //setContentView(R.layout.activity_menu);
+        //addImageButtons();
+        //setImageNextAndRepeat();
 
         iB_topleft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,14 +84,11 @@ public class MenuActivity extends AppCompatActivity {
                         items.add(map);
                     }
                 }
-                if(items.size()>=1){
+                if(items.size()>=1) {
                     String packageName = (String) items.get(0).get("packageName");
                     Intent i = pm.getLaunchIntentForPackage(packageName);
                     if (i != null)
                         startActivity(i);
-                }
-                else{
-                    // Application not found
                 }
             }
         });
@@ -124,6 +129,7 @@ public class MenuActivity extends AppCompatActivity {
         iB_midleft = (ImageButton) findViewById(R.id.button_midleft);
         iB_midright = (ImageButton) findViewById(R.id.button_midright);
     }
+
 
     public void setImageNextAndRepeat()
     {

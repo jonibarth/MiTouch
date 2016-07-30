@@ -64,6 +64,9 @@
             android:name=".ChatActivity"
             android:label="@string/title_activity_chat"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".MainMenuActivity"
+            android:label="@string/title_activity_probando_layout"></activity>
     </application>
 
 </manifest>

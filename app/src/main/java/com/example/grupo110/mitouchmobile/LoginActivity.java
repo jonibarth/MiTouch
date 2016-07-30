@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     // Si el usuario y pass son validas!
     public void IniciarPantalla()
     {
-        Intent siguiente = new Intent(LoginActivity.this, MenuActivity.class);
+        Intent siguiente = new Intent(LoginActivity.this, MainMenuActivity.class);
         startActivity(siguiente);
         finish();
     }
