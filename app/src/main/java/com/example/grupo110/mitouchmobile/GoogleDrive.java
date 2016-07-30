@@ -23,8 +23,6 @@ public class GoogleDrive extends AppCompatActivity {
             googleDrive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent siguiente = new Intent(GoogleDrive.this, MainMenuActivity.class);
-                    startActivity(siguiente);
                     finish();
                 }
             });

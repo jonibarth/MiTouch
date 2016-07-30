@@ -24,9 +24,7 @@ public class GaleriaActivity extends AppCompatActivity {
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent siguiente = new Intent(GaleriaActivity.this, MainMenuActivity.class);
-                startActivity(siguiente);
-                finish();
+               finish();
             }
         });
     }

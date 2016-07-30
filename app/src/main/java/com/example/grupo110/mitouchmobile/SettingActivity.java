@@ -50,15 +50,11 @@ public class SettingActivity extends AppCompatActivity {
 
     public void PantallaMenuSinCambios()
     {
-        Intent siguiente = new Intent(SettingActivity.this, MainMenuActivity.class);
-        startActivity(siguiente);
         finish();
     }
 
     public void PantallaMenuConCambios()
     {
-        Intent siguiente = new Intent(SettingActivity.this, MainMenuActivity.class);
-        startActivity(siguiente);
         finish();
     }
 

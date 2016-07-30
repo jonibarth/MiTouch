@@ -23,8 +23,6 @@ public class GoogleCalendarActivity extends AppCompatActivity {
         googleCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent siguiente = new Intent(GoogleCalendarActivity.this, MainMenuActivity.class);
-                startActivity(siguiente);
                 finish();
             }
         });
