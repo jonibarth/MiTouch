@@ -45,10 +45,6 @@
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MenuActivity"
-            android:label="@string/title_activity_probando_layout"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".GoogleDrive"
             android:label="@string/title_activity_google_drive"
             android:theme="@style/AppTheme.NoActionBar" />

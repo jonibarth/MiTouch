@@ -50,14 +50,14 @@ public class SettingActivity extends AppCompatActivity {
 
     public void PantallaMenuSinCambios()
     {
-        Intent siguiente = new Intent(SettingActivity.this, MenuActivity.class);
+        Intent siguiente = new Intent(SettingActivity.this, MainMenuActivity.class);
         startActivity(siguiente);
         finish();
     }
 
     public void PantallaMenuConCambios()
     {
-        Intent siguiente = new Intent(SettingActivity.this, MenuActivity.class);
+        Intent siguiente = new Intent(SettingActivity.this, MainMenuActivity.class);
         startActivity(siguiente);
         finish();
     }
@@ -80,9 +80,9 @@ public class SettingActivity extends AppCompatActivity {
 
 
         // Buscar en base de datos datos del usuario:
-        editTextNombre.setText("Jonathan ");
-        editTextApellido.setText("Barth ");
-        editTextEmail.setText("jonathan.barth05@gmail.com ");
+        editTextNombre.setText("Juan ");
+        editTextApellido.setText("Perez ");
+        editTextEmail.setText("juanchi_perez@gmail.com ");
 
     }
 }
