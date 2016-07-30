@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:src="@drawable/index"/>
+        android:src="@drawable/splash_screen"/>
 
     <ScrollView
         android:id="@+id/login_form"

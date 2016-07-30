@@ -1,30 +1,48 @@
 package com.example.grupo110.mitouchmobile;
 
+import java.util.Timer;
+import java.util.TimerTask;
+ 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ImageButton;
+import android.view.Window;
 
-public class MainActivity extends AppCompatActivity {
-
-    ImageButton pasarALogin;
-
+public class MainActivity extends Activity {
+ 
+    // Set the duration of the splash screen
+    private static final long SPLASH_SCREEN_DELAY = 3000;
+ 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+ 
+        // Set portrait orientation
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // Hide title bar
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+ 
         setContentView(R.layout.activity_welcome);
-
-        pasarALogin =(ImageButton)findViewById(R.id.imageButton);
-        pasarALogin.setOnClickListener(new View.OnClickListener() {
+ 
+        TimerTask task = new TimerTask() {
             @Override
-            public void onClick(View v) {
-                Intent siguiente = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(siguiente);
+            public void run() {
+ 
+                // Start the next activity
+                Intent mainIntent = new Intent().setClass(
+                        MainActivity.this, LoginActivity.class);
+                startActivity(mainIntent);
+ 
+                // Close the activity so the user won't able to go back this
+                // activity pressing Back button
                 finish();
             }
-        });
+        };
+ 
+        // Simulate a long loading process on application startup.
+        Timer timer = new Timer();
+        timer.schedule(task, SPLASH_SCREEN_DELAY);
     }
-
-
+ 
 }

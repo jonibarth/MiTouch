@@ -6,28 +6,12 @@
     android:layout_height="match_parent"
     android:background="#000000"
     tools:context=".MainActivity">
+ 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
-        android:background="@drawable/index"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Apretar sobre la imagen para continuar"
-        android:id="@+id/textView"
-        android:layout_marginTop="56dp"
-        android:textColor="#00B159"
-        android:layout_below="@+id/imageButton"
-        android:layout_centerHorizontal="true"
-        android:autoText="true"
-        android:textIsSelectable="false"
-        android:textStyle="bold|italic" />
-
+        android:src="@drawable/splash_screen" />
+ 
 </RelativeLayout>
