@@ -1,6 +1,5 @@
 package com.example.grupo110.mitouchmobile;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,6 +10,7 @@ import android.support.v7.view.menu.MenuView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -48,8 +48,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,14 +56,14 @@ public class MainMenuActivity extends AppCompatActivity {
         setListeners();
     }
 
-    protected void setListeners(){
+    protected void setListeners() {
 
-        ImageView vDrive   = (ImageView) findViewById(R.id.viewDrive);
+        ImageView vDrive = (ImageView) findViewById(R.id.viewDrive);
         ImageView vGallery = (ImageView) findViewById(R.id.viewGallery);
-        ImageView vChrome  = (ImageView) findViewById(R.id.viewChrome);
-        ImageView vCalend  = (ImageView) findViewById(R.id.viewCalendar);
-        ImageView vCalc    = (ImageView) findViewById(R.id.viewCalc);
-        ImageView vChat    = (ImageView) findViewById(R.id.viewChat);
+        ImageView vChrome = (ImageView) findViewById(R.id.viewChrome);
+        ImageView vCalend = (ImageView) findViewById(R.id.viewCalendar);
+        ImageView vCalc = (ImageView) findViewById(R.id.viewCalc);
+        ImageView vChat = (ImageView) findViewById(R.id.viewChat);
 
         vDrive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +72,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(mainIntent);
             }
         });
-
         vGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,8 +79,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(mainIntent);
             }
         });
-
-
         vCalend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +86,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 startActivity(mainIntent);
             }
         });
-
         vChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,35 +97,35 @@ public class MainMenuActivity extends AppCompatActivity {
         vCalc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<HashMap<String,Object>> items =new ArrayList<HashMap<String,Object>>();
+                ArrayList<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
                 final PackageManager pm = getPackageManager();
                 List<PackageInfo> packs = pm.getInstalledPackages(0);
                 for (PackageInfo pi : packs) {
-                    if( pi.packageName.toString().toLowerCase().contains("calcul")){
+                    if (pi.packageName.toString().toLowerCase().contains("calcul")) {
                         HashMap<String, Object> map = new HashMap<String, Object>();
                         map.put("appName", pi.applicationInfo.loadLabel(pm));
                         map.put("packageName", pi.packageName);
                         items.add(map);
                     }
                 }
-                if(items.size()>=1){
+                if (items.size() >= 1) {
                     String packageName = (String) items.get(0).get("packageName");
                     Intent i = pm.getLaunchIntentForPackage(packageName);
                     if (i != null)
                         startActivity(i);
-                }
-                else{
+                } else {
                     // Application not found
                 }
             }
         });
 
-    vChrome.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent mainIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-            startActivity(mainIntent);
-        }
-    });
-}
+        vChrome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+                startActivity(mainIntent);
+            }
+        });
+
+    }
 }
