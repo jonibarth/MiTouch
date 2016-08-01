@@ -65,9 +65,9 @@ public class SettingActivity extends AppCompatActivity {
         editTextEmail =(EditText)findViewById(R.id.editTextEmail);
 
         // Fondo Gris a las cosas que no se pueden editar
-        editTextNombre.setBackgroundColor(Color.rgb(216,223,234));
-        editTextApellido.setBackgroundColor(Color.rgb(216,223,234));
-        editTextEmail.setBackgroundColor(Color.rgb(216,223,234));
+        //editTextNombre.setBackgroundColor(Color.rgb(216,223,234));
+        //editTextApellido.setBackgroundColor(Color.rgb(216,223,234));
+      //  editTextEmail.setBackgroundColor(Color.rgb(216,223,234));
 
         // No permitir edición
         editTextNombre.setKeyListener(null);
