@@ -5,13 +5,13 @@
 
     <item android:id="@+id/action_settings"
         android:title="Preferencias"
-        android:icon="@drawable/ic_services_gray"
+        android:icon="@drawable/ic_services_white"
         android:orderInCategory="100"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_logout"
         android:title="Logout"
-        android:icon="@drawable/ic_power_logoff_gray"
+        android:icon="@drawable/ic_power_logoff_white"
         android:orderInCategory="100"
         app:showAsAction="always" />
 </menu>
