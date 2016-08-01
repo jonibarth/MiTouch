@@ -47,9 +47,9 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:backgroundTint="#00B159"
                     android:textColor="#00B159"
                     android:textStyle="bold"
+                    android:background="#313131"
                     />
 
             </android.support.design.widget.TextInputLayout>
@@ -71,9 +71,9 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:backgroundTint="#00B159"
                     android:textColor="#00B159"
                     android:textStyle="bold"
+                    android:background="#313131"
                     />
 
             </android.support.design.widget.TextInputLayout>
