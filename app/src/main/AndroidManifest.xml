@@ -31,8 +31,8 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
-            android:theme="@style/AppTheme.NoActionBar" />º
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        º
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
@@ -52,12 +52,14 @@
         <activity
             android:name=".ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainMenuActivity"
-            android:label="@string/title_activity_probando_layout">
-
-        </activity>
+            android:label="@string/title_activity_probando_layout"></activity>
+        <activity
+            android:name=".SettingsConPestaniaActivity"
+            android:label="@string/title_activity_settings_con_pestania"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

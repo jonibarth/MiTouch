@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="#00B159">
+    android:background="#000000">
 
         <LinearLayout
             android:layout_height="0dp"
@@ -21,10 +21,10 @@
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:layout_gravity="fill_horizontal"
-                android:background="#000000"
+                android:background="#313131"
                 android:src="@drawable/ic_drive_green"
                 android:clickable="true"
-                android:layout_margin="3dp"
+                android:layout_margin="10dp"
                 />
             <ImageView
                 android:padding="10dp"
@@ -34,12 +34,11 @@
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:layout_gravity="fill_horizontal"
-                android:background="#000000"
+                android:background="#313131"
                 android:src="@drawable/ic_picture_green"
                 android:clickable="true"
-                android:layout_margin="3dp" />
+                android:layout_margin="10dp" />
         </LinearLayout>
-/*
         <LinearLayout
             android:layout_height="0dp"
             android:layout_width="match_parent"
@@ -55,10 +54,10 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:layout_gravity="fill_horizontal"
-                android:background="#000000"
+                android:background="#313131"
                 android:src="@drawable/ic_iexplorer_green"
                 android:clickable="true"
-                android:layout_margin="3dp"/>
+                android:layout_margin="10dp"/>
             <ImageView
                 android:padding="10dp"
                 android:id="@+id/viewCalendar"
@@ -68,10 +67,10 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:layout_gravity="fill_horizontal"
-                android:background="#000000"
+                android:background="#313131"
                 android:src="@drawable/ic_calendar_green"
                 android:clickable="true"
-                android:layout_margin="3dp"/>
+                android:layout_margin="10dp"/>
         </LinearLayout>
         <LinearLayout
             android:layout_height="0dp"
@@ -88,10 +87,10 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:layout_gravity="fill_horizontal"
-                android:background="#000000"
+                android:background="#313131"
                 android:src="@drawable/ic_calculator_green"
                 android:clickable="true"
-                android:layout_margin="3dp"/>
+                android:layout_margin="10dp"/>
             <ImageView
                 android:padding="10dp"
                 android:id="@+id/viewChat"
@@ -101,10 +100,9 @@
                 android:layout_columnWeight="1"
                 android:gravity="center"
                 android:layout_gravity="fill_horizontal"
-                android:background="#000000"
+                android:background="#313131"
                 android:src="@drawable/ic_chat_green"
                 android:clickable="true"
-                android:layout_margin="3dp"/>
+                android:layout_margin="10dp"/>
         </LinearLayout>
-  */
   </LinearLayout>
