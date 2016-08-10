@@ -16,25 +16,6 @@ public class GoogleDrive extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_google_drive);
-            addImageButtons();
-            setImageNextAndRepeat();
-
-
-            googleDrive.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-        }
-
-        private void setImageNextAndRepeat() {
-            googleDrive .setImageResource(R.drawable.hardcode_google_drive);
-        }
-
-        private void addImageButtons() {
-            googleDrive= (ImageButton) findViewById(R.id.imageButtonGoogleDrive);
-
         }
 
 }

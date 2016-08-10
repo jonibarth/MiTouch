@@ -88,4 +88,9 @@
     <string name="title_activity_galeria">GaleriaActivity</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_settings_con_pestania">SettingsConPestaniaActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="Menu_lateral">Google Drive</string>
 </resources>
