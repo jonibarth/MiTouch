@@ -38,10 +38,6 @@
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GoogleDrive"
-            android:label="@string/title_activity_google_drive"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".GoogleCalendarActivity"
             android:label="@string/title_activity_google_calendar"
             android:theme="@style/AppTheme.NoActionBar" />

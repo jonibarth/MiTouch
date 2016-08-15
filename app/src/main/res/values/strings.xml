@@ -93,4 +93,5 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="Menu_lateral">Google Drive</string>
+    <string name="Menu_lateral_galeria">Galeria</string>
 </resources>
