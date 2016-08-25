@@ -68,7 +68,7 @@ public class MainMenuActivity extends AppCompatActivity {
         vDrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainIntent = new Intent(MainMenuActivity.this, DriveMenu.class);
+                Intent mainIntent = new Intent(MainMenuActivity.this, DriveActivity.class);
                 startActivity(mainIntent);
             }
         });
