@@ -14,158 +14,54 @@
 
 package com.example.grupo110.mitouchmobile;
 
-import android.net.Uri;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.ListView;
+import android.util.Log;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi;
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.query.Query;
-import com.google.android.gms.drive.widget.DataBufferAdapter;
+import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.OpenFileActivityBuilder;
 
 /**
- * An activity illustrates how to list file results and infinitely
- * populate the results list view with data if there are more results.
+ * An activity to illustrate how to pick a file with the
+ * opener intent.
  */
 public class DriveActivity extends BaseDriveActivity {
 
-    private ListView mListView;
-    private DataBufferAdapter<Metadata> mResultsAdapter;
-    private String mNextPageToken;
-    private boolean mHasMore;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    private static final String TAG = "DriveActivity";
 
-    @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
-        setContentView(R.layout.activity_google_drive);
+    private static final int REQUEST_CODE_OPENER = 1;
 
-        mHasMore = true; // initial request assumes there are files results.
-
-        mListView = (ListView) findViewById(R.id.listViewResults);
-        mResultsAdapter = new ResultsAdapter(this);
-        mListView.setAdapter(mResultsAdapter);
-        mListView.setOnScrollListener(new OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            /**
-             * Handles onScroll to retrieve next pages of results
-             * if there are more results items to display.
-             */
-            @Override
-            public void onScroll(AbsListView view, int first, int visible, int total) {
-                if (mNextPageToken != null && first + visible + 5 < total) {
-                    retrieveNextPage();
-                }
-            }
-        });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    /**
-     * Clears the result buffer to avoid memory leaks as soon
-     * as the activity is no longer visible by the user.
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "ListFiles Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.example.grupo110.mitouchmobile/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        mResultsAdapter.clear();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.disconnect();
-    }
-
-    /**
-     * Handles the Drive service connection initialization
-     * and inits the first listing request.
-     */
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
-        retrieveNextPage();
-    }
-
-    /**
-     * Retrieves results for the next page. For the first run,
-     * it retrieves results for the first page.
-     */
-    private void retrieveNextPage() {
-        // if there are no more results to retrieve,
-        // return silently.
-        if (!mHasMore) {
-            return;
+        IntentSender intentSender = Drive.DriveApi
+                .newOpenFileActivityBuilder()
+                .setMimeType(new String[] { "text/plain", "text/html" })
+                .build(getGoogleApiClient());
+        try {
+            startIntentSenderForResult(
+                    intentSender, REQUEST_CODE_OPENER, null, 0, 0, 0);
+        } catch (SendIntentException e) {
+            Log.w(TAG, "Unable to send int", e);
         }
-        // retrieve the results for the next page.
-        Query query = new Query.Builder()
-                .setPageToken(mNextPageToken)
-                .build();
-        Drive.DriveApi.query(getGoogleApiClient(), query)
-                .setResultCallback(metadataBufferCallback);
     }
 
-    /**
-     * Appends the retrieved results to the result buffer.
-     */
-    private final ResultCallback<DriveApi.MetadataBufferResult> metadataBufferCallback = new
-            ResultCallback<DriveApi.MetadataBufferResult>() {
-                @Override
-                public void onResult(DriveApi.MetadataBufferResult result) {
-                    if (!result.getStatus().isSuccess()) {
-                        showMessage("Problem while retrieving files");
-                        return;
-                    }
-                    mResultsAdapter.append(result.getMetadataBuffer());
-                    mNextPageToken = result.getMetadataBuffer().getNextPageToken();
-                    mHasMore = mNextPageToken != null;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_OPENER:
+                if (resultCode == RESULT_OK) {
+                    DriveId driveId = (DriveId) data.getParcelableExtra(
+                            OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+                    showMessage("Selected file's ID: " + driveId);
                 }
-            };
-
-    /*@Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "ListFiles Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.example.grupo110.mitouchmobile/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }*/
+                finish();
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }
