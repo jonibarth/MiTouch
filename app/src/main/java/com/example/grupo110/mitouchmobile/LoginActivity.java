@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.ResultSet;
+
 public class LoginActivity extends AppCompatActivity {
 
     Button pasarAMenu;
@@ -21,17 +23,15 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-        pasarAMenu =(Button)findViewById(R.id.email_sign_in_button);
+        pasarAMenu = (Button) findViewById(R.id.email_sign_in_button);
         pasarAMenu.setOnClickListener(new View.OnClickListener() {
             @Override
 
- // Un harcode: si usuario: admin y password: admin entro al menu
+            // Un harcode: si usuario: admin y password: admin entro al menu
             public void onClick(View v) {
                 EditText email = (EditText) findViewById(R.id.email);
                 EditText password = (EditText) findViewById(R.id.password);
-                String emailHarcode = "admin";
-                String passwordHarcode = "admin";
-                if(email.getText().toString().equals(emailHarcode)&&password.getText().toString().equals(passwordHarcode))
+                if (login(email.getText().toString(), password.getText().toString()) == 1)
                     IniciarPantalla();
                 else {
                     ErrorLogueo(email.getText().toString(), password.getText().toString());
@@ -39,12 +39,13 @@ public class LoginActivity extends AppCompatActivity {
                     password.setText("");
                     // Pierdo el foco!
                     password.clearFocus();
-                    email.clearFocus();}
-                    }
+                    email.clearFocus();
+                }
+            }
         });
 // Cuando apretas sobre el texto " me olvide la contraseña"
         TextView pasarAForgotPassword;
-        pasarAForgotPassword =(TextView)findViewById(R.id.textViewForgotYourPassword);
+        pasarAForgotPassword = (TextView) findViewById(R.id.textViewForgotYourPassword);
         pasarAForgotPassword.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -60,8 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // Si el usuario y pass son validas!
-    public void IniciarPantalla()
-    {
+    public void IniciarPantalla() {
         Intent siguiente = new Intent(LoginActivity.this, MainMenuActivity.class);
         startActivity(siguiente);
         finish();
@@ -69,9 +69,25 @@ public class LoginActivity extends AppCompatActivity {
 
     // Si el usuario y pass son INvalidas!
     private void ErrorLogueo(String email, String password) {
-        Toast toast= Toast.makeText (getApplicationContext(), "email ingresado: " + email +" password ingresada: " + password , Toast.LENGTH_SHORT);
-        toast.show();
-        Toast toast2= Toast.makeText (getApplicationContext(),"ingresar admin admin", Toast.LENGTH_SHORT);
+        Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario y contraseña invalidos... Ingrese nuevamente ", Toast.LENGTH_SHORT);
         toast2.show();
+    }
+
+    public int login(String usuario, String password) {
+        String usuario2 = "'{" + usuario +"}'";
+        String password2 = "'{" + password +"}'";
+        String comando = "";
+
+        comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario ="+ usuario2 +" " +
+                "AND usu_password = "+ password2 +";");
+
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try{
+            while (resultSet.next()) {
+                return 1;
+            }
+        }catch(Exception e){}
+        return 0;
     }
 }
