@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 public class LoginActivity extends AppCompatActivity {
 
     Button pasarAMenu;
+    int id_usuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -63,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
     // Si el usuario y pass son validas!
     public void IniciarPantalla() {
         Intent siguiente = new Intent(LoginActivity.this, MainMenuActivity.class);
+        siguiente.putExtra("id",id_usuario);
         startActivity(siguiente);
         finish();
     }
@@ -85,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
+                id_usuario = resultSet.getInt("usu_id");
                 return 1;
             }
         }catch(Exception e){}

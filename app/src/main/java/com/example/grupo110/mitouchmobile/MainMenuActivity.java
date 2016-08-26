@@ -26,6 +26,7 @@ public class MainMenuActivity extends AppCompatActivity {
     ImageView vCalc;
     ImageView vChat;
     MenuView.ItemView salir;
+    int id_usuario;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -42,6 +43,7 @@ public class MainMenuActivity extends AppCompatActivity {
                 return true;
             case R.id.action_settings:
                 Intent mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
+                mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
                 return true;
             default:
@@ -52,6 +54,7 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainmenu);
+        id_usuario = getIntent().getExtras().getInt("id");
 
         setListeners();
     }
@@ -69,6 +72,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent mainIntent = new Intent(MainMenuActivity.this, DriveActivity.class);
+                mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
         });
@@ -76,6 +80,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent mainIntent = new Intent(MainMenuActivity.this, GaleriaActivity.class);
+                mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
         });
@@ -83,6 +88,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent mainIntent = new Intent(MainMenuActivity.this, GoogleCalendarActivity.class);
+                mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
         });
@@ -90,6 +96,7 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent mainIntent = new Intent(MainMenuActivity.this, ChatActivity.class);
+                mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
         });
