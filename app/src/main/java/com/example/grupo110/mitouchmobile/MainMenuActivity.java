@@ -42,7 +42,8 @@ public class MainMenuActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.action_settings:
-                Intent mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
+                //Intent mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
+                Intent mainIntent = new Intent(MainMenuActivity.this, CambiarPasswordActivity.class);
                 mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
                 return true;

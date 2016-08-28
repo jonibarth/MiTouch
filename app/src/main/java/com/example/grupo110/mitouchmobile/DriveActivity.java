@@ -17,10 +17,13 @@ package com.example.grupo110.mitouchmobile;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
@@ -34,12 +37,14 @@ public class DriveActivity extends BaseDriveActivity {
 
     private static final int REQUEST_CODE_OPENER = 1;
 
+    private DriveFile file;
+
     @Override
     public void onConnected(Bundle connectionHint) {
         super.onConnected(connectionHint);
         IntentSender intentSender = Drive.DriveApi
                 .newOpenFileActivityBuilder()
-                .setMimeType(new String[] { "text/plain", "text/html" })
+                .setMimeType(new String[] {DriveFolder.MIME_TYPE, "text/plain", "text/html" })
                 .build(getGoogleApiClient());
         try {
             startIntentSenderForResult(
@@ -49,16 +54,16 @@ public class DriveActivity extends BaseDriveActivity {
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
+         switch (requestCode) {
             case REQUEST_CODE_OPENER:
                 if (resultCode == RESULT_OK) {
                     DriveId driveId = (DriveId) data.getParcelableExtra(
                             OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-                    showMessage("Selected file's ID: " + driveId);
                 }
-                finish();
+                    finish();
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);

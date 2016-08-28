@@ -1,10 +1,7 @@
 package com.example.grupo110.mitouchmobile;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -12,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.sql.ResultSet;
-import java.util.Date;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -108,6 +104,26 @@ public class SettingActivity extends AppCompatActivity {
         }catch(Exception e){}
         return 0;
     }
+
+
+    public int actualizarContraseña() {
+        String comando;
+
+        comando = String.format("UPDATE * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";");
+
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try{
+            while (resultSet.next()) {
+                usu_nombre_usuario = resultSet.getString("usu_nombre_usuario");
+                usu_nombre_completo = resultSet.getString("usu_nombre_completo");
+                usu_contraseña = resultSet.getString("usu_password");
+            }
+        }catch(Exception e){}
+        return 0;
+    }
+
+
 
 
 }

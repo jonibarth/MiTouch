@@ -94,4 +94,5 @@
 
     <string name="Menu_lateral">Google Drive</string>
     <string name="Menu_lateral_galeria">Galeria</string>
+    <string name="title_activity_cambiar_password">CambiarPasswordActivity</string>
 </resources>

@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
                 EditText email = (EditText) findViewById(R.id.email);
                 EditText password = (EditText) findViewById(R.id.password);
                 if (login(email.getText().toString(), password.getText().toString()) == 1)
+                //if (1 == 1)
                     IniciarPantalla();
                 else {
                     ErrorLogueo(email.getText().toString(), password.getText().toString());
@@ -76,13 +77,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public int login(String usuario, String password) {
-        String usuario2 = "'{" + usuario +"}'";
-        String password2 = "'{" + password +"}'";
         String comando = "";
 
-        comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario ="+ usuario2 +" " +
-                "AND usu_password = "+ password2 +";");
-
+        comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario ='"+ usuario +"' " +
+                "AND usu_password = '"+ password +"';");
+        System.out.println(comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{

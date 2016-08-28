@@ -11,10 +11,12 @@ import java.sql.ResultSet;
 
 // http://www.androidhive.info/2012/05/how-to-connect-android-with-php-mysql/
     // http://in1.php.net/pg_connect
+    // http://www.javamexico.org/foros/java_enterprise/error_conexion_remota_postgresql_solucionado
+
 public class PostgrestBD  implements Runnable {
 
     private Connection conn;
-    private String host = "10.0.2.2";
+    private String host = "192.168.2.104";
     private String db = "MiTouch";
     private int port = 5432;
     private String user = "postgres";
@@ -33,7 +35,7 @@ public class PostgrestBD  implements Runnable {
         try{
             Class.forName("org.postgresql.Driver");
             this.conn = DriverManager.getConnection(this.url,this.user,this.pass);
-            System.out.println(" ************* Postgresql Conectada! ************* "+ url+ " ************* ");
+           // System.out.println(" ************* Postgresql Conectada! ************* "+ url+ " ************* ");
         }catch (Exception e){
             e.printStackTrace();
             System.err.println(" ************* Error: Cant connect Postgresql! ************* ");

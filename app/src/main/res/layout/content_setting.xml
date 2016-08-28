@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Nombre :"
-        android:id="@+id/textViewNombreCompleto"
+        android:id="@+id/textViewPasswordVieja"
         android:textColor="#00B159"
         android:textStyle="bold"
         android:layout_alignBottom="@+id/editTextNombreCompleto"
@@ -57,7 +57,7 @@
         android:id="@+id/editTextNombreCompleto"
         android:textColor="#00B159"
         android:layout_below="@+id/editTextUsuario"
-        android:layout_toRightOf="@+id/textViewNombreCompleto"
+        android:layout_toRightOf="@+id/textViewPasswordVieja"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
     <TextView
