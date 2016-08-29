@@ -81,7 +81,6 @@ public class LoginActivity extends AppCompatActivity {
 
         comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario ='"+ usuario +"' " +
                 "AND usu_password = '"+ password +"';");
-        System.out.println(comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{

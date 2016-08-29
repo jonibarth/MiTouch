@@ -35,7 +35,7 @@ public class PostgrestBD  implements Runnable {
         try{
             Class.forName("org.postgresql.Driver");
             this.conn = DriverManager.getConnection(this.url,this.user,this.pass);
-           // System.out.println(" ************* Postgresql Conectada! ************* "+ url+ " ************* ");
+            System.out.println(" ************* Postgresql Conectada! ************* ");
         }catch (Exception e){
             e.printStackTrace();
             System.err.println(" ************* Error: Cant connect Postgresql! ************* ");
