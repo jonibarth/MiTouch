@@ -59,6 +59,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Cuando apretas sobre el texto " Registrarse"
+        TextView PasaraRegistrarse;
+        PasaraRegistrarse = (TextView) findViewById(R.id.textViewRegistrarse);
+        PasaraRegistrarse.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent siguiente = new Intent(LoginActivity.this, RegistrarseActivity.class);
+                startActivity(siguiente);
+                finish();
+            }
+        });
 
     }
 

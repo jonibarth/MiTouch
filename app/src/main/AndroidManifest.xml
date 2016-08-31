@@ -68,7 +68,11 @@
         <activity
             android:name=".CambiarPasswordActivity"
             android:label="@string/title_activity_cambiar_password"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RegistrarseActivity"
+            android:label="@string/title_activity_registrarse"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

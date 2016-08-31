@@ -68,6 +68,9 @@ public class CambiarPasswordActivity extends AppCompatActivity {
                 passwordVieja.setText("");
                 passwordNueva.setText("");
                 passwordNuevaRepite.setText("");
+                passwordVieja.clearFocus();
+                passwordNueva.clearFocus();
+                passwordNuevaRepite.clearFocus();
                 Toast toast2 = Toast.makeText(getApplicationContext(), "Ambas contraseñas no coinciden ", Toast.LENGTH_SHORT);
                 toast2.show();
             }
@@ -77,6 +80,9 @@ public class CambiarPasswordActivity extends AppCompatActivity {
             passwordVieja.setText("");
             passwordNueva.setText("");
             passwordNuevaRepite.setText("");
+            passwordVieja.clearFocus();
+            passwordNueva.clearFocus();
+            passwordNuevaRepite.clearFocus();
             Toast toast2 = Toast.makeText(getApplicationContext(), "el usuario y la contraseña no coinciden ", Toast.LENGTH_SHORT);
             toast2.show();
         }

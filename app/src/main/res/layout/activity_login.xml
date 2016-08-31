@@ -12,7 +12,7 @@
     android:background="#000000"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    >
+    android:weightSum="1">
 
     <!-- Login progress -->
 
@@ -20,14 +20,14 @@
         android:layout_width="223dp"
         android:layout_height="178dp"
         android:id="@+id/imageView"
-        android:src="@drawable/login_verde"/>
+        android:src="@drawable/splash_screen"/>
 
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="224dp"
+        android:layout_height="149dp"
         android:layout_gravity="center"
-        >
+        android:layout_weight="0.42">
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
@@ -97,7 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Forgot your Password?"
+        android:text="Te has olvidado la contraseña?"
         android:id="@+id/textViewForgotYourPassword"
         android:layout_gravity="center_horizontal"
         android:linksClickable="false"
@@ -105,4 +105,21 @@
         android:textColor="#00b159"
         android:textStyle="bold"
         android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Registrarse en MiTouch"
+        android:id="@+id/textViewRegistrarse"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="25dp"
+        android:linksClickable="false"
+        android:clickable="true"
+        android:textColor="#00b159"
+        android:textStyle="bold"
+        android:textSize="16sp" />
 </LinearLayout>
+
+
+

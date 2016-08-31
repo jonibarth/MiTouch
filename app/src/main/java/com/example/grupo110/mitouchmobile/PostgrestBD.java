@@ -16,7 +16,7 @@ import java.sql.ResultSet;
 public class PostgrestBD  implements Runnable {
 
     private Connection conn;
-    private String host = "192.168.2.104";
+    private String host = "192.168.1.33";
     private String db = "MiTouch";
     private int port = 5432;
     private String user = "postgres";

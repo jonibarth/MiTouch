@@ -7,9 +7,11 @@
     <string name="menu_settings">Settings</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email">Nombre de Usuario</string>
+    <string name="prompt_user">Nombre completo</string>
     <string name="prompt_password">Password </string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="prompt_gmail">Direccion de correo</string>
+    <string name="action_sign_in">Iniciar Sesion</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -22,6 +24,12 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
+
+    <string name="NombreCompleto">Nombre Completo</string>
+    <string name="Mail">Mail</string>
+    <string name="Registrarse"> Registrarse </string>
+    <string name="Cancelar"> Cancelar </string>
+
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
@@ -80,19 +88,21 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_menu_activity_grid_view">MenuActivityGridView</string>
-    <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_menu_activity_grid_view">Menu</string>
+    <string name="title_activity_setting">Setting</string>
     <string name="title_activity_probando_layout">MiTouch</string>
     <string name="title_activity_google_drive">GoogleDrive</string>
-    <string name="title_activity_google_calendar">GoogleCalendarActivity</string>
-    <string name="title_activity_galeria">GaleriaActivity</string>
-    <string name="title_activity_chat">ChatActivity</string>
-    <string name="title_activity_settings_con_pestania">SettingsConPestaniaActivity</string>
+    <string name="title_activity_google_calendar">Google Calendar</string>
+    <string name="title_activity_galeria">Galeria</string>
+    <string name="title_activity_chat">Chat</string>
+    <string name="title_activity_settings_con_pestania">Settings</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="Menu_lateral">Google Drive</string>
     <string name="Menu_lateral_galeria">Galeria</string>
-    <string name="title_activity_cambiar_password">CambiarPasswordActivity</string>
+    <string name="title_activity_cambiar_password">Cambiar contraseña</string>
+    <string name="title_activity_registrarse">Registro de Usuarios</string>
+    <string name="title_activity_setting_con_tab">SettingConTabActivity</string>
 </resources>
