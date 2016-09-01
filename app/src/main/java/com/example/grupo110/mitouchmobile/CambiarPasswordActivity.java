@@ -59,7 +59,7 @@ public class CambiarPasswordActivity extends AppCompatActivity {
         {
             if(passwordNueva.getText().toString().equals(passwordNuevaRepite.getText().toString()) && !passwordNueva.getText().toString().equals("")) {
                 ActualizarUsuario(passwordNueva.getText().toString());
-                Toast toast2 = Toast.makeText(getApplicationContext(), "Contraseña Actualizada ", Toast.LENGTH_SHORT);
+                Toast toast2 = Toast.makeText(getApplicationContext(), "Contraseña Actualizada // Verificar que sea alfanumerico", Toast.LENGTH_SHORT);
                 toast2.show();
                 finish();
             }
