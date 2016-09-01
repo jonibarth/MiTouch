@@ -21,6 +21,7 @@ public class CambiarPasswordActivity extends AppCompatActivity {
     private EditText passwordNuevaRepite;
     private int id_usuario;
     private String password;
+    private final static int  LARGO_CONTRASEÑA = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +58,23 @@ public class CambiarPasswordActivity extends AppCompatActivity {
         usuarioOk = buscarUsuario();
         if(usuarioOk == true)
         {
-            if(passwordNueva.getText().toString().equals(passwordNuevaRepite.getText().toString()) && !passwordNueva.getText().toString().equals("")) {
-                ActualizarUsuario(passwordNueva.getText().toString());
-                Toast toast2 = Toast.makeText(getApplicationContext(), "Contraseña Actualizada // Verificar que sea alfanumerico", Toast.LENGTH_SHORT);
-                toast2.show();
-                finish();
+            if(passwordNueva.getText().toString().equals(passwordNuevaRepite.getText().toString())) {
+                if(validarContraseña(passwordNueva.getText().toString())==true) {
+                    ActualizarUsuario(passwordNueva.getText().toString());
+                    Toast toast2 = Toast.makeText(getApplicationContext(), "Contraseña Actualizada", Toast.LENGTH_SHORT);
+                    toast2.show();
+                    finish();
+                }
+                else
+                {
+                    passwordVieja.setText("");
+                    passwordNueva.setText("");
+                    passwordNuevaRepite.setText("");
+                    passwordVieja.clearFocus();
+                    passwordNueva.clearFocus();
+                    passwordNuevaRepite.clearFocus();
+                }
+
             }
             else
             {
@@ -120,5 +133,42 @@ public class CambiarPasswordActivity extends AppCompatActivity {
         }*/
         return false;
     }
+
+    private boolean validarContraseña(String cadena)
+    {
+        boolean numero= false;
+        boolean letra=false;
+        Toast toast;
+        // No permito contraseñas con blancos
+        // Valido El largo
+        if(cadena.length() < LARGO_CONTRASEÑA)
+        {
+            toast = Toast.makeText(getApplicationContext(), "La cantidad minima de caracteres es 10 ", Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+        //Valido que no contenga simbolos, que no tenga espacios y que tenga por lo menos una letra y por lo menos un numero,
+        for(int i = 0; i < cadena.length(); ++i) {
+            char caracter = cadena.charAt(i);
+// No acepto simbolos ni vacios!
+            if(!Character.isLetterOrDigit(caracter)) {
+                toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos y contener espacios", Toast.LENGTH_SHORT);
+                toast.show();
+                return false;
+            }else
+            if(Character.isDigit(caracter))
+                numero = true;
+            else
+                letra = true;
+        }
+
+        if(numero == true && letra == true)
+        return true;
+
+        toast = Toast.makeText(getApplicationContext(), "La contraseña debe tener por lo menos un digito y una letra", Toast.LENGTH_SHORT);
+        toast.show();
+        return false;
+    }
+
 
 }
