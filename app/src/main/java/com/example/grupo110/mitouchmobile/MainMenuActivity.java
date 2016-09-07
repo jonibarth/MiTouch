@@ -7,13 +7,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuView;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +42,7 @@ public class MainMenuActivity extends AppCompatActivity {
         salir = (MenuView.ItemView) findViewById(R.id.action_logout);
         switch (item.getItemId()) {
             case R.id.action_logout:
+                modificar_usu_ultimo_log_out(id_usuario);
                 finish();
                 return true;
             case R.id.action_settings:
@@ -96,7 +100,8 @@ public class MainMenuActivity extends AppCompatActivity {
         vChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainIntent = new Intent(MainMenuActivity.this, ChatActivity.class);
+               // Intent mainIntent = new Intent(MainMenuActivity.this, ChatActivity.class);
+                Intent mainIntent = new Intent(MainMenuActivity.this, PedirAccesoGruposActivity.class);
                 mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
@@ -136,4 +141,17 @@ public class MainMenuActivity extends AppCompatActivity {
         });
 
     }
+
+    private void modificar_usu_ultimo_log_out(int id_usuario) {
+        Date d = new Date();
+        CharSequence diahora  = DateFormat.format("yyyy-MM-dd H:mm:ss", d.getTime());
+        String comando = "";
+
+        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ='"+diahora+"' WHERE usu_nombre_usuario ='"+ id_usuario +"';");
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        return;
+    }
+
+
 }

@@ -70,9 +70,13 @@
             android:label="@string/title_activity_cambiar_password"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RegistrarseActivity"
-            android:label="@string/title_activity_registrarse"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".PedirAccesoGruposActivity"
+            android:label="@string/title_activity_pedir_acceso_grupos"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".RegistrarActivity"
+            android:label="@string/title_activity_registrar"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

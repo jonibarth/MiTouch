@@ -25,6 +25,7 @@ public class ExecuteDB extends AsyncTask<String,Void,ResultSet> {
             resultSet = connection.prepareStatement(query).executeQuery();
         }catch (Exception e){
             System.out.println("Error: Query! doInBackground catch 1");
+            System.out.println("Error:" + e.toString());
         }finally {
             try {
                 connection.close();

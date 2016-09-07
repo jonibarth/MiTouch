@@ -7,8 +7,8 @@
     <string name="menu_settings">Settings</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Nombre de Usuario</string>
-    <string name="prompt_user">Nombre completo</string>
+    <string name="prompt_email">Nombre de Usuario:</string>
+    <string name="prompt_user">Nombre completo:</string>
     <string name="prompt_password">Password </string>
     <string name="prompt_gmail">Direccion de correo</string>
     <string name="action_sign_in">Iniciar Sesion</string>
@@ -103,6 +103,7 @@
     <string name="Menu_lateral">Google Drive</string>
     <string name="Menu_lateral_galeria">Galeria</string>
     <string name="title_activity_cambiar_password">Cambiar contraseña</string>
-    <string name="title_activity_registrarse">Registro de Usuarios</string>
     <string name="title_activity_setting_con_tab">SettingConTabActivity</string>
+    <string name="title_activity_pedir_acceso_grupos">Pedir acceso grupos de usuario</string>
+    <string name="title_activity_registrar">Registro de Usuarios</string>
 </resources>
