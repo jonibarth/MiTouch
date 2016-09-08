@@ -147,7 +147,7 @@ public class MainMenuActivity extends AppCompatActivity {
         CharSequence diahora  = DateFormat.format("yyyy-MM-dd H:mm:ss", d.getTime());
         String comando = "";
 
-        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ='"+diahora+"' WHERE usu_nombre_usuario ='"+ id_usuario +"';");
+        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ='"+diahora+"' WHERE usu_id ='"+ id_usuario +"';");
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         return;
