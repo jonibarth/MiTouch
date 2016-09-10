@@ -24,7 +24,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveApi;
+import com.google.android.gms.drive.MetadataBuffer;
 
 /**
  * An abstract activity that handles authorization and connection to the Drive
@@ -118,6 +121,22 @@ public abstract class BaseDriveActivity extends Activity implements
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "GoogleApiClient connected");
+        Drive.DriveApi.getRootFolder(mGoogleApiClient)
+                .listChildren(mGoogleApiClient)
+                .setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
+                    @Override
+                    public void onResult(DriveApi.MetadataBufferResult result) {
+                        if (!result.getStatus().isSuccess()) {
+                            System.out.println("DKDK" + "Request failed");
+                            return;
+                        }
+                        System.out.println("hola");
+                        MetadataBuffer metadataBuffer = result.getMetadataBuffer(); // empty!
+                        System.out.println("hola" + metadataBuffer);
+                        System.out.println("holi" + metadataBuffer.toString());
+                    }
+                });
+
     }
 
     /**

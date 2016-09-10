@@ -22,7 +22,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:backgroundTint="#00B159"/>
+            android:backgroundTint="@color/colorPrimary"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -46,7 +46,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#00B159"
+                android:textColorHint="@color/colorPrimary"
                 android:id="@+id/CustomViewNombreUsuario"
                 android:layout_marginBottom="15dp">
                 <EditText
@@ -58,7 +58,7 @@
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="#00B159"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     android:background="#313131"
                     />
@@ -76,7 +76,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#00B159"
+                android:textColorHint="@color/colorPrimary"
                 android:layout_below="@+id/CustomViewNombreUsuario"
                 android:id="@+id/CustomViewNombreCompleto"
                 android:layout_marginBottom="15dp">
@@ -89,7 +89,7 @@
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="#00B159"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     android:background="#313131"
                     />
@@ -98,7 +98,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#00B159"
+                android:textColorHint="@color/colorPrimary"
                 android:layout_below="@+id/CustomViewNombreCompleto"
                 android:id="@+id/CustomViewEmail"
                 android:layout_marginBottom="15dp">
@@ -112,7 +112,7 @@
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="#00B159"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     android:background="#313131"
                     />
@@ -123,7 +123,7 @@
                 android:layout_height="match_parent"
                 android:text=" @gmail.com"
                 android:textSize="20dp"
-                android:textColor="#00B159"
+                android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 android:id="@+id/textView3"
                 android:layout_alignBottom="@+id/CustomViewEmail"
@@ -133,7 +133,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#00B159"
+                android:textColorHint="@color/colorPrimary"
                 android:layout_below="@+id/CustomViewEmail"
                 android:id="@+id/CustomViewContraseña"
                 android:layout_marginBottom="15dp">
@@ -147,7 +147,7 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="#00B159"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     android:background="#313131"
                     />
@@ -165,7 +165,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="#00B159"
+                android:textColorHint="@color/colorPrimary"
                 android:id="@+id/CustomViewRepiteContraseña"
                 android:layout_below="@+id/CustomViewContraseña"
                 android:layout_marginBottom="15dp">
@@ -179,7 +179,7 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="#00B159"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     android:background="#313131"
                     />
@@ -211,7 +211,7 @@
         android:layout_height="wrap_content"
         android:text="Registrar Usuario"
         android:textStyle="bold"
-        android:background="#00B159"
+        android:background="@color/colorPrimary"
         android:textSize="18sp"
         android:textColor="#000000"
         android:layout_below="@+id/lvExp"

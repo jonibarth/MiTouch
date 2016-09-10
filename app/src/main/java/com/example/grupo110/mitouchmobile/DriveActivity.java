@@ -20,7 +20,9 @@ import android.content.IntentSender.SendIntentException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
@@ -36,15 +38,32 @@ public class DriveActivity extends BaseDriveActivity {
     private static final String TAG = "DriveActivity";
 
     private static final int REQUEST_CODE_OPENER = 1;
-
+    private final  String ext = "CAESHDBCNmRxRVljM1hTMXdUMmQ1WTFWMFQwUnhTRWsYlkYgmorkvM1VKAA=";
     private DriveFile file;
 
     @Override
     public void onConnected(Bundle connectionHint) {
+
         super.onConnected(connectionHint);
+        System.out.println("mimetype: " + ext);
+        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext.toLowerCase());
+        System.out.println("mimetype: " );
+
         IntentSender intentSender = Drive.DriveApi
                 .newOpenFileActivityBuilder()
-                .setMimeType(new String[] {DriveFolder.MIME_TYPE, "text/plain", "text/html" })
+                .setMimeType(new String[] {DriveFolder.MIME_TYPE, //mimeType
+                        "text/plain",
+                        "text/html",
+                        "application/vnd.oasis.opendocument.text",
+                        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                        "application/x-vnd.oasis.opendocument.spreadsheet",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        "application/pdf",
+                        "image/png",
+                        "image/jpeg",
+                        "image/jpg"
+                })
                 .build(getGoogleApiClient());
         try {
             startIntentSenderForResult(
@@ -60,8 +79,10 @@ public class DriveActivity extends BaseDriveActivity {
          switch (requestCode) {
             case REQUEST_CODE_OPENER:
                 if (resultCode == RESULT_OK) {
+                    System.out.println("HOLA abri algo");
                     DriveId driveId = (DriveId) data.getParcelableExtra(
                             OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+                    System.out.println("ID: " + driveId);
                 }
                     finish();
                 break;
@@ -69,4 +90,6 @@ public class DriveActivity extends BaseDriveActivity {
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+
 }

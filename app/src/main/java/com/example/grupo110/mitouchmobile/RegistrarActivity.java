@@ -230,7 +230,7 @@ public class RegistrarActivity extends AppCompatActivity {
         System.out.println("dia: " + dia);
         String id_usuadioGenerado=null;
 
-        comando = String.format("INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_path_galeria, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail) VALUES ('"+ dia +"', 'path6', 'path6', null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"@gmail.com') RETURNING usu_id;");
+        comando = String.format("INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_path_galeria, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail) VALUES ('"+ dia +"', 'path6', 'path6', null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"') RETURNING usu_id;");
         PostgrestBD baseDeDatos = new PostgrestBD();
         // Inserto usuario en la tabla usuarios
         // Busco el ID del usuario que genere para insertarlo en la tabla de solicitud de acceso!
