@@ -40,8 +40,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GoogleCalendarActivity"
-            android:label="@string/title_activity_google_calendar"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_google_calendar"/>
         <activity
             android:name=".GaleriaActivity"
             android:label="@string/title_activity_galeria"
@@ -77,6 +76,9 @@
             android:name=".RegistrarActivity"
             android:label="@string/title_activity_registrar"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name  =".NewCalendarEventActivity"
+            android:label ="Nuevo evento"></activity>
     </application>
 
 </manifest>

@@ -90,9 +90,9 @@ public class MainMenuActivity extends AppCompatActivity {
         vCalend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent mainIntent = new Intent(MainMenuActivity.this, GoogleCalendarActivity.class);
-                Intent mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
-                mainIntent.putExtra("id",id_usuario);
+                Intent mainIntent = new Intent(MainMenuActivity.this, GoogleCalendarActivity.class);
+                //Intent mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
+                //mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
         });

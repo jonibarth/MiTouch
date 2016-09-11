@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             // Un harcode: si usuario: admin y password: admin entro al menu
             public void onClick(View v) {
 
-                if (login(email.getText().toString(), password.getText().toString()) == 1)
+                if (1 /*login(email.getText().toString(), password.getText().toString())*/ == 1)
                     IniciarPantalla();
                 else {
                     ErrorLogueo(email.getText().toString(), password.getText().toString());
