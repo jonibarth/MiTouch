@@ -102,18 +102,20 @@ public class SettingActivity extends AppCompatActivity {
 
             public void onClick(View v) {
                 actualizarBasedeDatos();
-                finish();
+
             }
         });
 
     }
 
     private void actualizarBasedeDatos() {
+        System.out.println("aca en actualizar");
         String comando;
         if((validarUsuario(editTextUsuario.getText().toString()))) {
             comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_nombre_usuario = '" + editTextUsuario.getText().toString() + "', usu_nombre_completo = '" + editTextNombreCompleto.getText().toString() + "', usu_mail = '" + editTextMail.getText().toString() + "'" + " WHERE usu_id = " + id_usuario + ";");
             PostgrestBD baseDeDatos = new PostgrestBD();
             baseDeDatos.execute(comando);
+            finish(); // No se si deberia quedar en el menu o no!!
         }
 
     }
@@ -168,27 +170,33 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private boolean validarUsuario(String usuario) {
+        System.out.println("aca en validar"+ usuario.length());
+
         if(USUARIOMINIMO>usuario.length())
         {
             Toast toast = Toast.makeText(getApplicationContext(),"la cantidad de caracteres debe ser mayor que 5",Toast.LENGTH_LONG);
             toast.show();
-            return true;
+            return false;
         }
         if(usuario.length()> USUARIOMAXIMO){
             Toast toast = Toast.makeText(getApplicationContext(),"la cantidad de caracteres debe ser menor que 16",Toast.LENGTH_LONG);
             toast.show();
-            return true;
+            return false;
         }
         String comando;
         comando = String.format( "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario='" + usuario + "';");
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
-            while (resultSet.next())
-                return true;
+            while (resultSet.next()){
+                Toast toast = Toast.makeText(getApplicationContext(),"El nombre de usuario no esta disponible",Toast.LENGTH_LONG);
+                toast.show();
+                return false;
+            }
+
         } catch (Exception e) {
             System.err.println("Error busqueda usuario en Registrar");
         }
-        return false;
+        return true;
     }
 }

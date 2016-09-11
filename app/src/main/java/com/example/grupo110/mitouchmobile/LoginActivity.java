@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             // Un harcode: si usuario: admin y password: admin entro al menu
             public void onClick(View v) {
 
-                if (1 /*login(email.getText().toString(), password.getText().toString())*/ == 1)
+                if (login(email.getText().toString(), password.getText().toString()))
                     IniciarPantalla();
                 else {
                     ErrorLogueo(email.getText().toString(), password.getText().toString());
@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         toast2.show();
     }
 
-    public int login(String usuario, String password) {
+    public boolean login(String usuario, String password) {
         String comando = "";
 
         comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario ='"+ usuario +"' " +
@@ -130,10 +130,10 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println("Voy a modificar el log in!!");
                 modificar_usu_ultimo_log_in(id_usuario);
 
-                return 1;
+                return true;
             }
         }catch(Exception e){}
-        return 0;
+        return false;
     }
 
     private void modificar_usu_ultimo_log_in(int id_usuario) {
