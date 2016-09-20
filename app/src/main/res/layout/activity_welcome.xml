@@ -7,11 +7,20 @@
     android:background="#000000"
     tools:context=".MainActivity">
  
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:id="@+id/VideoView"
+        />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/app_name"
+        android:id="@+id/ImageView"
+        />
 
-        android:src="@drawable/splash_screen" />
- 
 </RelativeLayout>
