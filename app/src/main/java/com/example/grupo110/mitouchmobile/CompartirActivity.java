@@ -15,7 +15,10 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +29,7 @@ import java.util.Map;
 
 public class CompartirActivity extends AppCompatActivity {
 
-    int id_usuario=18;
+    int id_usuario=-1;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
@@ -61,6 +64,11 @@ public class CompartirActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //id_usuario = getIntent().getExtras().getInt("id");
+
+
+
+
+        System.out.println("El usuario que esta es: " + id_usuario);
         System.out.println( getIntent().getExtras().get(Intent.EXTRA_STREAM));
 
         // get the listview
@@ -92,7 +100,7 @@ public class CompartirActivity extends AppCompatActivity {
                         childPosition);
                 Toast toast = Toast.makeText(getApplicationContext(),grupoUsuario,Toast.LENGTH_LONG);
                 toast.show();
-                
+
                 try
                 {
                     System.out.println("Crear archivo");
@@ -108,6 +116,31 @@ public class CompartirActivity extends AppCompatActivity {
                 {
                     Log.e("Ficheros", "Error al escribir fichero a memoria interna");
                 }
+
+
+
+                try
+                {
+                    BufferedReader fin =
+                            new BufferedReader(
+                                    new InputStreamReader(
+                                            openFileInput("prueba_int.txt")));
+
+                    String texto = fin.readLine();
+                    System.out.println(texto);
+                    fin.close();
+                }
+                catch (Exception ex)
+                {
+                    Log.e("Ficheros", "Error al leer fichero desde memoria interna");
+                }
+
+
+
+
+
+
+
                 return false;
             }
         });

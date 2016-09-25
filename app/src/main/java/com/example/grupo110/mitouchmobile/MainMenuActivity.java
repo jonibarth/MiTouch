@@ -1,5 +1,6 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -13,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +45,9 @@ public class MainMenuActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_logout:
                 modificar_usu_ultimo_log_out(id_usuario);
+                grabar();
                 finish();
+
                 return true;
             case R.id.action_settings:
                 Intent mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
@@ -139,15 +144,31 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void modificar_usu_ultimo_log_out(int id_usuario) {
-        Date d = new Date();
-        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
+        //Date d = new Date();
+        //SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
+        //SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
         String comando = "";
 
-        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ='"+formatoFecha.format(d)+" " + formatoHora.format(d)+"' WHERE usu_id ='"+ id_usuario +"';");
+        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ="+null+" WHERE usu_id ='"+ id_usuario +"';");
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         return;
+
+
+    }
+
+    public void grabar() {
+        try {
+            OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput(
+                    "notas.txt", LoginActivity.MODE_PRIVATE));
+            archivo.write("null");
+            archivo.flush();
+            archivo.close();
+        } catch (Exception e) {System.out.println("Error grabar archivo");
+        }
+        Toast t = Toast.makeText(this, "Los datos fueron grabados",
+                Toast.LENGTH_SHORT);
+        t.show();
     }
 
 

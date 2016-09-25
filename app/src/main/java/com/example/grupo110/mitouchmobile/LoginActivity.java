@@ -14,6 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,8 +44,13 @@ public class LoginActivity extends AppCompatActivity {
             // Un harcode: si usuario: admin y password: admin entro al menu
             public void onClick(View v) {
 
-                if (login(email.getText().toString(), password.getText().toString()))
+                if (login(email.getText().toString(), password.getText().toString())) {
+                    System.out.println("El id del usuario es:" +id_usuario);
+                    grabar();
+                    leer();
+
                     IniciarPantalla();
+                }
                 else {
                     ErrorLogueo(email.getText().toString(), password.getText().toString());
                     email.setText("");
@@ -104,6 +113,8 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
+
     // Si el usuario y pass son validas!
     public void IniciarPantalla() {
         Intent siguiente = new Intent(LoginActivity.this, MainMenuActivity.class);
@@ -145,4 +156,40 @@ public class LoginActivity extends AppCompatActivity {
         PostgrestBD baseDeDatos = new PostgrestBD();
         baseDeDatos.execute(comando);
     }
+
+    public void grabar() {
+        try {
+            OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput(
+                    "notas.txt", LoginActivity.MODE_PRIVATE));
+            archivo.write(String.valueOf(id_usuario));
+            archivo.flush();
+            archivo.close();
+        } catch (Exception e) {System.out.println("Error grabar archivo");
+        }
+        Toast t = Toast.makeText(this, "Los datos fueron grabados",
+                Toast.LENGTH_SHORT);
+        t.show();
+    }
+
+    private void leer() {
+        try {
+            InputStreamReader archivo = new InputStreamReader(
+                    openFileInput("notas.txt"));
+            BufferedReader br = new BufferedReader(archivo);
+            String linea = br.readLine();
+            String todo = "";
+            while (linea != null) {
+                todo = todo + linea + "\n";
+                linea = br.readLine();
+            }
+            br.close();
+            archivo.close();
+            System.out.println("que es todo:");
+            System.out.println(todo);
+        } catch (Exception e) {
+            System.out.println("error en el try que esta dentro del if");
+        }
+    }
+
+
 }
