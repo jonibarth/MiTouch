@@ -1,10 +1,13 @@
 package com.example.grupo110.mitouchmobile;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +15,8 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -59,7 +64,7 @@ public class CompartirActivity extends AppCompatActivity {
         System.out.println( getIntent().getExtras().get(Intent.EXTRA_STREAM));
 
         // get the listview
-        expListView = (ExpandableListView) findViewById(R.id.lvExpNuevoGrupo);
+        expListView = (ExpandableListView) findViewById(R.id.lvExpCompartir);
         // preparing list data
         prepareListData();
 
@@ -87,6 +92,22 @@ public class CompartirActivity extends AppCompatActivity {
                         childPosition);
                 Toast toast = Toast.makeText(getApplicationContext(),grupoUsuario,Toast.LENGTH_LONG);
                 toast.show();
+                
+                try
+                {
+                    System.out.println("Crear archivo");
+                    OutputStreamWriter fout=
+                            new OutputStreamWriter(
+                                    openFileOutput("prueba_int.txt", Context.MODE_PRIVATE));
+
+                    fout.write("Texto de prueba.");
+                    fout.close();
+                    System.out.println("archivo Creado");
+                }
+                catch (Exception ex)
+                {
+                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
+                }
                 return false;
             }
         });
@@ -155,7 +176,7 @@ public class CompartirActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    System.out.println("Agregar usuario a la lista");
+                    //System.out.println("Agregar usuario a la lista");
                     grupodeUsuario.add(resultSet.getString(4));
                 }
             }
@@ -165,7 +186,7 @@ public class CompartirActivity extends AppCompatActivity {
         } catch (Exception e) {
             System.err.println("Error crear explist: " + e );
         }
-
+/*
         int size=listDataHeader.size();
         for(int x=0;x<listDataHeader.size();x++) {
             System.out.println("listDataHeader "+listDataHeader.get(x));
@@ -174,7 +195,7 @@ public class CompartirActivity extends AppCompatActivity {
         for (Map.Entry<String, List<String>> entry : listDataChild.entrySet()) {
             System.out.println("clave=" + entry.getKey() + ", valor=" + entry.getValue());
         }
-
+*/
 
 
     }
