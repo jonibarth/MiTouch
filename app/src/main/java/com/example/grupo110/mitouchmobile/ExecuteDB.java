@@ -31,6 +31,8 @@ public class ExecuteDB extends AsyncTask<String,Void,ResultSet> {
                 connection.close();
             }catch (Exception ex){
                 System.out.println("Error: doInBackground catch 2");
+                System.out.println("Error:" + ex.toString());
+
 
             }
         }

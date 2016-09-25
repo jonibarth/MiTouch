@@ -7,8 +7,8 @@
     <string name="menu_settings">Settings</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Nombre de Usuario:</string>
-    <string name="prompt_user">Nombre completo:</string>
+    <string name="prompt_email">Nombre de Usuario</string>
+    <string name="prompt_user">Nombre completo</string>
     <string name="prompt_password">Password </string>
     <string name="prompt_gmail">Direccion de correo</string>
     <string name="action_sign_in">Iniciar Sesion</string>
@@ -117,4 +117,5 @@
     <string name="lugar_evento">Lugar</string>
     <string name="email_evento">Email adicional</string>
     <string name="crear_evento">Crear evento</string>
+    <string name="title_activity_compartir">MiTouch</string>
 </resources>

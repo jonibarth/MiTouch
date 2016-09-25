@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
@@ -127,7 +128,6 @@ public class LoginActivity extends AppCompatActivity {
         try{
             while (resultSet.next()) {
                 id_usuario = resultSet.getInt("usu_id");
-                System.out.println("Voy a modificar el log in!!");
                 modificar_usu_ultimo_log_in(id_usuario);
 
                 return true;
@@ -138,10 +138,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void modificar_usu_ultimo_log_in(int id_usuario) {
         Date d = new Date();
-        CharSequence diahora  = DateFormat.format("yyyy-MM-dd H:mm:ss", d.getTime());
-        System.out.println("ya modifique el log in!!" + diahora + id_usuario);
+        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
         String comando = "";
-        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_in ='"+diahora+"' WHERE usu_id ='"+ id_usuario +"';");
+        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_in ='"+formatoFecha.format(d)+" " + formatoHora.format(d)+"' WHERE usu_id ='"+ id_usuario +"';");
         PostgrestBD baseDeDatos = new PostgrestBD();
         baseDeDatos.execute(comando);
     }

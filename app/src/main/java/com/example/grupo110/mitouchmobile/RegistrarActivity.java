@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -16,12 +18,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Toast;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistrarActivity extends AppCompatActivity {
 
@@ -47,6 +49,26 @@ public class RegistrarActivity extends AppCompatActivity {
     private boolean nombreValido = false;
     private boolean contraseñaValida = false;
     private boolean contraseñaRepiteValida = false;
+    private boolean emailValido = false;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_back:
+                Intent siguiente = new Intent(RegistrarActivity.this, LoginActivity.class);
+                startActivity(siguiente);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +111,8 @@ public class RegistrarActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
+                    boolean respuesta = validarEmail(direccionEmail.getText().toString());
+                    insertarImagenEmail(respuesta);
                     //Lineas para ocultar el teclado virtual (Hide keyboard)
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(repetirContraseña.getWindowToken(), 0);
@@ -128,10 +152,11 @@ public class RegistrarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 nombreUsuario.clearFocus();
+                direccionEmail.clearFocus();
                 nombreCompleto.clearFocus();
                 contraseña.clearFocus();
                 repetirContraseña.clearFocus();
-                if((nombreValido) && (contraseñaRepiteValida) && (contraseñaValida) && (grupoUsuario!=null)) {
+                if((nombreValido) && (emailValido) && (contraseñaRepiteValida) && (contraseñaValida) && (grupoUsuario!=null)) {
                 //    if((nombreValido) && (contraseñaRepiteValida) && (contraseñaValida)) {
                     CrearUsuario();
                     Toast toast2 = Toast.makeText(getApplicationContext(),"Usuario Registrado",Toast.LENGTH_LONG);
@@ -163,9 +188,6 @@ public class RegistrarActivity extends AppCompatActivity {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
                                         int groupPosition, long id) {
-                // Toast.makeText(getApplicationContext(),
-                // "Group Clicked " + listDataHeader.get(groupPosition),
-                // Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -181,7 +203,7 @@ public class RegistrarActivity extends AppCompatActivity {
                         childPosition);
                 listDataHeader.clear();
                 listDataHeader.add( grupoUsuario);
-                grupodeUsuario = new ArrayList<String>();
+                grupodeUsuario = new ArrayList<>();
                 BuscarGruposdeUsuario(grupodeUsuario,grupodeUsuarioid);
                 expListView.collapseGroup(groupPosition);
                 return false;
@@ -193,20 +215,20 @@ public class RegistrarActivity extends AppCompatActivity {
      */
 
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
         // Adding child data
         listDataHeader.add("Grupo de Usuario");
         // Adding child data
-        grupodeUsuario = new ArrayList<String>();
-        grupodeUsuarioid = new ArrayList<String>();
+        grupodeUsuario = new ArrayList<>();
+        grupodeUsuarioid = new ArrayList<>();
         BuscarGruposdeUsuario(grupodeUsuario,grupodeUsuarioid);
     }
 
 
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario,List<String> grupodeUsuarioid) {
         String comando;
-        comando = String.format( "SELECT * FROM  \"MiTouch\".t_grupos" + ";");
+        comando =  "SELECT * FROM  \"MiTouch\".t_grupos" + ";";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
@@ -230,7 +252,7 @@ public class RegistrarActivity extends AppCompatActivity {
         System.out.println("dia: " + dia);
         String id_usuadioGenerado=null;
 
-        comando = String.format("INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_path_galeria, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail) VALUES ('"+ dia +"', 'path6', 'path6', null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"') RETURNING usu_id;");
+        comando = "INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_path_galeria, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail) VALUES ('"+ dia +"', 'path6', 'path6', null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"') RETURNING usu_id;";
         PostgrestBD baseDeDatos = new PostgrestBD();
         // Inserto usuario en la tabla usuarios
         // Busco el ID del usuario que genere para insertarlo en la tabla de solicitud de acceso!
@@ -243,8 +265,8 @@ public class RegistrarActivity extends AppCompatActivity {
             System.err.println("Error: " + e);
         }
 
-        comando2 = String.format("INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES ("+id_usuadioGenerado+",'"+BuscarGruposdeUsuarioenArray()+"','"+ diahora +"',null,null);");
-        ResultSet resultSet2 = baseDeDatos.execute(comando2);
+        comando2 = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES ("+id_usuadioGenerado+",'"+BuscarGruposdeUsuarioenArray()+"','"+ diahora +"',null,null);";
+        baseDeDatos.execute(comando2);
     }
 
     private String BuscarGruposdeUsuarioenArray() {
@@ -264,7 +286,7 @@ public class RegistrarActivity extends AppCompatActivity {
             return true;
         }
         String comando;
-        comando = String.format( "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario='" + usuario + "';");
+        comando = "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario='" + usuario + "';";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
@@ -297,6 +319,32 @@ public class RegistrarActivity extends AppCompatActivity {
         }
     }
 
+    private void insertarImagenEmail(boolean respuesta) {
+
+        if(respuesta == true)
+        {
+            String uri = "@drawable/wrong";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            ImageView imagen= (ImageView)findViewById(R.id.ImagenViewEmail);
+            Drawable res = getResources().getDrawable(imageResource);
+            assert imagen != null;
+            imagen.setImageDrawable(res);
+        }
+        else
+        {
+            String uri = "@drawable/right";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            ImageView imagen= (ImageView)findViewById(R.id.ImagenViewEmail);
+            Drawable res = getResources().getDrawable(imageResource);
+            assert imagen != null;
+            imagen.setImageDrawable(res);
+            emailValido = true;
+        }
+    }
+    /*
+     * Si la contraseña no es valida le pongo X
+     * si la contraseña es valida le pongo tilde
+     */
     private void insertarImagenContraseña(boolean respuesta) {
 
         if(respuesta == false)
@@ -305,6 +353,7 @@ public class RegistrarActivity extends AppCompatActivity {
             int imageResource = getResources().getIdentifier(uri, null, getPackageName());
             ImageView imagen= (ImageView)findViewById(R.id.ImagenViewContraseña);
             Drawable res = getResources().getDrawable(imageResource);
+            assert imagen != null;
             imagen.setImageDrawable(res);
         }
         else
@@ -313,6 +362,7 @@ public class RegistrarActivity extends AppCompatActivity {
             int imageResource = getResources().getIdentifier(uri, null, getPackageName());
             ImageView imagen= (ImageView)findViewById(R.id.ImagenViewContraseña);
             Drawable res = getResources().getDrawable(imageResource);
+            assert imagen != null;
             imagen.setImageDrawable(res);
             contraseñaValida = true;
         }
@@ -339,9 +389,12 @@ public class RegistrarActivity extends AppCompatActivity {
 
         }
     }
-
-    private boolean validarContraseña(String cadena)
-    {
+    /*
+       * Metodo para validar la contraseña que se ingresa
+       * Valido que no contenga simbolos, que no tenga espacios y que tenga por lo menos una letra y por lo menos un numero,
+       * Valido El largo de la contraseña
+        */
+    private boolean validarContraseña(String cadena) {
         boolean numero= false;
         boolean letra=false;
         Toast toast;
@@ -351,10 +404,8 @@ public class RegistrarActivity extends AppCompatActivity {
             toast.show();
             return false;
         }
-        //Valido que no contenga simbolos, que no tenga espacios y que tenga por lo menos una letra y por lo menos un numero,
         for(int i = 0; i < cadena.length(); ++i) {
             char caracter = cadena.charAt(i);
-// No acepto simbolos ni vacios!
             if(!Character.isLetterOrDigit(caracter)) {
                 toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos y contener espacios", Toast.LENGTH_SHORT);
                 toast.show();
@@ -365,38 +416,28 @@ public class RegistrarActivity extends AppCompatActivity {
             else
                 letra = true;
         }
-
-        if(numero == true && letra == true)
+        if(numero && letra)
             return true;
-
         toast = Toast.makeText(getApplicationContext(), "La contraseña debe tener por lo menos un digito y una letra", Toast.LENGTH_SHORT);
         toast.show();
         return false;
     }
+    public boolean validarEmail(String email) {
+        Toast toast;
+        Pattern pattern = Pattern
+                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@gmail.com");
+
+        Matcher mather = pattern.matcher(email);
+        if (mather.find()) {
+            toast = Toast.makeText(getApplicationContext(), "El email ingresado es válido.", Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        } else {
+            System.out.println("");
+            toast = Toast.makeText(getApplicationContext(), "El email ingresado es inválido.", Toast.LENGTH_SHORT);
+            toast.show();
+            return true;
+        }
+
+    }
 }
-/*
-// Listview Group expanded listener
-expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-
-@Override
-public void onGroupExpand(int groupPosition) {
-        Toast.makeText(getApplicationContext(),
-        listDataHeader.get(groupPosition) + " Expanded",
-        Toast.LENGTH_SHORT).show();
-        //botonRegistrar.setVisibility(View.INVISIBLE);
-
-        }
-        });
-        // Listview Group collasped listener
-        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-@Override
-public void onGroupCollapse(int groupPosition) {
-        Toast.makeText(getApplicationContext(),
-        listDataHeader.get(groupPosition) + " Collapsed",
-        Toast.LENGTH_SHORT).show();
-        // botonRegistrar.setVisibility(View.VISIBLE);
-
-        }
-        });
-*/

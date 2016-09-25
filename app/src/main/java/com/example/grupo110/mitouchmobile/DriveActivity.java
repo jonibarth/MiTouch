@@ -47,19 +47,21 @@ public class DriveActivity extends BaseDriveActivity {
         super.onConnected(connectionHint);
         System.out.println("mimetype: " + ext);
         String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext.toLowerCase());
-        System.out.println("mimetype: " );
 
         IntentSender intentSender = Drive.DriveApi
                 .newOpenFileActivityBuilder()
                 .setMimeType(new String[] {DriveFolder.MIME_TYPE, //mimeType
-                        "text/plain",
                         "text/html",
+                        "text/plain",
+                        "application/rtf",
                         "application/vnd.oasis.opendocument.text",
-                        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                        "application/x-vnd.oasis.opendocument.spreadsheet",
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                         "application/pdf",
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "application/x-vnd.oasis.opendocument.spreadsheet",
+                        "text/csv",
+                        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                        "application/vnd.google-apps.document",
                         "image/png",
                         "image/jpeg",
                         "image/jpg"
@@ -79,10 +81,8 @@ public class DriveActivity extends BaseDriveActivity {
          switch (requestCode) {
             case REQUEST_CODE_OPENER:
                 if (resultCode == RESULT_OK) {
-                    System.out.println("HOLA abri algo");
                     DriveId driveId = (DriveId) data.getParcelableExtra(
                             OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-                    System.out.println("ID: " + driveId);
                 }
                     finish();
                 break;

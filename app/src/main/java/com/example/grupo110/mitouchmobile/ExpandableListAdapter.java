@@ -18,7 +18,8 @@ import android.widget.TextView;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context _context;
-    private List<String> _listDataHeader; // header titles
+    // header titles
+    private List<String> _listDataHeader;
     // child data in format of header title, child title
     private HashMap<String, List<String>> _listDataChild;
 

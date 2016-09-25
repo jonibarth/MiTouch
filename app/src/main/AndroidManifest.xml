@@ -32,29 +32,36 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         º
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".GoogleCalendarActivity"
-            android:label="@string/title_activity_google_calendar"/>
+            android:label="@string/title_activity_google_calendar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".GaleriaActivity"
             android:label="@string/title_activity_galeria"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ChatActivity"
             android:label="@string/title_activity_chat"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainMenuActivity"
-            android:label="@string/title_activity_probando_layout" />
+            android:label="@string/title_activity_probando_layout"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DriveActivity"
             android:label="@string/Menu_lateral"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -67,18 +74,34 @@
         <activity
             android:name=".CambiarPasswordActivity"
             android:label="@string/title_activity_cambiar_password"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PedirAccesoGruposActivity"
             android:label="@string/title_activity_pedir_acceso_grupos"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RegistrarActivity"
             android:label="@string/title_activity_registrar"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name  =".NewCalendarEventActivity"
-            android:label ="Nuevo evento"></activity>
+            android:name=".NewCalendarEventActivity"
+            android:label="Nuevo evento"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CompartirActivity"
+            android:label="@string/title_activity_compartir"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

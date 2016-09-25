@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,7 +29,6 @@ public class MainMenuActivity extends AppCompatActivity {
     ImageView vCalend;
     ImageView vCalc;
     ImageView vChat;
-    MenuView.ItemView salir;
     int id_usuario;
 
     @Override
@@ -39,7 +39,6 @@ public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        salir = (MenuView.ItemView) findViewById(R.id.action_logout);
         switch (item.getItemId()) {
             case R.id.action_logout:
                 modificar_usu_ultimo_log_out(id_usuario);
@@ -91,16 +90,14 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent mainIntent = new Intent(MainMenuActivity.this, GoogleCalendarActivity.class);
-                //Intent mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
-                //mainIntent.putExtra("id",id_usuario);
+                mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
         });
         vChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Intent mainIntent = new Intent(MainMenuActivity.this, ChatActivity.class);
-                Intent mainIntent = new Intent(MainMenuActivity.this, PedirAccesoGruposActivity.class);
+                Intent mainIntent = new Intent(MainMenuActivity.this, ChatActivity.class);
                 mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
@@ -143,10 +140,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void modificar_usu_ultimo_log_out(int id_usuario) {
         Date d = new Date();
-        CharSequence diahora  = DateFormat.format("yyyy-MM-dd H:mm:ss", d.getTime());
+        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
         String comando = "";
 
-        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ='"+diahora+"' WHERE usu_id ='"+ id_usuario +"';");
+        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ='"+formatoFecha.format(d)+" " + formatoHora.format(d)+"' WHERE usu_id ='"+ id_usuario +"';");
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         return;

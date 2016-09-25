@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,27 @@ public class CambiarPasswordActivity extends AppCompatActivity {
     private int id_usuario;
     private String password;
     private final static int  LARGO_CONTRASEÑA = 10;
+    /*
+    *
+    * Toolbar con el boton para volver al menu anterior
+    *
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_back:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +75,19 @@ public class CambiarPasswordActivity extends AppCompatActivity {
         });
     }
 
-    private void GrabarCambios() {
-        boolean usuarioOk;
+    /*
+    * Si la contraseña vieja es la misma que esta en la base de datos +
+    * las contraseñas son validas e iguales guardo los cambios
+    *
+    * Si la contraseña vieja es la misma que esta en la base de datos +
+    * las contraseñas no son validas limpio los campos
+    *
+     */
 
-        usuarioOk = buscarUsuario();
-        if(usuarioOk == true)
+    private void GrabarCambios() {
+        boolean usuarioContraseñaCoinciden;
+        usuarioContraseñaCoinciden = buscarBaseDeDatosUsuarioContraseña();
+        if(usuarioContraseñaCoinciden == true)
         {
             if(passwordNueva.getText().toString().equals(passwordNuevaRepite.getText().toString())) {
                 if(validarContraseña(passwordNueva.getText().toString())==true) {
@@ -67,40 +98,27 @@ public class CambiarPasswordActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    passwordVieja.setText("");
-                    passwordNueva.setText("");
-                    passwordNuevaRepite.setText("");
-                    passwordVieja.clearFocus();
-                    passwordNueva.clearFocus();
-                    passwordNuevaRepite.clearFocus();
+                    limpiarCampos();
                 }
-
             }
             else
             {
-                passwordVieja.setText("");
-                passwordNueva.setText("");
-                passwordNuevaRepite.setText("");
-                passwordVieja.clearFocus();
-                passwordNueva.clearFocus();
-                passwordNuevaRepite.clearFocus();
+                limpiarCampos();
                 Toast toast2 = Toast.makeText(getApplicationContext(), "Ambas contraseñas no coinciden ", Toast.LENGTH_SHORT);
                 toast2.show();
             }
 
         }else
         {
-            passwordVieja.setText("");
-            passwordNueva.setText("");
-            passwordNuevaRepite.setText("");
-            passwordVieja.clearFocus();
-            passwordNueva.clearFocus();
-            passwordNuevaRepite.clearFocus();
-            Toast toast2 = Toast.makeText(getApplicationContext(), "el usuario y la contraseña no coinciden ", Toast.LENGTH_SHORT);
+            limpiarCampos();
+            Toast toast2 = Toast.makeText(getApplicationContext(), "El usuario y la contraseña no coinciden ", Toast.LENGTH_SHORT);
             toast2.show();
         }
     }
-    private boolean buscarUsuario() {
+    /*
+    * Valido que la contraseña que ingresa el usuario sea la misma que se encuentra en la base de datos
+    */
+    private boolean buscarBaseDeDatosUsuarioContraseña() {
         password = passwordVieja.getText().toString();
         String comando;
         comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id =" + id_usuario +
@@ -116,41 +134,37 @@ public class CambiarPasswordActivity extends AppCompatActivity {
         }
         return false;
     }
-
+    /*
+    * Actualizar la contraseña en la Base de Datos
+    */
     private boolean ActualizarUsuario(String nuevaContraseña) {
         String comando;
 
         comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_password = '"+nuevaContraseña+"' WHERE usu_id = " + id_usuario + ";");
         System.out.println(comando);
-
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
-        /*try {
-            if (resultSet.next()) {
-                return true;
-            }
-        } catch (Exception e) {
-        }*/
         return false;
     }
-
+    /*
+   * Metodo para validar la contraseña que se ingresa
+   * Valido que no contenga simbolos, que no tenga espacios y que tenga por lo menos una letra y por lo menos un numero,
+   * Valido El largo de la contraseña
+    */
     private boolean validarContraseña(String cadena)
     {
         boolean numero= false;
         boolean letra=false;
         Toast toast;
-        // No permito contraseñas con blancos
-        // Valido El largo
         if(cadena.length() < LARGO_CONTRASEÑA)
         {
             toast = Toast.makeText(getApplicationContext(), "La cantidad minima de caracteres es 10 ", Toast.LENGTH_SHORT);
             toast.show();
             return false;
         }
-        //Valido que no contenga simbolos, que no tenga espacios y que tenga por lo menos una letra y por lo menos un numero,
         for(int i = 0; i < cadena.length(); ++i) {
             char caracter = cadena.charAt(i);
-// No acepto simbolos ni vacios!
+
             if(!Character.isLetterOrDigit(caracter)) {
                 toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos y contener espacios", Toast.LENGTH_SHORT);
                 toast.show();
@@ -164,11 +178,17 @@ public class CambiarPasswordActivity extends AppCompatActivity {
 
         if(numero == true && letra == true)
         return true;
-
         toast = Toast.makeText(getApplicationContext(), "La contraseña debe tener por lo menos un digito y una letra", Toast.LENGTH_SHORT);
         toast.show();
         return false;
     }
 
-
+    public void limpiarCampos(){
+        passwordVieja.setText("");
+        passwordNueva.setText("");
+        passwordNuevaRepite.setText("");
+        passwordVieja.clearFocus();
+        passwordNueva.clearFocus();
+        passwordNuevaRepite.clearFocus();
+    }
 }

@@ -1,18 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".ChatActivity">
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:background="@color/colorNegro"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
-
-    <ImageButton
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/imageButtonChat"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:backgroundTint="@color/colorVerde"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/textViewChat"
+       android:layout_weight="0.83"
+       android:background="@color/colorGris"/>
+
+    <EditText
+        android:id="@+id/EditText01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeActionId="@+id/editTextChat"
+        android:imeOptions="actionUnspecified"
+        android:inputType="text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColorHint="@color/colorVerde"
+        android:textStyle="bold"
+        android:background="#313131"
+        android:hint="Escribe un mensaje aqui"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorVerde"
+        >
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+            android:id="@+id/chatButton"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="Enviar"
+            android:layout_gravity="center"
+            android:background="@color/colorVerde"
+            android:textStyle="bold"
+            android:textColor="@color/colorNegro"
+            android:layout_marginBottom="20dp">
+        </Button>
+    </LinearLayout>

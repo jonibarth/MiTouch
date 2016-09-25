@@ -5,7 +5,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,26 +21,44 @@ import java.sql.ResultSet;
 
 public class SettingActivity extends AppCompatActivity {
 
+    /*
+    * Declaracion de variables
+     */
+
     private final static int  USUARIOMINIMO = 6;
     private final static int  USUARIOMAXIMO = 15;
-
     Button cambiarContraseña;
     Button solicitarNuevoGrupodeUsuario;
     Button ActualizarBasedeDatos;
-
-
     EditText editTextUsuario;
     EditText editTextNombreCompleto;
     EditText editTextMail;
-
     ImageButton imagenEditUsuario;
     ImageButton imagenEditNombre;
     ImageButton imagenEditEmail;
-
     String usu_nombre_usuario;
     String usu_nombre_completo;
     String usu_mail;
     int id_usuario;
+
+    /*
+     * Toolbar con el boton para volver al menu anterior
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_back:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -37,7 +37,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/colorPrimary"
+                android:textColorHint="@color/colorVerde"
                 >
                 <EditText
                     android:id="@+id/email"
@@ -47,7 +47,7 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/colorVerde"
                     android:textStyle="bold"
                     android:background="#313131"
                     />
@@ -57,7 +57,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/colorPrimary"
+                android:textColorHint="@color/colorVerde"
                 >
 
                 <EditText
@@ -71,7 +71,7 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/colorVerde"
                     android:textStyle="bold"
                     android:background="#313131"
                     />
@@ -86,7 +86,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
                 android:textStyle="bold"
-                android:background="@color/colorPrimary"
+                android:background="@color/colorVerde"
                 android:textSize="18sp"
                 android:textColor="#000000" />
 
@@ -102,7 +102,7 @@
         android:layout_gravity="center_horizontal"
         android:linksClickable="false"
         android:clickable="true"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorVerde"
         android:textStyle="bold"
         android:textSize="16sp" />
 
@@ -116,7 +116,7 @@
         android:layout_marginTop="25dp"
         android:linksClickable="false"
         android:clickable="true"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorVerde"
         android:textStyle="bold"
         android:textSize="16sp" />
 </LinearLayout>
