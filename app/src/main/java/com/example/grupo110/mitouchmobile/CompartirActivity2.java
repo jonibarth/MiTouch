@@ -1,43 +1,39 @@
 package com.example.grupo110.mitouchmobile;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-public class CompartirActivity extends AppCompatActivity {
+public class CompartirActivity2 extends AppCompatActivity {
 
     int id_usuario=-1;
+    String path=null;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
-    List<String> grupodeUsuarioid;
     String grupoUsuario=null;
-    Button aceptarGrupodeUsuario;
 
 
     @Override
@@ -57,19 +53,22 @@ public class CompartirActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compartir);
+        setContentView(R.layout.activity_compartir3);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //id_usuario = getIntent().getExtras().getInt("id");
+        try{
+            id_usuario = getIntent().getExtras().getInt("id");
+            System.out.println("holi1");
+            path = getIntent().getExtras().getString("url");
+            System.out.println("holi2");}
+        catch(Exception e){
+            System.out.println("Error: "+e);
+        }
 
-
-
-
-        System.out.println("El usuario que esta es: " + id_usuario);
-        System.out.println( getIntent().getExtras().get(Intent.EXTRA_STREAM));
 
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExpCompartir);
@@ -98,7 +97,7 @@ public class CompartirActivity extends AppCompatActivity {
                 grupoUsuario = listDataChild.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
-                Toast toast = Toast.makeText(getApplicationContext(),grupoUsuario,Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
                 toast.show();
 
                 try
@@ -134,13 +133,6 @@ public class CompartirActivity extends AppCompatActivity {
                 {
                     Log.e("Ficheros", "Error al leer fichero desde memoria interna");
                 }
-
-
-
-
-
-
-
                 return false;
             }
         });
@@ -219,19 +211,49 @@ public class CompartirActivity extends AppCompatActivity {
         } catch (Exception e) {
             System.err.println("Error crear explist: " + e );
         }
-/*
-        int size=listDataHeader.size();
-        for(int x=0;x<listDataHeader.size();x++) {
-            System.out.println("listDataHeader "+listDataHeader.get(x));
-        }
-
-        for (Map.Entry<String, List<String>> entry : listDataChild.entrySet()) {
-            System.out.println("clave=" + entry.getKey() + ", valor=" + entry.getValue());
-        }
-*/
-
-
     }
 
+    private boolean existe(String[] archivos, String archbusca) {
+        for (int f = 0; f < archivos.length; f++)
+            if (archbusca.equals(archivos[f]))
+                return true;
+        return false;
+    }
 
+    public void IniciarPantalla() {
+        Intent siguiente = new Intent(CompartirActivity2.this, MainMenuActivity.class);
+        siguiente.putExtra("id",id_usuario);
+        startActivity(siguiente);
+        finish();
+    }
+
+    private Boolean buscarUsuario() {
+        String comando = "";
+        System.out.println("el usuario es" + id_usuario);
+        comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";");
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try{
+            while (resultSet.next()) {
+                System.out.println("usuario: " + resultSet.getInt("usu_id"));
+                return true;
+            }
+        }catch(Exception e){System.out.println("Error busqueda");}
+        return false;
+    }
+
+    public static void dumpIntent(Intent i){
+
+        Bundle bundle = i.getExtras();
+        if (bundle != null) {
+            Set<String> keys = bundle.keySet();
+            Iterator<String> it = keys.iterator();
+            System.out.println("Dumping Intent start");
+            while (it.hasNext()) {
+                String key = it.next();
+                System.out.println("[" + key + "=" + bundle.get(key)+"]");
+            }
+            System.out.println("Dumping Intent end");
+        }
+    }
 }

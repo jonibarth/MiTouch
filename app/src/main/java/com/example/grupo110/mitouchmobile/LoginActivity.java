@@ -3,6 +3,7 @@ package com.example.grupo110.mitouchmobile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.AppCompatActivity;
@@ -21,16 +22,20 @@ import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
 
 public class LoginActivity extends AppCompatActivity {
 
     Button pasarAMenu;
     int id_usuario;
+    String url=null;
     EditText email;
     EditText password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("OnCreate Login");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -45,11 +50,25 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (login(email.getText().toString(), password.getText().toString())) {
-                    System.out.println("El id del usuario es:" +id_usuario);
+                    System.out.println("El id del usuario es: " +id_usuario);
+                    try{
+                    url = getIntent().getExtras().getString("url");}catch(Exception e){}
                     grabar();
                     leer();
+                    // En caso que quiero compartir una imagen desde la galeria y no estoy logueado, voy a recibir la url.
+                    if(url==null)
+                        IniciarPantalla();
+                    else
+                    {
+                        Intent siguiente = new Intent(LoginActivity.this, CompartirActivity2.class);
+                        System.out.println(" id "+id_usuario);
+                        System.out.println(" url "+url);
 
-                    IniciarPantalla();
+                        siguiente.putExtra("id",id_usuario);
+                        siguiente.putExtra("url",url);
+                        startActivity(siguiente);
+                        finish();
+                    }
                 }
                 else {
                     ErrorLogueo(email.getText().toString(), password.getText().toString());
@@ -192,4 +211,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    public static void dumpIntent(Intent i){
+
+        Bundle bundle = i.getExtras();
+        if (bundle != null) {
+            Set<String> keys = bundle.keySet();
+            Iterator<String> it = keys.iterator();
+           System.out.println("Dumping Intent start");
+            while (it.hasNext()) {
+                String key = it.next();
+                System.out.println("[" + key + "=" + bundle.get(key)+"]");
+            }
+            System.out.println("Dumping Intent end");
+        }
+    }
 }

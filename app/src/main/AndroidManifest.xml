@@ -91,8 +91,8 @@
             android:label="Nuevo evento"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CompartirActivity"
-            android:label="@string/title_activity_compartir"
+            android:name=".Compartir2"
+            android:label="@string/title_activity_compartir2"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
@@ -101,6 +101,13 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
 
+
+        </activity>
+
+        <activity
+            android:name=".CompartirActivity2"
+            android:label="@string/title_activity_compartir2"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
