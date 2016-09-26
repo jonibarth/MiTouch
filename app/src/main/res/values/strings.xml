@@ -103,8 +103,7 @@
     <string name="Menu_lateral">Google Drive</string>
     <string name="Menu_lateral_galeria">Galeria</string>
     <string name="title_activity_cambiar_password">Cambiar contraseña</string>
-    <string name="title_activity_setting_con_tab">SettingConTabActivity</string>
-    <string name="title_activity_pedir_acceso_grupos">Pedir acceso grupos de usuario</string>
+    <string name="title_activity_pedir_acceso_grupos">Solicitar Acceso</string>
     <string name="title_activity_registrar">Registro de Usuarios</string>
     <string name="option_today">Ver eventos de hoy</string>
     <string name="option_date">Ver evento de una fecha específica</string>

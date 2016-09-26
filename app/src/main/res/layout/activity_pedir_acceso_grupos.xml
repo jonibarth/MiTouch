@@ -8,21 +8,28 @@
     tools:context="com.example.grupo110.mitouchmobile.PedirAccesoGruposActivity"
     android:background="#000000">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_marginBottom="10dp"
-        android:background="?attr/colorPrimary"
-        android:backgroundTint="@color/colorVerde"/>
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/android.support.design">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:backgroundTint="@color/colorVerde"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <ExpandableListView
         android:id="@+id/lvExpNuevoGrupo"
-        android:layout_above="@+id/toolbar"
+        android:layout_below="@+id/android.support.design"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"/>
+        />
 
     <Button
         android:id="@+id/buttonregistrarUsuarioNuevoGrupo"
@@ -34,5 +41,6 @@
         android:background="@color/colorVerde"
         android:textSize="18sp"
         android:textColor="#000000"
-        android:layout_below="@+id/lvExpNuevoGrupo" />
+        android:layout_below="@+id/lvExpNuevoGrupo"
+        android:layout_margin="15dp"/>
 </RelativeLayout>
