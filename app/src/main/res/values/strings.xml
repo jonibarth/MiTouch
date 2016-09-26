@@ -20,7 +20,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
+    <string name="title_activity_forgot_password"></string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

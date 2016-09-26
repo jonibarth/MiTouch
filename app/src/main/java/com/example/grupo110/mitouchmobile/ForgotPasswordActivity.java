@@ -3,6 +3,7 @@ package com.example.grupo110.mitouchmobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,29 +14,30 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private String nombreAdministrador = null;
     private String emailAdministrador = null;
     TextView texto;
-    Button pasarALogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-        validarUsuario();
-
-        pasarALogin =(Button)findViewById(R.id.button);
-        texto = (TextView)findViewById(R.id.textViewForgotPassword);
-        texto.setText("Enviale un mail al administrador\nNombre: " + nombreAdministrador +"\nemail: " + emailAdministrador);
-        texto.setTextSize(20);
-
-        pasarALogin.setOnClickListener(new View.OnClickListener() {
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                System.out.println("sdfsdfdsf");
                 Intent siguiente = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                 startActivity(siguiente);
                 finish();
+
             }
         });
+
+
+        validarUsuario();
+        texto = (TextView)findViewById(R.id.textViewForgotPassword);
+        texto.setText("Enviale un mail al administrador\nNombre: " + nombreAdministrador +"\nemail: " + emailAdministrador);
+        texto.setTextSize(20);
     }
 
     private boolean validarUsuario() {
