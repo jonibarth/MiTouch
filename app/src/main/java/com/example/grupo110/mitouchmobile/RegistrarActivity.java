@@ -51,31 +51,25 @@ public class RegistrarActivity extends AppCompatActivity {
     private boolean contraseñaRepiteValida = false;
     private boolean emailValido = false;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_back:
-                Intent siguiente = new Intent(RegistrarActivity.this, LoginActivity.class);
-                startActivity(siguiente);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("sdfsdfdsf");
+                Intent siguiente = new Intent(RegistrarActivity.this, LoginActivity.class);
+                startActivity(siguiente);
+                finish();
+
+            }
+        });
 
         nombreUsuario = (EditText) findViewById(R.id.nombreUsuarioRegistrar);
         nombreCompleto = (EditText) findViewById(R.id.nombreCompletoRegistrar);
