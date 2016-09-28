@@ -94,7 +94,7 @@ public class DetailsActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(DetailsActivity.this, R.style.AlertDialogCustom));
                 builder.setTitle("Acción a realizar")
-                        .setItems(new String [] {"Abrir","Compartir","Eliminar"}, new DialogInterface.OnClickListener(){
+                        .setItems(new String [] {"Abrir","Compartir","Eliminar","Cerrar"}, new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface dialog, int opt){
                                 System.out.println("Opción elegida: "+ opt);
                                 switch (opt){
@@ -103,6 +103,9 @@ public class DetailsActivity extends AppCompatActivity {
                                     case 1:  System.out.println("Archivo que deseo compartir: " );
                                         break;
                                     case 2:  System.out.println("Archivo que deseo eliminar: " );
+                                        borrarArchivo();
+                                        break;
+                                    case 3:  System.out.println("Salir " );
                                         break;
                                 }
                             }
@@ -111,6 +114,17 @@ public class DetailsActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+    }
+
+    private void borrarArchivo() {
+        // Borrar de la base de datos, Tabla t_archivos_galeria y t_carpetas_archivos_galeria
+
+
+        //borrar de la carpeta MiTouchMultimedia en el dispositivos android
+
+
+
+
     }
 
     private void descomponerArchivos() {

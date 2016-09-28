@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -164,11 +165,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void modificar_usu_ultimo_log_in(int id_usuario) {
-        Date d = new Date();
-        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
+
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+
+        SimpleDateFormat diahora = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+
+
+
         String comando = "";
-        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_in ='"+formatoFecha.format(d)+" " + formatoHora.format(d)+"' WHERE usu_id ='"+ id_usuario +"';");
+        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_in ='"+diahora+"' WHERE usu_id ='"+ id_usuario +"';");
         PostgrestBD baseDeDatos = new PostgrestBD();
         baseDeDatos.execute(comando);
     }

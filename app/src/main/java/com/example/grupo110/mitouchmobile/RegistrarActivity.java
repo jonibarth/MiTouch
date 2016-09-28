@@ -18,12 +18,16 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Toast;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.lang.Integer.parseInt;
 
 public class RegistrarActivity extends AppCompatActivity {
 
@@ -40,6 +44,7 @@ public class RegistrarActivity extends AppCompatActivity {
     EditText contraseña;
     EditText repetirContraseña;
     String grupoUsuario=null;
+    final String PATH_SERVIDOR="..../";
 
     Button botonRegistrar;
     private final static int  LARGO_CONTRASEÑA = 10;
@@ -84,9 +89,6 @@ public class RegistrarActivity extends AppCompatActivity {
                 if(!hasFocus){
                     boolean respuesta = validarUsuario(nombreUsuario.getText().toString());
                     insertarImagenNombreUsuario(respuesta);
-                    //Lineas para ocultar el teclado virtual (Hide keyboard)
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(repetirContraseña.getWindowToken(), 0);
                 }
 
             }
@@ -95,9 +97,6 @@ public class RegistrarActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
-                    //Lineas para ocultar el teclado virtual (Hide keyboard)
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(repetirContraseña.getWindowToken(), 0);
                 }
             }
         });
@@ -107,9 +106,6 @@ public class RegistrarActivity extends AppCompatActivity {
                 if(!hasFocus) {
                     boolean respuesta = validarEmail(direccionEmail.getText().toString());
                     insertarImagenEmail(respuesta);
-                    //Lineas para ocultar el teclado virtual (Hide keyboard)
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(repetirContraseña.getWindowToken(), 0);
                 }
             }
         });
@@ -119,9 +115,6 @@ public class RegistrarActivity extends AppCompatActivity {
                 if(!hasFocus){
                     boolean respuesta = validarContraseña(contraseña.getText().toString());
                     insertarImagenContraseña(respuesta);
-                    //Lineas para ocultar el teclado virtual (Hide keyboard)
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(repetirContraseña.getWindowToken(), 0);
                 }
 
             }
@@ -238,19 +231,35 @@ public class RegistrarActivity extends AppCompatActivity {
     }
 
     private void CrearUsuario(){
-        String comando,comando2;
-        Date d = new Date();
-        CharSequence diahora  = DateFormat.format("yyyy-MM-dd H:mm:ss", d.getTime());
-        System.out.println("Dia hora: " + diahora);
-        CharSequence dia  = DateFormat.format("yyyy-MM-dd", d.getTime());
-        System.out.println("dia: " + dia);
+        String comando;
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat diahora = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+        SimpleDateFormat dia = new SimpleDateFormat("yyyyMMdd");
+        String fechadia = dia.format(c.getTime());
+        String fechadiahora = diahora.format(c.getTime());
         String id_usuadioGenerado=null;
-
-        comando = "INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_path_galeria, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail) VALUES ('"+ dia +"', 'path6', 'path6', null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"') RETURNING usu_id;";
+        String id_carpetaGenerada=null;
         PostgrestBD baseDeDatos = new PostgrestBD();
+
+
+        // Cuando creo un usuario primero voy a crear la carpeta de la galeria y del drive!
+        comando = "INSERT INTO \"MiTouch\".t_carpetas_galeria ( cg_path, cg_fecha_baja) VALUES ('"+PATH_SERVIDOR+ nombreUsuario.getText().toString() +"',null) RETURNING cg_id;";
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try {
+            while (resultSet.next()){
+                id_carpetaGenerada=resultSet.getArray(1).toString();
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e);
+        }
+
+        System.out.println("el id de la carpeta generada es: " + id_carpetaGenerada);
+
+        comando = "INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail,usu_id_galeria) VALUES ('"+ fechadia +"', null, null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"',"+parseInt(id_carpetaGenerada)+") RETURNING usu_id;";
+
         // Inserto usuario en la tabla usuarios
         // Busco el ID del usuario que genere para insertarlo en la tabla de solicitud de acceso!
-        ResultSet resultSet = baseDeDatos.execute(comando);
+        resultSet = baseDeDatos.execute(comando);
         try {
             while (resultSet.next()){
                 id_usuadioGenerado=resultSet.getArray(1).toString();
@@ -258,10 +267,8 @@ public class RegistrarActivity extends AppCompatActivity {
         } catch (Exception e) {
             System.err.println("Error: " + e);
         }
-
-        comando2 = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES ("+id_usuadioGenerado+",'"+BuscarGruposdeUsuarioenArray()+"','"+ diahora +"',null,null);";
-        baseDeDatos = new PostgrestBD();
-        baseDeDatos.execute(comando2);
+        comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES ("+id_usuadioGenerado+",'"+BuscarGruposdeUsuarioenArray()+"','"+ fechadiahora +"',null,null);";
+        baseDeDatos.execute(comando);
     }
 
     private String BuscarGruposdeUsuarioenArray() {
