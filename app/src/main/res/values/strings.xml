@@ -20,7 +20,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
+    <string name="title_activity_forgot_password"></string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -103,8 +103,7 @@
     <string name="Menu_lateral">Google Drive</string>
     <string name="Menu_lateral_galeria">Galeria</string>
     <string name="title_activity_cambiar_password">Cambiar contraseña</string>
-    <string name="title_activity_setting_con_tab">SettingConTabActivity</string>
-    <string name="title_activity_pedir_acceso_grupos">Pedir acceso grupos de usuario</string>
+    <string name="title_activity_pedir_acceso_grupos">Solicitar Acceso</string>
     <string name="title_activity_registrar">Registro de Usuarios</string>
     <string name="option_today">Ver eventos de hoy</string>
     <string name="option_date">Ver evento de una fecha específica</string>
@@ -118,4 +117,14 @@
     <string name="email_evento">Email adicional</string>
     <string name="crear_evento">Crear evento</string>
     <string name="title_activity_compartir">MiTouch</string>
+    <string name="title_activity_compartir2">Compartir Archivo Multimedia</string>
+    <string name="title_activity_explorador">Explorador</string>
+
+
+    <string-array name="image_ids">
+        <item>@drawable/image_1</item>
+        <item>@drawable/image_2</item>
+        <item>@drawable/folder</item>
+    </string-array>
+    <string name="title_activity_details">Galeria</string>
 </resources>

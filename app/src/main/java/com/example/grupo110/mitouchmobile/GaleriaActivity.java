@@ -1,82 +1,98 @@
 package com.example.grupo110.mitouchmobile;
 
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 
-public class GaleriaActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
 
+public class GaleriaActivity extends AppCompatActivity {
+    private GridView gridView;
+    private GridViewAdapter gridAdapter;
+    public int id_usuario;
+    List<String> listDataHeader;
+    List<String> listIdHeader;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_galeria);
+        setContentView(R.layout.activity_galeria);
+        id_usuario = getIntent().getExtras().getInt("id");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            }
+        });
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        gridView = (GridView) findViewById(R.id.gridView);
+        CrearCarpetas();
+        gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
+        gridView.setAdapter(gridAdapter);
+
+        gridView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                ImageItem item = (ImageItem) parent.getItemAtPosition(position);
+                System.out.println("que aprete?? " + listDataHeader.get(position));
+                //Create intent
+                Intent siguiente = new Intent(GaleriaActivity.this, DetailsActivity.class);
+                siguiente.putExtra("carpeta",listIdHeader.get(position));
+                siguiente.putExtra("id",id_usuario);
+                //Start details activity
+                startActivity(siguiente);
+            }
+        });
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+    private void CrearCarpetas() {
+        listIdHeader = new ArrayList<>();
+        listDataHeader = new ArrayList<>();
+        listDataHeader.add("Carpeta Personal");
+        listIdHeader.add("Carpeta Personal");
+        String comando;
+        int auxiliar;
+        comando = String.format("SELECT gru_id,gru_nombre " +
+                "FROM \"MiTouch\".t_usuarios_grupo INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
+                "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
+                "WHERE  usu_id =" + id_usuario +";");
+
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try {
+            while (resultSet.next()) {
+                listDataHeader.add(resultSet.getString("gru_nombre"));
+                listIdHeader.add("" +resultSet.getInt("gru_id"));
+            }
+        } catch (Exception e) {System.out.println("ERror Crear Carpetas: " + e);
         }
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    /**
+     * Prepare some dummy data for gridview
+     */
+    private ArrayList<ImageItem> getData() {
+        final ArrayList<ImageItem> imageItems = new ArrayList<>();
+        for (int i = 0; i < listDataHeader.size(); i++) {
+            System.out.println("carpetas:" +listDataHeader.get(i).toString());
+            Bitmap item = BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                    R.drawable.folder);
+            imageItems.add(new ImageItem(item, listDataHeader.get(i).toString() ));
         }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return imageItems;
     }
 }

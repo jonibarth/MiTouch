@@ -1,5 +1,6 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,7 +17,6 @@ import java.sql.ResultSet;
 
 public class CambiarPasswordActivity extends AppCompatActivity {
 
-    private Button volverAMenuSinCambios;
     private Button volveraMenuCambiosOk;
     private EditText passwordVieja;
     private EditText passwordNueva;
@@ -24,27 +24,6 @@ public class CambiarPasswordActivity extends AppCompatActivity {
     private int id_usuario;
     private String password;
     private final static int  LARGO_CONTRASEÑA = 10;
-    /*
-    *
-    * Toolbar con el boton para volver al menu anterior
-    *
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_back:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +31,27 @@ public class CambiarPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cambiar_password);
         id_usuario = getIntent().getExtras().getInt("id");
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
+            }
+        });
 
         passwordVieja =(EditText)findViewById(R.id.editTextPasswordVieja);
         passwordNueva =(EditText)findViewById(R.id.editTextPasswordNueva);
         passwordNuevaRepite =(EditText)findViewById(R.id.editTextPasswordNuevaRepite);
-        volverAMenuSinCambios = (Button) findViewById(R.id.buttonCancelar);
         volveraMenuCambiosOk = (Button) findViewById(R.id.buttonAceptar);
 
         volveraMenuCambiosOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GrabarCambios();
-            }
-        });
-        volverAMenuSinCambios.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
     }

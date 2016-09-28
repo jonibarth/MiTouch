@@ -34,22 +34,6 @@ public class PedirAccesoGruposActivity extends AppCompatActivity {
     Button aceptarGrupodeUsuario;
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_back:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +41,14 @@ public class PedirAccesoGruposActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pedir_acceso_grupos);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
+            }
+        });
         id_usuario = getIntent().getExtras().getInt("id");
         aceptarGrupodeUsuario = (Button) findViewById(R.id.buttonregistrarUsuarioNuevoGrupo);
 
