@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -34,7 +38,7 @@
             android:label="@string/title_activity_forgot_password"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        º
+
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
@@ -94,17 +98,26 @@
             android:name=".ActionGoogleDriveActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CompartirActivity"
-            android:label="@string/title_activity_compartir"
+            android:name=".Compartir2"
+            android:label="@string/title_activity_compartir2"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
-
         </activity>
+        <activity
+            android:name=".CompartirActivity2"
+            android:label="@string/title_activity_compartir2"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".DetailsActivity"
+            android:label="@string/title_activity_details"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
