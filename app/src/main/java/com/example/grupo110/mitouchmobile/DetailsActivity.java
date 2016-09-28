@@ -1,5 +1,7 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -86,7 +89,26 @@ public class DetailsActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);
-                System.out.println("Archivo que deseo abrir: " + listArchivos.get(position));
+                System.out.println("Archivo que deseo abrir: " + listArchivosCompletos.get(position));
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(DetailsActivity.this, R.style.AlertDialogCustom));
+                builder.setTitle("Acción a realizar")
+                        .setItems(new String [] {"Abrir","Compartir","Eliminar"}, new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int opt){
+                                System.out.println("Opción elegida: "+ opt);
+                                switch (opt){
+                                    case 0:  System.out.println("Archivo que deseo abrir: " );
+                                        break;
+                                    case 1:  System.out.println("Archivo que deseo compartir: " );
+                                        break;
+                                    case 2:  System.out.println("Archivo que deseo eliminar: " );
+                                        break;
+                                }
+                            }
+                        });
+
+                builder.show();
             }
         });
     }
@@ -204,5 +226,10 @@ public class DetailsActivity extends AppCompatActivity {
             return true;
         return false;
     }
+
+
+
+
+
 
 }

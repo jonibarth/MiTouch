@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -14,7 +15,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,9 +29,12 @@ public class CompartirActivity2 extends AppCompatActivity {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
+    List<String> listIDHeader;
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
     String grupoUsuario=null;
+    final String PATH_BASE_DE_DATOS = "C:\\Program Files\\MiTouch";
+    final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
 
 
     @Override
@@ -102,8 +109,31 @@ public class CompartirActivity2 extends AppCompatActivity {
         System.out.println("directorio original: " + directorio);
         System.out.println("Image name: " + archivoOriginal);
         System.out.println("path destino: ");
-        copyFileOrDirectory(path,"/storage/sdcard0/MiTouchMultimedia");
+        copyFileOrDirectory(path,PATH_MOBILE);
+        ActualizarBaseDeDatos();
 
+    }
+
+    private void ActualizarBaseDeDatos() {
+
+        // Crear Registro en la tabla de archivos
+        String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\";
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        String fecha = df.format(c.getTime());
+
+        String comando;
+        comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+");";
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        baseDeDatos.execute(comando);
+        System.out.println("Archivo Creado");
+
+        // Asociar Carpeta con el archivo
+        //comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ('"+path+"','"+path+"','"+fecha+"',"+null+");";
+        //baseDeDatos.execute(comando);
+        //System.out.println("archivo asociado a carpeta");
     }
 
     private String obtenerArchivo() {
@@ -123,6 +153,7 @@ public class CompartirActivity2 extends AppCompatActivity {
 
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
+        listIDHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         grupodeUsuario = new ArrayList<>();
         BuscarGruposdeUsuario(grupodeUsuario);
@@ -165,6 +196,8 @@ public class CompartirActivity2 extends AppCompatActivity {
                     {//Lo hago solo para el primer registro!!
                         grupo=resultSet.getString(2);
                         listDataHeader.add(grupo);
+                        listIDHeader.add(grupo);
+                        listIDHeader.add(resultSet.getString(4));
                         grupodeUsuario.add(grupo);
                         grupodeUsuario.add(resultSet.getString(4));
                         aux=resultSet.getInt(1);
@@ -179,12 +212,15 @@ public class CompartirActivity2 extends AppCompatActivity {
                         grupodeUsuario.add(grupo);
                         grupodeUsuario.add(resultSet.getString(4));
                         aux=resultSet.getInt(1);
+                        listIDHeader.add(grupo);
+                        listIDHeader.add(resultSet.getString(4));
                     }
                 }
                 else
                 {
                     //System.out.println("Agregar usuario a la lista");
                     grupodeUsuario.add(resultSet.getString(4));
+                    listIDHeader.add(resultSet.getString(4));
                 }
             }
 
@@ -194,22 +230,7 @@ public class CompartirActivity2 extends AppCompatActivity {
             System.err.println("Error crear explist: " + e );
         }
     }
-/*
-    private boolean existe(String[] archivos, String archbusca) {
-        for (int f = 0; f < archivos.length; f++)
-            if (archbusca.equals(archivos[f]))
-                return true;
-        return false;
-    }
-*/
-/*
-    public void IniciarPantalla() {
-        Intent siguiente = new Intent(CompartirActivity2.this, MainMenuActivity.class);
-        siguiente.putExtra("id",id_usuario);
-        startActivity(siguiente);
-        finish();
-    }
-*/
+
     private Boolean buscarUsuario() {
         String comando = "";
         System.out.println("el usuario es" + id_usuario);
@@ -224,22 +245,7 @@ public class CompartirActivity2 extends AppCompatActivity {
         }catch(Exception e){System.out.println("Error busqueda");}
         return false;
     }
-/*
-    public static void dumpIntent(Intent i){
 
-        Bundle bundle = i.getExtras();
-        if (bundle != null) {
-            Set<String> keys = bundle.keySet();
-            Iterator<String> it = keys.iterator();
-            System.out.println("Dumping Intent start");
-            while (it.hasNext()) {
-                String key = it.next();
-                System.out.println("[" + key + "=" + bundle.get(key)+"]");
-            }
-            System.out.println("Dumping Intent end");
-        }
-    }
-*/
     public void CrearDirectorio(){
         try
         {

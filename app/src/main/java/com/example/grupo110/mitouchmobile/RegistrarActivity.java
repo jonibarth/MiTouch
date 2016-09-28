@@ -260,6 +260,7 @@ public class RegistrarActivity extends AppCompatActivity {
         }
 
         comando2 = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES ("+id_usuadioGenerado+",'"+BuscarGruposdeUsuarioenArray()+"','"+ diahora +"',null,null);";
+        baseDeDatos = new PostgrestBD();
         baseDeDatos.execute(comando2);
     }
 
