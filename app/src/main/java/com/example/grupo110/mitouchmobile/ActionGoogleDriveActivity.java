@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.ImageFormat;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -28,8 +29,8 @@ public class ActionGoogleDriveActivity extends Activity {
 
            id = getIntent().getExtras().getString("id");
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(ActionGoogleDriveActivity.this);
-
+            //AlertDialog.Builder builder = new AlertDialog.Builder(ActionGoogleDriveActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(ActionGoogleDriveActivity.this, R.style.AlertDialogCustom));
             builder.setTitle("Acción a realizar")
                     .setItems(new String [] {"Abrir","Compartir","Eliminar"}, new DialogInterface.OnClickListener(){
 

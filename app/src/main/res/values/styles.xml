@@ -18,8 +18,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
-        <item name="android:textColor">#00FF00</item>
+    <style name="AlertDialogCustom" parent="android:Theme.Holo">
+        <item name="android:textColor">@color/colorVerde</item>
+        <item name="android:background">@color/colorGrisOscuro</item>
         <item name="android:typeface">monospace</item>
         <item name="android:textSize">10sp</item>
     </style>
