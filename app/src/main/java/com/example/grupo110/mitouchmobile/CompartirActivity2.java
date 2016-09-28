@@ -33,6 +33,7 @@ public class CompartirActivity2 extends AppCompatActivity {
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
     String grupoUsuario=null;
+    String id_carpeta=null;
     final String PATH_BASE_DE_DATOS = "C:\\Program Files\\MiTouch";
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
 
@@ -89,6 +90,7 @@ public class CompartirActivity2 extends AppCompatActivity {
                         childPosition);
                 Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
                 toast.show();
+                id_carpeta=listIDHeader.get(childPosition);
                 CrearDirectorio();
                 CopiarAInternalStorage();
 
@@ -105,35 +107,40 @@ public class CompartirActivity2 extends AppCompatActivity {
         String archivoOriginal = obtenerArchivo();
         // obtengo el directorio del archivo que quiero copiar
         String directorio = obtenerDirectorio();
-        System.out.println("path original: " + path);
-        System.out.println("directorio original: " + directorio);
-        System.out.println("Image name: " + archivoOriginal);
-        System.out.println("path destino: ");
+       // System.out.println("path original: " + path);
+       // System.out.println("directorio original: " + directorio);
+       // System.out.println("Image name: " + archivoOriginal);
+       // System.out.println("path destino: ");
         copyFileOrDirectory(path,PATH_MOBILE);
         ActualizarBaseDeDatos();
 
     }
 
     private void ActualizarBaseDeDatos() {
-
         // Crear Registro en la tabla de archivos
+        String id_archivo=null;
         String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\";
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time => "+c.getTime());
+        //System.out.println("Current time => "+c.getTime());
 
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         String fecha = df.format(c.getTime());
 
         String comando;
-        comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+");";
+        comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+") RETURNING archg_id;";
         PostgrestBD baseDeDatos = new PostgrestBD();
-        baseDeDatos.execute(comando);
-        System.out.println("Archivo Creado");
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try {
+            while (resultSet.next()){
+                id_archivo=resultSet.getArray(1).toString();
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e);
+        }
 
-        // Asociar Carpeta con el archivo
-        //comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ('"+path+"','"+path+"','"+fecha+"',"+null+");";
-        //baseDeDatos.execute(comando);
-        //System.out.println("archivo asociado a carpeta");
+         //Asociar Carpeta con el archivo
+        comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ("+id_carpeta+","+id_archivo+");";
+        baseDeDatos.execute(comando);
     }
 
     private String obtenerArchivo() {
@@ -182,7 +189,7 @@ public class CompartirActivity2 extends AppCompatActivity {
             baseDeDatos.execute(comando);
         }catch (Exception e){System.out.println("Error creacion vista: "+ e );}
 
-        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario " +
+        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, gru_id_galeria, usu_id_galeria " +
                 "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
                 "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
@@ -196,8 +203,8 @@ public class CompartirActivity2 extends AppCompatActivity {
                     {//Lo hago solo para el primer registro!!
                         grupo=resultSet.getString(2);
                         listDataHeader.add(grupo);
-                        listIDHeader.add(grupo);
-                        listIDHeader.add(resultSet.getString(4));
+                        listIDHeader.add(resultSet.getString(5));
+                        listIDHeader.add(resultSet.getString(6));
                         grupodeUsuario.add(grupo);
                         grupodeUsuario.add(resultSet.getString(4));
                         aux=resultSet.getInt(1);
@@ -212,15 +219,15 @@ public class CompartirActivity2 extends AppCompatActivity {
                         grupodeUsuario.add(grupo);
                         grupodeUsuario.add(resultSet.getString(4));
                         aux=resultSet.getInt(1);
-                        listIDHeader.add(grupo);
-                        listIDHeader.add(resultSet.getString(4));
+                        listIDHeader.add(resultSet.getString(5));
+                        listIDHeader.add(resultSet.getString(6));
                     }
                 }
                 else
                 {
                     //System.out.println("Agregar usuario a la lista");
                     grupodeUsuario.add(resultSet.getString(4));
-                    listIDHeader.add(resultSet.getString(4));
+                    listIDHeader.add(resultSet.getString(6));
                 }
             }
 
@@ -233,7 +240,7 @@ public class CompartirActivity2 extends AppCompatActivity {
 
     private Boolean buscarUsuario() {
         String comando = "";
-        System.out.println("el usuario es" + id_usuario);
+        //System.out.println("el usuario es" + id_usuario);
         comando = "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
@@ -243,6 +250,7 @@ public class CompartirActivity2 extends AppCompatActivity {
                 return true;
             }
         }catch(Exception e){System.out.println("Error busqueda");}
+
         return false;
     }
 
