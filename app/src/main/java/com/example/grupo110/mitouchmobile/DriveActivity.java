@@ -17,54 +17,32 @@ package com.example.grupo110.mitouchmobile;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.IntentSender.SendIntentException;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
-
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
-/**
- * An activity to illustrate how to pick a file with the
- * opener intent.
- */
 public class DriveActivity extends BaseDriveActivity {
 
     private static final String TAG = "DriveActivity";
 
     private static final int REQUEST_CODE_OPENER = 1;
-    private final  String ext = "CAESHDBCNmRxRVljM1hTMXdUMmQ1WTFWMFQwUnhTRWsYlkYgmorkvM1VKAA=";
-    private DriveFile file;
 
     @Override
     public void onConnected(Bundle connectionHint) {
 
         super.onConnected(connectionHint);
-        System.out.println("mimetype: " + ext);
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext.toLowerCase());
 
         IntentSender intentSender = Drive.DriveApi
                 .newOpenFileActivityBuilder()
-                .setMimeType(new String[] {DriveFolder.MIME_TYPE, //mimeType
+                .setMimeType(new String[] {DriveFolder.MIME_TYPE,
                         "text/html",
                         "text/plain",
-                        "application/rtf",
-                        "application/vnd.oasis.opendocument.text",
-                        "application/pdf",
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "application/x-vnd.oasis.opendocument.spreadsheet",
-                        "text/csv",
-                        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                        "application/vnd.google-apps.document",
-                        "image/png",
-                        "image/jpeg",
-                        "image/jpg"
+                        "application/vnd.google-apps.spreadsheet",
+                        "application/vnd.google-apps.presentation",
+                        "application/vnd.google-apps.document"
                 })
                 .build(getGoogleApiClient());
         try {
@@ -83,6 +61,10 @@ public class DriveActivity extends BaseDriveActivity {
                 if (resultCode == RESULT_OK) {
                     DriveId driveId = (DriveId) data.getParcelableExtra(
                             OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+
+                    Intent intent = new Intent(DriveActivity.this, ActionGoogleDriveActivity.class);
+                    intent.putExtra("id",driveId.getResourceId());
+                    startActivity(intent);
                 }
                     finish();
                 break;
@@ -90,6 +72,5 @@ public class DriveActivity extends BaseDriveActivity {
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
 
 }

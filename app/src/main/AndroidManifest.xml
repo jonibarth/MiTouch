@@ -91,6 +91,9 @@
             android:label="Nuevo evento"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ActionGoogleDriveActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".CompartirActivity"
             android:label="@string/title_activity_compartir"
             android:theme="@style/AppTheme.NoActionBar">
