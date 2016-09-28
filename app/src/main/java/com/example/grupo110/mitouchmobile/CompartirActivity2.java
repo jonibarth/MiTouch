@@ -1,28 +1,22 @@
 package com.example.grupo110.mitouchmobile;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class CompartirActivity2 extends AppCompatActivity {
 
@@ -37,34 +31,23 @@ public class CompartirActivity2 extends AppCompatActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_back:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compartir3);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
+            }
+        });
         try{
             id_usuario = getIntent().getExtras().getInt("id");
-            System.out.println("holi1");
             path = getIntent().getExtras().getString("url");
-            System.out.println("holi2");}
+            }
         catch(Exception e){
             System.out.println("Error: "+e);
         }
@@ -99,50 +82,49 @@ public class CompartirActivity2 extends AppCompatActivity {
                         childPosition);
                 Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
                 toast.show();
+                CrearDirectorio();
+                CopiarAInternalStorage();
 
-                try
-                {
-                    System.out.println("Crear archivo");
-                    OutputStreamWriter fout=
-                            new OutputStreamWriter(
-                                    openFileOutput("prueba_int.txt", Context.MODE_PRIVATE));
-
-                    fout.write("Texto de prueba.");
-                    fout.close();
-                    System.out.println("archivo Creado");
-                }
-                catch (Exception ex)
-                {
-                    Log.e("Ficheros", "Error al escribir fichero a memoria interna");
-                }
-
-
-
-                try
-                {
-                    BufferedReader fin =
-                            new BufferedReader(
-                                    new InputStreamReader(
-                                            openFileInput("prueba_int.txt")));
-
-                    String texto = fin.readLine();
-                    System.out.println(texto);
-                    fin.close();
-                }
-                catch (Exception ex)
-                {
-                    Log.e("Ficheros", "Error al leer fichero desde memoria interna");
-                }
                 return false;
             }
         });
     }
 
+    // http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
+    // http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
+    private void CopiarAInternalStorage(){
+
+        // obtengo el nombre del archivo que queiro copiar
+        String archivoOriginal = obtenerArchivo();
+        // obtengo el directorio del archivo que quiero copiar
+        String directorio = obtenerDirectorio();
+        System.out.println("path original: " + path);
+        System.out.println("directorio original: " + directorio);
+        System.out.println("Image name: " + archivoOriginal);
+        System.out.println("path destino: ");
+        copyFileOrDirectory(path,"/storage/sdcard0/MiTouchMultimedia");
+
+    }
+
+    private String obtenerArchivo() {
+        return path.substring(path.lastIndexOf("/") + 1);
+    }
+    private String obtenerDirectorio(){
+        String directorio="";
+        String[] item =path.split("/");;
+
+        for(int i = 1 ; i <item.length-1;i++){
+            directorio=directorio+"/"+ item[i];
+        }
+        directorio=directorio+"/";
+        return directorio;
+
+    }
 
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
-        grupodeUsuario = new ArrayList<String>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
+        grupodeUsuario = new ArrayList<>();
         BuscarGruposdeUsuario(grupodeUsuario);
     }
 
@@ -153,7 +135,7 @@ public class CompartirActivity2 extends AppCompatActivity {
         ResultSet resultSet;
         int aux = -1;
 
-        comando = String.format( "DROP VIEW tablaVista ;");
+        comando ="DROP VIEW tablaVista ;";
         baseDeDatos = new PostgrestBD();
         try{
             baseDeDatos.execute(comando);
@@ -190,7 +172,7 @@ public class CompartirActivity2 extends AppCompatActivity {
                     else
                     {
                         listDataChild.put(grupo, grupodeUsuario);
-                        grupodeUsuario = new ArrayList<String>();
+                        grupodeUsuario = new ArrayList<>();
 
                         grupo=resultSet.getString(2);
                         listDataHeader.add(grupo);
@@ -212,25 +194,26 @@ public class CompartirActivity2 extends AppCompatActivity {
             System.err.println("Error crear explist: " + e );
         }
     }
-
+/*
     private boolean existe(String[] archivos, String archbusca) {
         for (int f = 0; f < archivos.length; f++)
             if (archbusca.equals(archivos[f]))
                 return true;
         return false;
     }
-
+*/
+/*
     public void IniciarPantalla() {
         Intent siguiente = new Intent(CompartirActivity2.this, MainMenuActivity.class);
         siguiente.putExtra("id",id_usuario);
         startActivity(siguiente);
         finish();
     }
-
+*/
     private Boolean buscarUsuario() {
         String comando = "";
         System.out.println("el usuario es" + id_usuario);
-        comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";");
+        comando = "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
@@ -241,7 +224,7 @@ public class CompartirActivity2 extends AppCompatActivity {
         }catch(Exception e){System.out.println("Error busqueda");}
         return false;
     }
-
+/*
     public static void dumpIntent(Intent i){
 
         Bundle bundle = i.getExtras();
@@ -256,4 +239,74 @@ public class CompartirActivity2 extends AppCompatActivity {
             System.out.println("Dumping Intent end");
         }
     }
+*/
+    public void CrearDirectorio(){
+        try
+        {
+
+            File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "MiTouchMultimedia");
+
+            if (!mediaStorageDir.exists()) {
+                if (!mediaStorageDir.mkdirs()) {
+                    Log.d("App", "failed to create directory");
+                }else{Log.d("App", "failed to create directory 2");}
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.e("Ficheros", "Error al escribir fichero a memoria interna");
+        }
+    }
+
+    public static void copyFileOrDirectory(String srcDir, String dstDir) {
+
+        try {
+            File src = new File(srcDir);
+            File dst = new File(dstDir, src.getName());
+
+            if (src.isDirectory()) {
+
+                String files[] = src.list();
+                int filesLength = files.length;
+                for (int i = 0; i < filesLength; i++) {
+                    String src1 = (new File(src, files[i]).getPath());
+                    String dst1 = dst.getPath();
+                    copyFileOrDirectory(src1, dst1);
+
+                }
+            } else {
+                copyFile(src, dst);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!destFile.getParentFile().exists())
+            destFile.getParentFile().mkdirs();
+
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+        }
+    }
+
+
 }

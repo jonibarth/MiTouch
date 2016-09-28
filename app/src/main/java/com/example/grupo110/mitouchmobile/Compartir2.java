@@ -1,8 +1,13 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +16,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
@@ -31,10 +40,7 @@ public class Compartir2 extends AppCompatActivity {
         //dumpIntent(getIntent());
 
         Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
-        url = uri.toString();
-        System.out.println("uri: "+uri);
-        System.out.println("texto: "+url);
-
+        url= getRealPathFromURI(getApplicationContext(),uri);
         String[] archivos = fileList();
         if (existe(archivos, "notas.txt"))
             try {
@@ -45,8 +51,6 @@ public class Compartir2 extends AppCompatActivity {
                 todo =linea;
                 br.close();
                 archivo.close();
-
-                System.out.println("usuario que encontre: " + todo);
                 abrirIntent();
             } catch (Exception e) {
                 System.out.println("error en el try que esta dentro del if");
@@ -100,13 +104,11 @@ public class Compartir2 extends AppCompatActivity {
 
     private Boolean buscarUsuario() {
         String comando = "";
-        System.out.println("el usuario es" + id_usuario);
         comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";");
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
-                System.out.println("usuario: " + resultSet.getInt("usu_id"));
                 return true;
             }
         }catch(Exception e){System.out.println("Error busqueda");}
@@ -141,4 +143,22 @@ public class Compartir2 extends AppCompatActivity {
                 Toast.LENGTH_SHORT);
         t.show();
     }
+// Metodo que transforma uri en path!!
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+
+
 }
