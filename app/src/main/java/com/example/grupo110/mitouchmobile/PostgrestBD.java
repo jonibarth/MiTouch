@@ -24,7 +24,7 @@ public class PostgrestBD  implements Runnable {
     private String user = "postgres";
     private String pass = "mitouch";*/
 
-    private String host = "192.168.1.37";
+    private String host = "192.168.1.34";
     private String db = "postgres";
     private int port = 5432;
     private String user = "postgres";

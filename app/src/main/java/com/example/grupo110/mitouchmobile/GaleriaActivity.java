@@ -48,7 +48,6 @@ public class GaleriaActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 ImageItem item = (ImageItem) parent.getItemAtPosition(position);
-                System.out.println("que aprete?? " + listDataHeader.get(position));
                 //Create intent
                 Intent siguiente = new Intent(GaleriaActivity.this, DetailsActivity.class);
                 siguiente.putExtra("carpeta",listIdHeader.get(position));

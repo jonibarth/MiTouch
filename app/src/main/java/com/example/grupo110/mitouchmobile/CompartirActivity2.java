@@ -2,6 +2,7 @@ package com.example.grupo110.mitouchmobile;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -26,6 +27,7 @@ public class CompartirActivity2 extends AppCompatActivity {
 
     int id_usuario=-1;
     String path=null;
+    String archivoOriginal=null;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
@@ -93,7 +95,7 @@ public class CompartirActivity2 extends AppCompatActivity {
                 id_carpeta=listIDHeader.get(childPosition);
                 CrearDirectorio();
                 CopiarAInternalStorage();
-
+                finish();
                 return false;
             }
         });
@@ -104,14 +106,18 @@ public class CompartirActivity2 extends AppCompatActivity {
     private void CopiarAInternalStorage(){
 
         // obtengo el nombre del archivo que queiro copiar
-        String archivoOriginal = obtenerArchivo();
-        // obtengo el directorio del archivo que quiero copiar
+        archivoOriginal = obtenerArchivo();
+        //obtengo el directorio del archivo que quiero copiar
         String directorio = obtenerDirectorio();
-       // System.out.println("path original: " + path);
-       // System.out.println("directorio original: " + directorio);
-       // System.out.println("Image name: " + archivoOriginal);
-       // System.out.println("path destino: ");
-        copyFileOrDirectory(path,PATH_MOBILE);
+        System.out.println("path original: " + path);
+        System.out.println("directorio original: " + directorio);
+        System.out.println("Image name: " + archivoOriginal);
+        System.out.println("path destino: " + PATH_MOBILE);
+        System.out.println("soy: "+id_usuario);
+        System.out.println("usuario: "+grupoUsuario);
+
+
+        copyFileOrDirectory(path,PATH_MOBILE+"/"+grupoUsuario);
         ActualizarBaseDeDatos();
 
     }
@@ -119,7 +125,7 @@ public class CompartirActivity2 extends AppCompatActivity {
     private void ActualizarBaseDeDatos() {
         // Crear Registro en la tabla de archivos
         String id_archivo=null;
-        String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\";
+        String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\" + archivoOriginal;
         Calendar c = Calendar.getInstance();
         //System.out.println("Current time => "+c.getTime());
 
@@ -143,6 +149,7 @@ public class CompartirActivity2 extends AppCompatActivity {
         baseDeDatos.execute(comando);
     }
 
+    @NonNull
     private String obtenerArchivo() {
         return path.substring(path.lastIndexOf("/") + 1);
     }
@@ -238,6 +245,7 @@ public class CompartirActivity2 extends AppCompatActivity {
         }
     }
 
+    @NonNull
     private Boolean buscarUsuario() {
         String comando = "";
         //System.out.println("el usuario es" + id_usuario);
