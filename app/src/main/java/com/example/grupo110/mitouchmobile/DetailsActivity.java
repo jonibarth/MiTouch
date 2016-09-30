@@ -27,6 +27,7 @@ public class DetailsActivity extends AppCompatActivity {
     public int id_carpeta=-1; // Guardo el id de la carpeta que voy a entrar o entre
     public String path="";
     public String carpeta; // Aca me viene el id de la carpeta que abri, cuando hago el intent
+    public String nombre_carpeta=null; // guardo el nombre de la carpeta
     List<String> listArchivosCompletos; // Guardo el path de los archivos que hay en esa carpeta
     List<String> listIDArchivosCompletos; // Guardo el id de los archivos que hay en esa carpeta
     List<String> listExtenciones; // Guardo la extencion de los archivos que hay en esa carpeta
@@ -54,6 +55,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         id_usuario = getIntent().getExtras().getInt("id");
         carpeta = getIntent().getExtras().getString("carpeta");
+
         System.out.println("usuario: " + id_usuario);
         System.out.println("Carpeta: " + carpeta);
 
@@ -98,6 +100,7 @@ public class DetailsActivity extends AppCompatActivity {
                                         abrirArchivo(listIDArchivosCompletos.get(posicionAprentada));
                                         break;
                                     case 1:  System.out.println("Archivo que deseo compartir: " +  listArchivosCompletos.get(posicionAprentada));
+                                        compartirArchivo(listIDArchivosCompletos.get(posicionAprentada));
                                         break;
                                     case 2:  System.out.println("Archivo que deseo eliminar: " +  listArchivosCompletos.get(posicionAprentada));
                                         borrarArchivo(listIDArchivosCompletos.get(posicionAprentada));
@@ -116,16 +119,42 @@ public class DetailsActivity extends AppCompatActivity {
 
     }
 
-    private void abrirArchivo(String idAbrir) {
-        String pathAbrir;
-        pathAbrir =PATH_MOBILE+"/"+listNombreArchivos.get(posicionAprentada);
-        System.out.println(pathAbrir);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(pathAbrir)), "image/*");
-        startActivity(intent);
+    private void compartirArchivo(String idCompartir) {
+        System.out.println("el archivo a compartir es: " + idCompartir);
     }
 
+    private void abrirArchivo(String idAbrir) {
+        String pathAbrir;
+        pathAbrir =PATH_MOBILE+"/"+nombre_carpeta+"/"+listNombreArchivos.get(posicionAprentada);
+        System.out.println(pathAbrir);
+        if(ArchivoExiste()){
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(new File(pathAbrir)), "image/*");
+            startActivity(intent);
+        }else
+        {
+            descargarArchivo();
+            //abrirArchivo("abrete!");
+        }
+    }
+
+    private boolean ArchivoExiste() {
+
+        String pathAbrir= PATH_MOBILE+"/"+nombre_carpeta+"/"+listNombreArchivos.get(posicionAprentada);
+        System.out.println("El path a abrir es: " + pathAbrir);
+        File file = new File(pathAbrir);
+        if(file.exists())
+            return true;
+        else
+            return false;
+// Do something else.
+    }
+
+    // Este metodo sirve para descargar el archivo que se encuentra en el servidor!!!
+    private void descargarArchivo() {
+        System.out.println("Descargando archivo...");
+    }
 
 
     private void borrarArchivo(String idEliminar) {
@@ -145,7 +174,7 @@ public class DetailsActivity extends AppCompatActivity {
         // busco nombre archivo, borrar esta en la carpeta MiTouchMultimedia, lo borro
 
         nombreArchivo=listNombreArchivos.get(posicionAprentada);
-        String pArchivo = PATH_MOBILE + "/" + nombreArchivo;
+        String pArchivo = PATH_MOBILE + "/" +nombre_carpeta+ "/" + nombreArchivo;
         try {
             File fichero = new File(pArchivo);
             if (!fichero.delete())
@@ -178,7 +207,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void  buscarPathCarpetaPersonal() {
         String comando;
-        comando = String.format("SELECT cg_id,cg_path " +
+        comando = String.format("SELECT cg_id,cg_path,usu_nombre_usuario " +
                 "FROM \"MiTouch\".t_carpetas_galeria INNER JOIN \"MiTouch\".t_usuarios ON cg_id = usu_id_galeria " +
                 "WHERE  usu_id =" + id_usuario +";");
 
@@ -190,6 +219,7 @@ public class DetailsActivity extends AppCompatActivity {
                 System.out.println("id Carpeta: "+id_carpeta);
                 path =resultSet.getString("cg_path");
                 System.out.println("path carpeta: " + path);
+                nombre_carpeta=resultSet.getString("usu_nombre_usuario");
             }
         }catch (Exception e) {System.out.println("Error Crear Carpetas: " + e);
         }
@@ -215,7 +245,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void buscarpathCarpetaGrupoUsuario() {
         String comando;
-        comando = String.format("SELECT cg_id,cg_path " +
+        comando = String.format("SELECT cg_id,cg_path,gru_nombre " +
                 "FROM \"MiTouch\".t_carpetas_galeria INNER JOIN \"MiTouch\".t_grupos ON cg_id = gru_id_galeria " +
                 "WHERE  gru_id =" + id_grupo +";");
 
@@ -223,6 +253,7 @@ public class DetailsActivity extends AppCompatActivity {
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
             while (resultSet.next()) {
+                nombre_carpeta=resultSet.getString("gru_nombre");
                 id_carpeta=resultSet.getInt("cg_id");
                 System.out.println("id Carpeta: "+id_carpeta);
                 path =resultSet.getString("cg_path");
@@ -246,7 +277,7 @@ public class DetailsActivity extends AppCompatActivity {
         {
             Bitmap item = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                     R.drawable.image_1);
-            imageItems.add(new ImageItem(item, listArchivosCompletos.get(i) ));
+            imageItems.add(new ImageItem(item, listNombreArchivos.get(i) ));
         }
             else
         if(esunVideo(listExtenciones.get(i)))

@@ -1,5 +1,6 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -23,7 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class CompartirActivity2 extends AppCompatActivity {
+public class CompartirActivity extends AppCompatActivity {
 
     int id_usuario=-1;
     String path=null;
@@ -38,12 +39,14 @@ public class CompartirActivity2 extends AppCompatActivity {
     String id_carpeta=null;
     final String PATH_BASE_DE_DATOS = "C:\\Program Files\\MiTouch";
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
+    static Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compartir3);
+        Toast toast;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
@@ -61,7 +64,6 @@ public class CompartirActivity2 extends AppCompatActivity {
         catch(Exception e){
             System.out.println("Error: "+e);
         }
-
 
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExpCompartir);
@@ -90,38 +92,68 @@ public class CompartirActivity2 extends AppCompatActivity {
                 grupoUsuario = listDataChild.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
-                Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
-                toast.show();
+                context = getApplicationContext();
+                //Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
+                //toast.show();
                 id_carpeta=listIDHeader.get(childPosition);
-                CrearDirectorio();
-                CopiarAInternalStorage();
-                finish();
+
+                archivoOriginal = obtenerArchivo();
+                String directorio = obtenerDirectorio();
+
+                //System.out.println("path original: " + path);
+                //System.out.println("directorio original: " + directorio);
+                //System.out.println("Image name: " + archivoOriginal);
+                //System.out.println("path destino: " + PATH_MOBILE);
+                //System.out.println("soy: "+id_usuario);
+                //System.out.println("usuario: "+grupoUsuario);
+                Toast toast;
+
+                if(!ArchivoExiteEnBD()){
+                    //System.out.println("copiando archivo en la base de datos...");
+                    CrearDirectorio();
+                    copyFileOrDirectory(path,PATH_MOBILE+"/"+grupoUsuario);
+                    ActualizarBaseDeDatos();
+                    toast= Toast.makeText(getApplicationContext(),"El archivo fue copiado con exito", Toast.LENGTH_LONG);
+                    toast.show();
+                    finish();
+                }
+                else
+                {
+                    //System.out.println("el archivo existe en la base de datos");
+                    toast= Toast.makeText(getApplicationContext(),"El archivo ya existe", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+
                 return false;
             }
         });
     }
+    private boolean ArchivoExiteEnBD() {
+        String pathAVerificar =PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\"+archivoOriginal;
+        String comando = "";
 
+        //System.out.println("El path es: "+ pathAVerificar);
+        comando = "SELECT archg_path FROM \"MiTouch\".t_archivo_galeria WHERE archg_path ='"+pathAVerificar+"';";
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try{
+            while (resultSet.next()) {
+                //System.out.println("eee: " + resultSet.getString(1));
+                return true;
+            }
+        }catch(Exception e){System.out.println("Error busqueda:" + e);}
+
+        return false;
+    }
     // http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
     // http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
     private void CopiarAInternalStorage(){
 
         // obtengo el nombre del archivo que queiro copiar
-        archivoOriginal = obtenerArchivo();
+
         //obtengo el directorio del archivo que quiero copiar
-        String directorio = obtenerDirectorio();
-        System.out.println("path original: " + path);
-        System.out.println("directorio original: " + directorio);
-        System.out.println("Image name: " + archivoOriginal);
-        System.out.println("path destino: " + PATH_MOBILE);
-        System.out.println("soy: "+id_usuario);
-        System.out.println("usuario: "+grupoUsuario);
-
-
-        copyFileOrDirectory(path,PATH_MOBILE+"/"+grupoUsuario);
-        ActualizarBaseDeDatos();
 
     }
-
     private void ActualizarBaseDeDatos() {
         // Crear Registro en la tabla de archivos
         String id_archivo=null;
@@ -148,7 +180,6 @@ public class CompartirActivity2 extends AppCompatActivity {
         comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ("+id_carpeta+","+id_archivo+");";
         baseDeDatos.execute(comando);
     }
-
     @NonNull
     private String obtenerArchivo() {
         return path.substring(path.lastIndexOf("/") + 1);
@@ -164,7 +195,6 @@ public class CompartirActivity2 extends AppCompatActivity {
         return directorio;
 
     }
-
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
         listIDHeader = new ArrayList<>();
@@ -172,8 +202,6 @@ public class CompartirActivity2 extends AppCompatActivity {
         grupodeUsuario = new ArrayList<>();
         BuscarGruposdeUsuario(grupodeUsuario);
     }
-
-
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario) {
         String comando,grupo=null;
         PostgrestBD baseDeDatos;
@@ -244,7 +272,6 @@ public class CompartirActivity2 extends AppCompatActivity {
             System.err.println("Error crear explist: " + e );
         }
     }
-
     @NonNull
     private Boolean buscarUsuario() {
         String comando = "";
@@ -254,14 +281,12 @@ public class CompartirActivity2 extends AppCompatActivity {
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
-                System.out.println("usuario: " + resultSet.getInt("usu_id"));
+                //System.out.println("usuario: " + resultSet.getInt("usu_id"));
                 return true;
             }
         }catch(Exception e){System.out.println("Error busqueda");}
-
         return false;
     }
-
     public void CrearDirectorio(){
         try
         {
@@ -280,12 +305,14 @@ public class CompartirActivity2 extends AppCompatActivity {
             Log.e("Ficheros", "Error al escribir fichero a memoria interna");
         }
     }
-
     public static void copyFileOrDirectory(String srcDir, String dstDir) {
-
         try {
             File src = new File(srcDir);
             File dst = new File(dstDir, src.getName());
+
+            //System.out.println(src.toString());
+            //System.out.println(dstDir.toString());
+            //System.out.println("so vo imagen ?" +src.getName());
 
             if (src.isDirectory()) {
 
@@ -298,13 +325,12 @@ public class CompartirActivity2 extends AppCompatActivity {
 
                 }
             } else {
-                copyFile(src, dst);
+                    copyFile(src, dst);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();

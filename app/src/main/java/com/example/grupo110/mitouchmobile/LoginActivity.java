@@ -14,12 +14,10 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -58,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                         IniciarPantalla();
                     else
                     {
-                        Intent siguiente = new Intent(LoginActivity.this, CompartirActivity2.class);
+                        Intent siguiente = new Intent(LoginActivity.this, CompartirActivity.class);
                         System.out.println(" id "+id_usuario);
                         System.out.println(" url "+url);
 

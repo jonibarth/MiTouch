@@ -98,7 +98,7 @@
             android:name=".ActionGoogleDriveActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Compartir2"
+            android:name=".Compartir"
             android:label="@string/title_activity_compartir2"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -110,7 +110,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CompartirActivity2"
+            android:name=".CompartirActivity"
             android:label="@string/title_activity_compartir2"
             android:theme="@style/AppTheme.NoActionBar" />
 

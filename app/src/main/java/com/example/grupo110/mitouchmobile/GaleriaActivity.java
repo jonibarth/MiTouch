@@ -20,6 +20,7 @@ import android.widget.GridView;
 public class GaleriaActivity extends AppCompatActivity {
     private GridView gridView;
     private GridViewAdapter gridAdapter;
+    private String nombre_usuario=null;
     public int id_usuario;
     List<String> listDataHeader;
     List<String> listIdHeader;
@@ -51,6 +52,7 @@ public class GaleriaActivity extends AppCompatActivity {
                 //Create intent
                 Intent siguiente = new Intent(GaleriaActivity.this, DetailsActivity.class);
                 siguiente.putExtra("carpeta",listIdHeader.get(position));
+                siguiente.putExtra("nombre_usuario",nombre_usuario);
                 siguiente.putExtra("id",id_usuario);
                 //Start details activity
                 startActivity(siguiente);
