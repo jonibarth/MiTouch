@@ -120,7 +120,19 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void compartirArchivo(String idCompartir) {
-        System.out.println("el archivo a compartir es: " + idCompartir);
+        String pathAbrir;
+        pathAbrir =PATH_MOBILE+"/"+nombre_carpeta+"/"+listNombreArchivos.get(posicionAprentada);
+        System.out.println("El archivo que quiero compartir es: " + PATH_MOBILE);
+        System.out.println("El archivo que quiero compartir es: " + nombre_carpeta);
+        System.out.println("El archivo que quiero compartir es: " + listNombreArchivos.get(posicionAprentada));
+        System.out.println("El archivo que quiero compartir es: " + pathAbrir);
+
+        Intent intent = new Intent(DetailsActivity.this,CompartirActivity.class);
+        intent.putExtra("id",id_usuario);
+        intent.putExtra("url",pathAbrir);
+        startActivity(intent);
+
+
     }
 
     private void abrirArchivo(String idAbrir) {

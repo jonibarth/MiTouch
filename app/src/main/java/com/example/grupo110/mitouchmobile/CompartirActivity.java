@@ -1,6 +1,7 @@
 package com.example.grupo110.mitouchmobile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -22,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class CompartirActivity extends AppCompatActivity {
 
@@ -57,6 +60,7 @@ public class CompartirActivity extends AppCompatActivity {
 
             }
         });
+        dumpIntent(getIntent());
         try{
             id_usuario = getIntent().getExtras().getInt("id");
             path = getIntent().getExtras().getString("url");
@@ -99,17 +103,10 @@ public class CompartirActivity extends AppCompatActivity {
 
                 archivoOriginal = obtenerArchivo();
                 String directorio = obtenerDirectorio();
-
-                //System.out.println("path original: " + path);
-                //System.out.println("directorio original: " + directorio);
-                //System.out.println("Image name: " + archivoOriginal);
-                //System.out.println("path destino: " + PATH_MOBILE);
-                //System.out.println("soy: "+id_usuario);
-                //System.out.println("usuario: "+grupoUsuario);
                 Toast toast;
 
                 if(!ArchivoExiteEnBD()){
-                    //System.out.println("copiando archivo en la base de datos...");
+
                     CrearDirectorio();
                     copyFileOrDirectory(path,PATH_MOBILE+"/"+grupoUsuario);
                     ActualizarBaseDeDatos();
@@ -119,7 +116,6 @@ public class CompartirActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    //System.out.println("el archivo existe en la base de datos");
                     toast= Toast.makeText(getApplicationContext(),"El archivo ya existe", Toast.LENGTH_LONG);
                     toast.show();
                 }
@@ -356,5 +352,19 @@ public class CompartirActivity extends AppCompatActivity {
         }
     }
 
+    public static void dumpIntent(Intent i){
+
+        Bundle bundle = i.getExtras();
+        if (bundle != null) {
+            Set<String> keys = bundle.keySet();
+            Iterator<String> it = keys.iterator();
+            System.out.println("Dumping Intent start");
+            while (it.hasNext()) {
+                String key = it.next();
+                System.out.println("[" + key + "=" + bundle.get(key)+"]");
+            }
+            System.out.println("Dumping Intent end");
+        }
+    }
 
 }
