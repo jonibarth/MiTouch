@@ -1,7 +1,10 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -20,12 +23,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-public class CompartirActivity2 extends AppCompatActivity {
+public class CompartirActivity extends AppCompatActivity {
 
     int id_usuario=-1;
     String path=null;
+    String archivoOriginal=null;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
@@ -33,14 +39,17 @@ public class CompartirActivity2 extends AppCompatActivity {
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
     String grupoUsuario=null;
+    String id_carpeta=null;
     final String PATH_BASE_DE_DATOS = "C:\\Program Files\\MiTouch";
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
+    static Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compartir3);
+        Toast toast;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
@@ -51,6 +60,7 @@ public class CompartirActivity2 extends AppCompatActivity {
 
             }
         });
+        dumpIntent(getIntent());
         try{
             id_usuario = getIntent().getExtras().getInt("id");
             path = getIntent().getExtras().getString("url");
@@ -58,7 +68,6 @@ public class CompartirActivity2 extends AppCompatActivity {
         catch(Exception e){
             System.out.println("Error: "+e);
         }
-
 
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExpCompartir);
@@ -87,55 +96,87 @@ public class CompartirActivity2 extends AppCompatActivity {
                 grupoUsuario = listDataChild.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
-                Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
-                toast.show();
-                CrearDirectorio();
-                CopiarAInternalStorage();
+                context = getApplicationContext();
+                //Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
+                //toast.show();
+                id_carpeta=listIDHeader.get(childPosition);
+
+                archivoOriginal = obtenerArchivo();
+                String directorio = obtenerDirectorio();
+                Toast toast;
+
+                if(!ArchivoExiteEnBD()){
+
+                    CrearDirectorio();
+                    copyFileOrDirectory(path,PATH_MOBILE+"/"+grupoUsuario);
+                    ActualizarBaseDeDatos();
+                    toast= Toast.makeText(getApplicationContext(),"El archivo fue copiado con exito", Toast.LENGTH_LONG);
+                    toast.show();
+                    finish();
+                }
+                else
+                {
+                    toast= Toast.makeText(getApplicationContext(),"El archivo ya existe", Toast.LENGTH_LONG);
+                    toast.show();
+                }
 
                 return false;
             }
         });
     }
+    private boolean ArchivoExiteEnBD() {
+        String pathAVerificar =PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\"+archivoOriginal;
+        String comando = "";
 
+        //System.out.println("El path es: "+ pathAVerificar);
+        comando = "SELECT archg_path FROM \"MiTouch\".t_archivo_galeria WHERE archg_path ='"+pathAVerificar+"';";
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try{
+            while (resultSet.next()) {
+                //System.out.println("eee: " + resultSet.getString(1));
+                return true;
+            }
+        }catch(Exception e){System.out.println("Error busqueda:" + e);}
+
+        return false;
+    }
     // http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
     // http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
     private void CopiarAInternalStorage(){
 
         // obtengo el nombre del archivo que queiro copiar
-        String archivoOriginal = obtenerArchivo();
-        // obtengo el directorio del archivo que quiero copiar
-        String directorio = obtenerDirectorio();
-        System.out.println("path original: " + path);
-        System.out.println("directorio original: " + directorio);
-        System.out.println("Image name: " + archivoOriginal);
-        System.out.println("path destino: ");
-        copyFileOrDirectory(path,PATH_MOBILE);
-        ActualizarBaseDeDatos();
+
+        //obtengo el directorio del archivo que quiero copiar
 
     }
-
     private void ActualizarBaseDeDatos() {
-
         // Crear Registro en la tabla de archivos
-        String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\";
+        String id_archivo=null;
+        String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\" + archivoOriginal;
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time => "+c.getTime());
+        //System.out.println("Current time => "+c.getTime());
 
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         String fecha = df.format(c.getTime());
 
         String comando;
-        comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+");";
+        comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+") RETURNING archg_id;";
         PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try {
+            while (resultSet.next()){
+                id_archivo=resultSet.getArray(1).toString();
+            }
+        } catch (Exception e) {
+            System.err.println("Error: " + e);
+        }
+
+         //Asociar Carpeta con el archivo
+        comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ("+id_carpeta+","+id_archivo+");";
         baseDeDatos.execute(comando);
-        System.out.println("Archivo Creado");
-
-        // Asociar Carpeta con el archivo
-        //comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ('"+path+"','"+path+"','"+fecha+"',"+null+");";
-        //baseDeDatos.execute(comando);
-        //System.out.println("archivo asociado a carpeta");
     }
-
+    @NonNull
     private String obtenerArchivo() {
         return path.substring(path.lastIndexOf("/") + 1);
     }
@@ -150,7 +191,6 @@ public class CompartirActivity2 extends AppCompatActivity {
         return directorio;
 
     }
-
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
         listIDHeader = new ArrayList<>();
@@ -158,8 +198,6 @@ public class CompartirActivity2 extends AppCompatActivity {
         grupodeUsuario = new ArrayList<>();
         BuscarGruposdeUsuario(grupodeUsuario);
     }
-
-
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario) {
         String comando,grupo=null;
         PostgrestBD baseDeDatos;
@@ -182,7 +220,7 @@ public class CompartirActivity2 extends AppCompatActivity {
             baseDeDatos.execute(comando);
         }catch (Exception e){System.out.println("Error creacion vista: "+ e );}
 
-        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario " +
+        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, gru_id_galeria, usu_id_galeria " +
                 "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
                 "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
@@ -196,8 +234,8 @@ public class CompartirActivity2 extends AppCompatActivity {
                     {//Lo hago solo para el primer registro!!
                         grupo=resultSet.getString(2);
                         listDataHeader.add(grupo);
-                        listIDHeader.add(grupo);
-                        listIDHeader.add(resultSet.getString(4));
+                        listIDHeader.add(resultSet.getString(5));
+                        listIDHeader.add(resultSet.getString(6));
                         grupodeUsuario.add(grupo);
                         grupodeUsuario.add(resultSet.getString(4));
                         aux=resultSet.getInt(1);
@@ -212,15 +250,15 @@ public class CompartirActivity2 extends AppCompatActivity {
                         grupodeUsuario.add(grupo);
                         grupodeUsuario.add(resultSet.getString(4));
                         aux=resultSet.getInt(1);
-                        listIDHeader.add(grupo);
-                        listIDHeader.add(resultSet.getString(4));
+                        listIDHeader.add(resultSet.getString(5));
+                        listIDHeader.add(resultSet.getString(6));
                     }
                 }
                 else
                 {
                     //System.out.println("Agregar usuario a la lista");
                     grupodeUsuario.add(resultSet.getString(4));
-                    listIDHeader.add(resultSet.getString(4));
+                    listIDHeader.add(resultSet.getString(6));
                 }
             }
 
@@ -230,22 +268,21 @@ public class CompartirActivity2 extends AppCompatActivity {
             System.err.println("Error crear explist: " + e );
         }
     }
-
+    @NonNull
     private Boolean buscarUsuario() {
         String comando = "";
-        System.out.println("el usuario es" + id_usuario);
+        //System.out.println("el usuario es" + id_usuario);
         comando = "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
-                System.out.println("usuario: " + resultSet.getInt("usu_id"));
+                //System.out.println("usuario: " + resultSet.getInt("usu_id"));
                 return true;
             }
         }catch(Exception e){System.out.println("Error busqueda");}
         return false;
     }
-
     public void CrearDirectorio(){
         try
         {
@@ -264,12 +301,14 @@ public class CompartirActivity2 extends AppCompatActivity {
             Log.e("Ficheros", "Error al escribir fichero a memoria interna");
         }
     }
-
     public static void copyFileOrDirectory(String srcDir, String dstDir) {
-
         try {
             File src = new File(srcDir);
             File dst = new File(dstDir, src.getName());
+
+            //System.out.println(src.toString());
+            //System.out.println(dstDir.toString());
+            //System.out.println("so vo imagen ?" +src.getName());
 
             if (src.isDirectory()) {
 
@@ -282,13 +321,12 @@ public class CompartirActivity2 extends AppCompatActivity {
 
                 }
             } else {
-                copyFile(src, dst);
+                    copyFile(src, dst);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
@@ -314,5 +352,19 @@ public class CompartirActivity2 extends AppCompatActivity {
         }
     }
 
+    public static void dumpIntent(Intent i){
+
+        Bundle bundle = i.getExtras();
+        if (bundle != null) {
+            Set<String> keys = bundle.keySet();
+            Iterator<String> it = keys.iterator();
+            System.out.println("Dumping Intent start");
+            while (it.hasNext()) {
+                String key = it.next();
+                System.out.println("[" + key + "=" + bundle.get(key)+"]");
+            }
+            System.out.println("Dumping Intent end");
+        }
+    }
 
 }

@@ -20,6 +20,7 @@
 
     <style name="AlertDialogCustom" parent="android:Theme.Holo">
         <item name="android:textColor">@color/colorVerde</item>
+
         <item name="android:background">@color/colorGrisOscuro</item>
         <item name="android:typeface">monospace</item>
         <item name="android:textSize">10sp</item>

@@ -3,30 +3,20 @@ package com.example.grupo110.mitouchmobile;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class Compartir2 extends AppCompatActivity {
+public class Compartir extends AppCompatActivity {
 
     int id_usuario=-1;
     Uri uri;
@@ -35,12 +25,31 @@ public class Compartir2 extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("Estoy aca ?");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.humo);
-        //dumpIntent(getIntent());
+        dumpIntent(getIntent());
 
-        Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
-        url= getRealPathFromURI(getApplicationContext(),uri);
+        try {
+            // Si vengo de la galeria
+            Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
+            url = getRealPathFromURI(getApplicationContext(), uri);
+            System.out.println("la url es: " + url);
+        }catch (Exception e){
+            try{
+                // Si vengo del file manager
+                Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
+                url = uri.toString();
+                url = url.replaceAll("file://","");
+                System.out.println("la url es: " + url);
+            }catch(Exception ex)
+            {
+                try{
+                    System.out.print("sdfsdf");
+                }catch (Exception ee ){System.out.println("Error: " + ee);}
+                System.out.println("Error "+ ex);
+            }
+        }
         String[] archivos = fileList();
         if (existe(archivos, "notas.txt"))
             try {
@@ -58,7 +67,7 @@ public class Compartir2 extends AppCompatActivity {
         else{
             Toast toast=Toast.makeText(getApplicationContext(),"El usuario no esta logueado", Toast.LENGTH_LONG);
             toast.show();
-            Intent mainIntent = new Intent().setClass(Compartir2.this, LoginActivity.class);
+            Intent mainIntent = new Intent().setClass(Compartir.this, LoginActivity.class);
             mainIntent.putExtra("url",url);
             startActivity(mainIntent);
             finish();
@@ -71,7 +80,7 @@ public class Compartir2 extends AppCompatActivity {
             todo.trim();
             id_usuario = Integer.parseInt(todo);
             if (buscarUsuario()) {
-                Intent mainIntent = new Intent().setClass(Compartir2.this, CompartirActivity2.class);
+                Intent mainIntent = new Intent().setClass(Compartir.this, CompartirActivity.class);
                 mainIntent.putExtra("id",id_usuario);
                 mainIntent.putExtra("url",url);
                 startActivity(mainIntent);
@@ -88,7 +97,7 @@ public class Compartir2 extends AppCompatActivity {
         {
             Toast toast=Toast.makeText(getApplicationContext(),"El usuario no esta logueado", Toast.LENGTH_LONG);
             toast.show();
-            Intent mainIntent = new Intent().setClass(Compartir2.this, LoginActivity.class);
+            Intent mainIntent = new Intent().setClass(Compartir.this, LoginActivity.class);
             mainIntent.putExtra("url",url);
             startActivity(mainIntent);
             finish();
