@@ -19,17 +19,17 @@ import java.sql.ResultSet;
 
 public class ActionGoogleDriveActivity extends Activity {
 
-    private String id, url;
-
+    private String id, url, idDel;
+    private DeleteFileDrive del;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if(getIntent().getExtras() != null){
 
-           id = getIntent().getExtras().getString("id");
+            id = getIntent().getExtras().getString("id");
+            idDel = getIntent().getExtras().getString("idDel");
 
-            //AlertDialog.Builder builder = new AlertDialog.Builder(ActionGoogleDriveActivity.this);
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(ActionGoogleDriveActivity.this, R.style.AlertDialogCustom));
             builder.setTitle("Acción a realizar")
                     .setItems(new String [] {"Abrir","Compartir","Eliminar"}, new DialogInterface.OnClickListener(){
@@ -50,8 +50,15 @@ public class ActionGoogleDriveActivity extends Activity {
 
                                         break;
 
+                                case 1: break;
 
+                                case 2: if(idDel != null){
 
+                                    Intent deleteIntent = new Intent(ActionGoogleDriveActivity.this,DeleteFileDrive.class);
+                                    deleteIntent.putExtra("idDel",idDel);
+                                    startActivity(deleteIntent);
+
+                                }
                             }
                             finish();
                         }
