@@ -122,6 +122,12 @@
             android:label="@string/title_activity_details"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity android:name=".DeleteFileDrive"
+            ></activity>
+
+
+
     </application>
 
 </manifest>

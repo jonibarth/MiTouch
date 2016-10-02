@@ -64,6 +64,7 @@ public class DriveActivity extends BaseDriveActivity {
 
                     Intent intent = new Intent(DriveActivity.this, ActionGoogleDriveActivity.class);
                     intent.putExtra("id",driveId.getResourceId());
+                    intent.putExtra("idDel",driveId.toString());
                     startActivity(intent);
                 }
                     finish();
