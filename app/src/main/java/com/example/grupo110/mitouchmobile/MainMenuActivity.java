@@ -20,6 +20,7 @@ import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -144,12 +145,15 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void modificar_usu_ultimo_log_out(int id_usuario) {
-        //Date d = new Date();
-        //SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
-        //SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => "+c.getTime());
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+        String diahora = df.format(c.getTime());
+
         String comando = "";
 
-        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ="+null+" WHERE usu_id ='"+ id_usuario +"';");
+        comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_out ='"+diahora+"' WHERE usu_id ='"+ id_usuario +"';");
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         return;

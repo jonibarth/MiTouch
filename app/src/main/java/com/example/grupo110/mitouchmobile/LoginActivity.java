@@ -93,8 +93,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
                     //Lineas para ocultar el teclado virtual (Hide keyboard)
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
+                    //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
                 }
             }
         });
@@ -140,22 +140,25 @@ public class LoginActivity extends AppCompatActivity {
 
     // Si el usuario y pass son INvalidas!
     private void ErrorLogueo(String email, String password) {
-        Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario y contraseña invalidos... Ingrese nuevamente ", Toast.LENGTH_SHORT);
+        Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario y contraseña invalidos... o El usuario ya esta conectado ", Toast.LENGTH_SHORT);
         toast2.show();
     }
 
     public boolean login(String usuario, String password) {
         String comando = "";
 
-        comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario ='"+ usuario +"' " +
-                "AND usu_password = '"+ password +"';");
+        comando = String.format("SELECT * " +
+                "FROM  \"MiTouch\".t_usuarios " +
+                "WHERE usu_nombre_usuario ='"+ usuario +"' " +
+                "AND usu_password = '"+ password +"' " +
+                "AND ( usu_ultimo_log_out IS NOT NULL OR  usu_ultimo_log_in IS NULL);");
+        System.out.println("la consulta es: " + comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
-                id_usuario = resultSet.getInt("usu_id");
-                modificar_usu_ultimo_log_in(id_usuario);
-
+                    id_usuario = resultSet.getInt("usu_id");
+                    modificar_usu_ultimo_log_in(id_usuario);
                 return true;
             }
         }catch(Exception e){}
@@ -167,10 +170,8 @@ public class LoginActivity extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         System.out.println("Current time => "+c.getTime());
 
-        SimpleDateFormat diahora = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
-
-
-
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+        String diahora = df.format(c.getTime());
         String comando = "";
         comando = String.format("UPDATE \"MiTouch\".t_usuarios SET usu_ultimo_log_in ='"+diahora+"' WHERE usu_id ='"+ id_usuario +"';");
         PostgrestBD baseDeDatos = new PostgrestBD();

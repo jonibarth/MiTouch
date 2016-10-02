@@ -137,12 +137,17 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void abrirArchivo(String idAbrir) {
         String pathAbrir;
-        pathAbrir =PATH_MOBILE+"/"+nombre_carpeta+"/"+listNombreArchivos.get(posicionAprentada);
+        String auxiliar = listNombreArchivos.get(posicionAprentada);
+        pathAbrir =PATH_MOBILE+"/"+nombre_carpeta+"/"+auxiliar;
         System.out.println(pathAbrir);
         if(ArchivoExiste()){
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(new File(pathAbrir)), "image/*");
+
+            if(esunaImagen(auxiliar.substring(auxiliar.lastIndexOf(".") + 1)))
+                intent.setDataAndType(Uri.fromFile(new File(pathAbrir)), "image/*");
+            else
+                intent.setDataAndType(Uri.fromFile(new File(pathAbrir)), "video/*");
             startActivity(intent);
         }else
         {
@@ -204,9 +209,12 @@ public class DetailsActivity extends AppCompatActivity {
         String auxiliar="";
         for (int i=0; i <listArchivosCompletos.size();i++) {
             System.out.println("archivo: " + listArchivosCompletos.get(i));
+
             auxiliar=listArchivosCompletos.get(i);
+
             listExtenciones.add(auxiliar.substring(auxiliar.lastIndexOf(".") + 1));
             listNombreArchivos.add(auxiliar.substring(auxiliar.lastIndexOf("\\") + 1));
+
         }
 
         for (int i=0; i <listArchivosCompletos.size();i++) {
@@ -296,7 +304,7 @@ public class DetailsActivity extends AppCompatActivity {
         {
             Bitmap item = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                     R.drawable.image_2);
-            imageItems.add(new ImageItem(item, listArchivosCompletos.get(i) ));
+            imageItems.add(new ImageItem(item, listNombreArchivos.get(i) ));
         }
             else {System.out.println("error");}
 

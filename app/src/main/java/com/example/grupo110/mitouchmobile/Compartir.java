@@ -25,7 +25,6 @@ public class Compartir extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("Estoy aca ?");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.humo);
         dumpIntent(getIntent());
@@ -49,6 +48,8 @@ public class Compartir extends AppCompatActivity {
                 }catch (Exception ee ){System.out.println("Error: " + ee);}
                 System.out.println("Error "+ ex);
             }
+
+            System.out.print("salte el try!!! "+ url);
         }
         String[] archivos = fileList();
         if (existe(archivos, "notas.txt"))

@@ -26,10 +26,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
+/*
+    * // http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
+    * // http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
+ */
 public class CompartirActivity extends AppCompatActivity {
 
     int id_usuario=-1;
+    int id_carpetausuario;
+    String usuario;
     String path=null;
     String archivoOriginal=null;
     ExpandableListAdapter listAdapter;
@@ -49,7 +54,6 @@ public class CompartirActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compartir3);
-        Toast toast;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
@@ -68,6 +72,9 @@ public class CompartirActivity extends AppCompatActivity {
         catch(Exception e){
             System.out.println("Error: "+e);
         }
+        System.out.println("url: " + path);
+
+        buscarUsuario();
 
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExpCompartir);
@@ -83,6 +90,7 @@ public class CompartirActivity extends AppCompatActivity {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
                                         int groupPosition, long id) {
+                System.out.println("eeeeeeeeeeeeeeeeeeeeeeee");
                 return false;
             }
         });
@@ -97,16 +105,11 @@ public class CompartirActivity extends AppCompatActivity {
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
                 context = getApplicationContext();
-                //Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
-                //toast.show();
                 id_carpeta=listIDHeader.get(childPosition);
-
                 archivoOriginal = obtenerArchivo();
                 String directorio = obtenerDirectorio();
                 Toast toast;
-
                 if(!ArchivoExiteEnBD()){
-
                     CrearDirectorio();
                     copyFileOrDirectory(path,PATH_MOBILE+"/"+grupoUsuario);
                     ActualizarBaseDeDatos();
@@ -141,8 +144,7 @@ public class CompartirActivity extends AppCompatActivity {
 
         return false;
     }
-    // http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
-    // http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
+
     private void CopiarAInternalStorage(){
 
         // obtengo el nombre del archivo que queiro copiar
@@ -224,46 +226,58 @@ public class CompartirActivity extends AppCompatActivity {
                 "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
                 "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
+                "WHERE  usu_id<>"+id_usuario+" "+
                 "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario;";
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);
+        System.out.println("El id de la galeria personal es: " + id_carpetausuario);
+
+        grupo="Carpeta Personal";
+        listDataHeader.add(grupo);
+        grupodeUsuario.add(usuario);
+        listIDHeader.add(id_carpetausuario+"");
+        listDataChild.put(grupo, grupodeUsuario);
+
+
         try {
+            System.out.println("Entre al try ");
+
             while (resultSet.next()) {
+
+                System.out.println("Entre al while ");
                 if(aux != resultSet.getInt(1)){
                     if(aux == -1)
                     {//Lo hago solo para el primer registro!!
+                        grupodeUsuario = new ArrayList<>();
                         grupo=resultSet.getString(2);
-                        listDataHeader.add(grupo);
-                        listIDHeader.add(resultSet.getString(5));
-                        listIDHeader.add(resultSet.getString(6));
-                        grupodeUsuario.add(grupo);
-                        grupodeUsuario.add(resultSet.getString(4));
-                        aux=resultSet.getInt(1);
+                            listDataHeader.add(grupo);
+                            listIDHeader.add(resultSet.getString(5));
+                            listIDHeader.add(resultSet.getString(6));
+                            grupodeUsuario.add(grupo);
+                            grupodeUsuario.add(resultSet.getString(4));
+                            aux = resultSet.getInt(1);
                     }
                     else
                     {
                         listDataChild.put(grupo, grupodeUsuario);
                         grupodeUsuario = new ArrayList<>();
-
-                        grupo=resultSet.getString(2);
-                        listDataHeader.add(grupo);
-                        grupodeUsuario.add(grupo);
-                        grupodeUsuario.add(resultSet.getString(4));
-                        aux=resultSet.getInt(1);
-                        listIDHeader.add(resultSet.getString(5));
-                        listIDHeader.add(resultSet.getString(6));
+                            grupo = resultSet.getString(2);
+                            listDataHeader.add(grupo);
+                            grupodeUsuario.add(grupo);
+                            grupodeUsuario.add(resultSet.getString(4));
+                            aux = resultSet.getInt(1);
+                            listIDHeader.add(resultSet.getString(5));
+                            listIDHeader.add(resultSet.getString(6));
                     }
                 }
                 else
                 {
-                    //System.out.println("Agregar usuario a la lista");
-                    grupodeUsuario.add(resultSet.getString(4));
-                    listIDHeader.add(resultSet.getString(6));
+                        //System.out.println("Agregar usuario a la lista");
+                        grupodeUsuario.add(resultSet.getString(4));
+                        listIDHeader.add(resultSet.getString(6));
                 }
             }
-
             listDataChild.put(grupo, grupodeUsuario);
-
         } catch (Exception e) {
             System.err.println("Error crear explist: " + e );
         }
@@ -271,13 +285,13 @@ public class CompartirActivity extends AppCompatActivity {
     @NonNull
     private Boolean buscarUsuario() {
         String comando = "";
-        //System.out.println("el usuario es" + id_usuario);
         comando = "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
-                //System.out.println("usuario: " + resultSet.getInt("usu_id"));
+                usuario = resultSet.getString("usu_nombre_usuario");
+                id_carpetausuario = resultSet.getInt("usu_id_galeria");
                 return true;
             }
         }catch(Exception e){System.out.println("Error busqueda");}
@@ -305,20 +319,13 @@ public class CompartirActivity extends AppCompatActivity {
         try {
             File src = new File(srcDir);
             File dst = new File(dstDir, src.getName());
-
-            //System.out.println(src.toString());
-            //System.out.println(dstDir.toString());
-            //System.out.println("so vo imagen ?" +src.getName());
-
             if (src.isDirectory()) {
-
                 String files[] = src.list();
                 int filesLength = files.length;
                 for (int i = 0; i < filesLength; i++) {
                     String src1 = (new File(src, files[i]).getPath());
                     String dst1 = dst.getPath();
                     copyFileOrDirectory(src1, dst1);
-
                 }
             } else {
                     copyFile(src, dst);

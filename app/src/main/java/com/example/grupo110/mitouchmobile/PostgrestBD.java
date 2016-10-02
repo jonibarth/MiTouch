@@ -16,20 +16,20 @@ import java.sql.ResultSet;
 public class PostgrestBD  implements Runnable {
 
     private Connection conn;
-    /* Usuario Base de Datos: MiTouch password grupo 110
+    /* Usuario Base de Datos: MiTouch password grupo 110*/
 
     private String host = "mitouch.hopto.org";
     private String db = "postgres";
     private int port = 5432;
     private String user = "postgres";
-    private String pass = "mitouch";*/
-
+    private String pass = "mitouch";
+/*
     private String host = "192.168.1.35";
     private String db = "postgres";
     private int port = 5432;
     private String user = "postgres";
     private String pass = "namekiano";
-
+*/
     private String url = "jdbc:postgresql://%s:%d/%s";
 
     public PostgrestBD() {

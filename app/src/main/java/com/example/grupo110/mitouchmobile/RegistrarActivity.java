@@ -44,7 +44,7 @@ public class RegistrarActivity extends AppCompatActivity {
     EditText contraseña;
     EditText repetirContraseña;
     String grupoUsuario=null;
-    final String PATH_SERVIDOR="..../";
+    final String PATH_SERVIDOR="C:\\Program Files\\MiTouch\\";
 
     Button botonRegistrar;
     private final static int  LARGO_CONTRASEÑA = 10;
@@ -123,7 +123,7 @@ public class RegistrarActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus){
-                    if(repetirContraseña.getText().toString().equals(contraseña.getText().toString()))
+                    if(repetirContraseña.getText().toString().equals(contraseña.getText().toString()) && validarContraseña(repetirContraseña.getText().toString()))
                         insertarImagenRepiteContraseña(true);
                     else
                         insertarImagenRepiteContraseña(false);
@@ -143,8 +143,8 @@ public class RegistrarActivity extends AppCompatActivity {
                 nombreCompleto.clearFocus();
                 contraseña.clearFocus();
                 repetirContraseña.clearFocus();
-                if((nombreValido) && (emailValido) && (contraseñaRepiteValida) && (contraseñaValida) && (grupoUsuario!=null)) {
-                //    if((nombreValido) && (contraseñaRepiteValida) && (contraseñaValida)) {
+                //if((nombreValido) && (emailValido) && (contraseñaRepiteValida) && (contraseñaValida) && (grupoUsuario!=null)) {
+                    if((nombreValido) && (contraseñaRepiteValida) && (contraseñaValida)) {
                     CrearUsuario();
                     Toast toast2 = Toast.makeText(getApplicationContext(),"Usuario Registrado",Toast.LENGTH_LONG);
                     toast2.show();
@@ -255,7 +255,7 @@ public class RegistrarActivity extends AppCompatActivity {
 
         System.out.println("el id de la carpeta generada es: " + id_carpetaGenerada);
 
-        comando = "INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail,usu_id_galeria) VALUES ('"+ fechadia +"', null, null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"',"+parseInt(id_carpetaGenerada)+") RETURNING usu_id;";
+        comando = "INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail,usu_id_galeria) VALUES ('"+ fechadia +"','Alan Bobo dame el id', null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"',"+parseInt(id_carpetaGenerada)+") RETURNING usu_id;";
 
         // Inserto usuario en la tabla usuarios
         // Busco el ID del usuario que genere para insertarlo en la tabla de solicitud de acceso!
@@ -267,8 +267,10 @@ public class RegistrarActivity extends AppCompatActivity {
         } catch (Exception e) {
             System.err.println("Error: " + e);
         }
-        comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES ("+id_usuadioGenerado+",'"+BuscarGruposdeUsuarioenArray()+"','"+ fechadiahora +"',null,null);";
-        baseDeDatos.execute(comando);
+        try {
+            comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES ("+id_usuadioGenerado+",'"+BuscarGruposdeUsuarioenArray()+"','"+ fechadiahora +"',null,null);";
+            baseDeDatos.execute(comando);
+        }catch(Exception e){ System.out.println("no selecciono grupo de usuario");}
     }
 
     private String BuscarGruposdeUsuarioenArray() {
