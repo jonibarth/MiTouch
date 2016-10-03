@@ -47,11 +47,12 @@ public class MainMenuActivity extends AppCompatActivity {
             case R.id.action_logout:
                 modificar_usu_ultimo_log_out(id_usuario);
                 grabar();
+                Intent mainIntent = new Intent(MainMenuActivity.this, LoginActivity.class);
+                startActivity(mainIntent);
                 finish();
-
                 return true;
             case R.id.action_settings:
-                Intent mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
+                mainIntent = new Intent(MainMenuActivity.this, SettingActivity.class);
                 mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
                 return true;
