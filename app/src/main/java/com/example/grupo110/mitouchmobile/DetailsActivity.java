@@ -256,6 +256,7 @@ public class DetailsActivity extends AppCompatActivity {
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
             while (resultSet.next()) {
+                System.out.println("archivo leido: " + resultSet.getString("archg_path"));
                 listArchivosCompletos.add(resultSet.getString("archg_path"));
                 listIDArchivosCompletos.add(resultSet.getString("archg_id"));
             }

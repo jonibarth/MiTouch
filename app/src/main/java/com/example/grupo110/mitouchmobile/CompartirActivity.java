@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,7 @@ public class CompartirActivity extends AppCompatActivity {
     ExpandableListView expListView;
     List<String> listDataHeader;
     List<String> listIDHeader;
+    List<Boolean> puedoEscribir;
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
     String grupoUsuario=null;
@@ -105,14 +107,27 @@ public class CompartirActivity extends AppCompatActivity {
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
                 context = getApplicationContext();
-                id_carpeta=listIDHeader.get(childPosition);
+
+                int posicion = groupPosition + childPosition;
+
+                System.out.println("El grupo de uuario es: "+ grupoUsuario);
+                id_carpeta=listIDHeader.get(posicion);
+                System.out.println("id_carpeta " +id_carpeta);
+                System.out.println("childPosition " + childPosition);
+
                 archivoOriginal = obtenerArchivo();
                 String directorio = obtenerDirectorio();
                 Toast toast;
                 if(!ArchivoExiteEnBD()){
-                    CrearDirectorio();
-                    copyFileOrDirectory(path,PATH_MOBILE+"/"+grupoUsuario);
+                    System.out.println("El destino es:" + PATH_MOBILE+"/"+grupoUsuario);
+                    System.out.println("el grupo de usuario es: " + grupoUsuario);
                     ActualizarBaseDeDatos();
+
+                    if(puedoEscribir.get(posicion)==true) {
+                        CrearDirectorio();
+                        copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);
+                        }
+
                     toast= Toast.makeText(getApplicationContext(),"El archivo fue copiado con exito", Toast.LENGTH_LONG);
                     toast.show();
                     finish();
@@ -156,14 +171,16 @@ public class CompartirActivity extends AppCompatActivity {
         // Crear Registro en la tabla de archivos
         String id_archivo=null;
         String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\" + archivoOriginal;
+        System.out.println("el path ");
+        System.out.println("el grupoUsuario es: " + grupoUsuario);
+        System.out.println("el archivoOriginal es: " +archivoOriginal);
+        System.out.println("el path es: " + path);
         Calendar c = Calendar.getInstance();
-        //System.out.println("Current time => "+c.getTime());
-
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         String fecha = df.format(c.getTime());
-
         String comando;
         comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+") RETURNING archg_id;";
+        System.out.println("el comando es: " + comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
@@ -176,6 +193,7 @@ public class CompartirActivity extends AppCompatActivity {
 
          //Asociar Carpeta con el archivo
         comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ("+id_carpeta+","+id_archivo+");";
+        System.out.println("el comando es: " + comando);
         baseDeDatos.execute(comando);
     }
     @NonNull
@@ -198,6 +216,7 @@ public class CompartirActivity extends AppCompatActivity {
         listIDHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         grupodeUsuario = new ArrayList<>();
+        puedoEscribir = new ArrayList<Boolean>();
         BuscarGruposdeUsuario(grupodeUsuario);
     }
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario) {
@@ -236,8 +255,9 @@ public class CompartirActivity extends AppCompatActivity {
         listDataHeader.add(grupo);
         grupodeUsuario.add(usuario);
         listIDHeader.add(id_carpetausuario+"");
+        puedoEscribir.add(true);
         listDataChild.put(grupo, grupodeUsuario);
-
+        grupodeUsuario = new ArrayList<>();
 
         try {
             System.out.println("Entre al try ");
@@ -252,7 +272,9 @@ public class CompartirActivity extends AppCompatActivity {
                         grupo=resultSet.getString(2);
                             listDataHeader.add(grupo);
                             listIDHeader.add(resultSet.getString(5));
+                            puedoEscribir.add(true);
                             listIDHeader.add(resultSet.getString(6));
+                            puedoEscribir.add(false);
                             grupodeUsuario.add(grupo);
                             grupodeUsuario.add(resultSet.getString(4));
                             aux = resultSet.getInt(1);
@@ -267,7 +289,9 @@ public class CompartirActivity extends AppCompatActivity {
                             grupodeUsuario.add(resultSet.getString(4));
                             aux = resultSet.getInt(1);
                             listIDHeader.add(resultSet.getString(5));
+                            puedoEscribir.add(true);
                             listIDHeader.add(resultSet.getString(6));
+                            puedoEscribir.add(false);
                     }
                 }
                 else
@@ -275,6 +299,7 @@ public class CompartirActivity extends AppCompatActivity {
                         //System.out.println("Agregar usuario a la lista");
                         grupodeUsuario.add(resultSet.getString(4));
                         listIDHeader.add(resultSet.getString(6));
+                        puedoEscribir.add(false);
                 }
             }
             listDataChild.put(grupo, grupodeUsuario);
@@ -298,6 +323,7 @@ public class CompartirActivity extends AppCompatActivity {
         return false;
     }
     public void CrearDirectorio(){
+        System.out.println("Cree el directorio!");
         try
         {
 
@@ -316,6 +342,7 @@ public class CompartirActivity extends AppCompatActivity {
         }
     }
     public static void copyFileOrDirectory(String srcDir, String dstDir) {
+        System.out.println("Cree el archivo: copyFileOrDirectory!");
         try {
             File src = new File(srcDir);
             File dst = new File(dstDir, src.getName());
@@ -335,6 +362,7 @@ public class CompartirActivity extends AppCompatActivity {
         }
     }
     public static void copyFile(File sourceFile, File destFile) throws IOException {
+        System.out.println("Cree el archivo: copyFile!");
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
 
