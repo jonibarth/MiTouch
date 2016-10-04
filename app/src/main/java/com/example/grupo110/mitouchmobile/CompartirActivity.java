@@ -41,10 +41,15 @@ public class CompartirActivity extends AppCompatActivity {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
-    List<String> listIDHeader;
-    List<Boolean> puedoEscribir;
+    //List<String> listIDHeader;
+    //List<Boolean> puedoEscribir;
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
+    HashMap<String, List<String>> listDataID;
+    List<String> grupodeUsuarioID;
+    HashMap<String, List<String>> listDataEscribir;
+    List<String> grupodeUsuarioEscribir;
+
     String grupoUsuario=null;
     String id_carpeta=null;
     final String PATH_BASE_DE_DATOS = "C:\\Program Files\\MiTouch";
@@ -108,13 +113,21 @@ public class CompartirActivity extends AppCompatActivity {
                         childPosition);
                 context = getApplicationContext();
 
-                int posicion = groupPosition + childPosition;
 
-                System.out.println("El grupo de uuario es: "+ grupoUsuario);
-                id_carpeta=listIDHeader.get(posicion);
-                System.out.println("id_carpeta " +id_carpeta);
-                System.out.println("childPosition " + childPosition);
+                System.out.println("grupo de usuario: " + grupoUsuario);
 
+                System.out.println("id de la carpeta: " +listDataID.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition));
+                System.out.println("id de la carpeta: " +listDataEscribir.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition));
+
+               // System.out.println("El grupo de uuario es: "+ grupoUsuario);
+                //id_carpeta=listIDHeader.get(posicion);
+               // System.out.println("id_carpeta " +id_carpeta);
+               // System.out.println("childPosition " + childPosition);
+/*
                 archivoOriginal = obtenerArchivo();
                 String directorio = obtenerDirectorio();
                 Toast toast;
@@ -137,7 +150,7 @@ public class CompartirActivity extends AppCompatActivity {
                     toast= Toast.makeText(getApplicationContext(),"El archivo ya existe", Toast.LENGTH_LONG);
                     toast.show();
                 }
-
+*/
                 return false;
             }
         });
@@ -213,10 +226,16 @@ public class CompartirActivity extends AppCompatActivity {
     }
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
-        listIDHeader = new ArrayList<>();
+
         listDataChild = new HashMap<>();
+        listDataID =new HashMap<>();
+        listDataEscribir = new HashMap<>();
+
         grupodeUsuario = new ArrayList<>();
-        puedoEscribir = new ArrayList<Boolean>();
+        grupodeUsuarioID = new ArrayList<>();
+        grupodeUsuarioEscribir = new ArrayList<>();
+
+
         BuscarGruposdeUsuario(grupodeUsuario);
     }
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario) {
@@ -252,57 +271,98 @@ public class CompartirActivity extends AppCompatActivity {
         System.out.println("El id de la galeria personal es: " + id_carpetausuario);
 
         grupo="Carpeta Personal";
+
         listDataHeader.add(grupo);
         grupodeUsuario.add(usuario);
-        listIDHeader.add(id_carpetausuario+"");
-        puedoEscribir.add(true);
+        grupodeUsuarioID.add(id_carpetausuario+"");
+        grupodeUsuarioEscribir.add("true");
+
         listDataChild.put(grupo, grupodeUsuario);
+        listDataID.put(grupo, grupodeUsuarioID);
+        listDataEscribir.put(grupo, grupodeUsuarioEscribir);
         grupodeUsuario = new ArrayList<>();
+        grupodeUsuarioID = new ArrayList<>();
+        grupodeUsuarioEscribir = new ArrayList<>();
+
 
         try {
-            System.out.println("Entre al try ");
-
             while (resultSet.next()) {
-
-                System.out.println("Entre al while ");
                 if(aux != resultSet.getInt(1)){
+                    System.out.println("Aux: " + aux + " != " +resultSet.getInt(1));
                     if(aux == -1)
-                    {//Lo hago solo para el primer registro!!
-                        grupodeUsuario = new ArrayList<>();
-                        grupo=resultSet.getString(2);
+                    {
+                        System.out.println("Aux: " + aux + " != " +resultSet.getInt(1) + " --> Entro al if");
+                            grupo=resultSet.getString(2);
                             listDataHeader.add(grupo);
-                            listIDHeader.add(resultSet.getString(5));
-                            puedoEscribir.add(true);
-                            listIDHeader.add(resultSet.getString(6));
-                            puedoEscribir.add(false);
+
                             grupodeUsuario.add(grupo);
-                            grupodeUsuario.add(resultSet.getString(4));
-                            aux = resultSet.getInt(1);
+                            grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
+                            grupodeUsuarioEscribir.add("true");
+
+
+                            grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                            grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
+
+
+                        System.out.println("inicio tercer subconjunto");
+                        System.out.println("listDataHeader: " + grupo);
+                        System.out.println("grupodeUsuario: " + resultSet.getString("usu_nombre_usuario"));
+                        System.out.println("grupodeUsuarioID: " + resultSet.getString("usu_id_galeria"));
+                        System.out.println("fin tercer subconjunto");
+
+                        aux = resultSet.getInt(1);
+
                     }
                     else
                     {
+                        System.out.println("Aux: " + aux + " != " +resultSet.getInt(1) + " --> Entro al else");
+
                         listDataChild.put(grupo, grupodeUsuario);
+                        listDataID.put(grupo, grupodeUsuarioID);
+                        listDataEscribir.put(grupo, grupodeUsuarioEscribir);
+
                         grupodeUsuario = new ArrayList<>();
-                            grupo = resultSet.getString(2);
-                            listDataHeader.add(grupo);
-                            grupodeUsuario.add(grupo);
-                            grupodeUsuario.add(resultSet.getString(4));
-                            aux = resultSet.getInt(1);
-                            listIDHeader.add(resultSet.getString(5));
-                            puedoEscribir.add(true);
-                            listIDHeader.add(resultSet.getString(6));
-                            puedoEscribir.add(false);
+                        grupodeUsuarioID = new ArrayList<>();
+                        grupodeUsuarioEscribir = new ArrayList<>();
+
+                        grupo = resultSet.getString(2);
+                        listDataHeader.add(grupo);
+                        grupodeUsuario.add(grupo);
+                        grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
+                        grupodeUsuarioEscribir.add("true");
+
+
+                        grupodeUsuario.add(resultSet.getString(4));
+                        grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        if(resultSet.getInt("ugru_id_usuario")==id_usuario)
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
+
+                        aux = resultSet.getInt(1);
+
                     }
                 }
                 else
                 {
-                        //System.out.println("Agregar usuario a la lista");
-                        grupodeUsuario.add(resultSet.getString(4));
-                        listIDHeader.add(resultSet.getString(6));
-                        puedoEscribir.add(false);
+                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                        grupodeUsuarioID.add(resultSet.getString(6));
+                        if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
+
                 }
             }
+
             listDataChild.put(grupo, grupodeUsuario);
+            listDataID.put(grupo, grupodeUsuarioID);
+            listDataEscribir.put(grupo, grupodeUsuarioEscribir);
+
         } catch (Exception e) {
             System.err.println("Error crear explist: " + e );
         }
