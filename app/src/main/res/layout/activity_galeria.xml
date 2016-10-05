@@ -22,10 +22,10 @@
 
     <GridView
         android:id="@+id/gridView"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:columnWidth="100dp"
+        android:columnWidth="125dp"
         android:drawSelectorOnTop="true"
         android:gravity="center"
         android:numColumns="auto_fit"

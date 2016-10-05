@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,23 +16,31 @@
 
     <!-- Login progress -->
 
+
     <ImageView
-        android:layout_width="223dp"
-        android:layout_height="178dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_form"
         android:id="@+id/imageView"
-        android:src="@drawable/splash_screen"/>
+        android:src="@drawable/splash_screen"
+        android:layout_centerHorizontal="true" />
 
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="149dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="0.42">
+        android:foregroundGravity="center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -42,11 +50,12 @@
                 <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true"
                     android:textColor="@color/colorVerde"
                     android:textStyle="bold"
                     android:background="#313131"
@@ -59,18 +68,18 @@
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/colorVerde"
                 >
-
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
                     android:hint="@string/prompt_password"
                     android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true"
                     android:textColor="@color/colorVerde"
                     android:textStyle="bold"
                     android:background="#313131"
@@ -82,6 +91,8 @@
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
@@ -93,18 +104,22 @@
         </LinearLayout>
     </ScrollView>
 
+
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Te has olvidado la contraseña?"
         android:id="@+id/textViewForgotYourPassword"
-        android:layout_gravity="center_horizontal"
         android:linksClickable="false"
         android:clickable="true"
         android:textColor="@color/colorVerde"
         android:textStyle="bold"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="62dp"
+        android:gravity="center"
+        android:layout_below="@+id/login_form"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -112,14 +127,17 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Registrarse en MiTouch"
         android:id="@+id/textViewRegistrarse"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_gravity="center"
         android:linksClickable="false"
         android:clickable="true"
         android:textColor="@color/colorVerde"
         android:textStyle="bold"
-        android:textSize="16sp" />
-</LinearLayout>
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_below="@+id/textViewForgotYourPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" />
+</RelativeLayout>
 
 
 

@@ -62,7 +62,6 @@ public class MainActivity extends Activity {
                 // Busco que ese usuario exista, sino que entre en el login
                 String texto = "null";
                 String[] archivos = fileList();
-                System.out.println("Voy a leer el archvio de usuarios");
 
                 if (existe(archivos, "notas.txt"))
                     try {
@@ -79,20 +78,16 @@ public class MainActivity extends Activity {
                         System.out.println("error en el try que esta dentro del if");
                     }
                 else{
-                    System.out.println("entre en el else");
                     Intent mainIntent = new Intent().setClass(
                             MainActivity.this, LoginActivity.class);
                     startActivity(mainIntent);
                     finish();
                 }
 
-                System.out.println("Ya pase el try: el texto es " + texto);
                 texto.trim();
                 if(!texto.equals("null")) {
-                    System.out.println("Ya pase el try");
                     id_usuario = Integer.parseInt(texto);
                     if (buscarUsuario()) {
-                        System.out.println("estoy dentro del if");
                         IniciarPantalla();
                     }
                 }
@@ -112,7 +107,6 @@ public class MainActivity extends Activity {
 
     private Boolean buscarUsuario() {
         String comando = "";
-        System.out.println("el usuario es" + id_usuario);
         comando = String.format("SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";");
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);

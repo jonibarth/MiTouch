@@ -124,10 +124,12 @@ public class CompartirActivity extends AppCompatActivity {
                         childPosition));
 
                // System.out.println("El grupo de uuario es: "+ grupoUsuario);
-                //id_carpeta=listIDHeader.get(posicion);
-               // System.out.println("id_carpeta " +id_carpeta);
+                id_carpeta=listDataID.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition);
+                System.out.println("id_carpeta " +id_carpeta);
                // System.out.println("childPosition " + childPosition);
-/*
+
                 archivoOriginal = obtenerArchivo();
                 String directorio = obtenerDirectorio();
                 Toast toast;
@@ -136,7 +138,7 @@ public class CompartirActivity extends AppCompatActivity {
                     System.out.println("el grupo de usuario es: " + grupoUsuario);
                     ActualizarBaseDeDatos();
 
-                    if(puedoEscribir.get(posicion)==true) {
+                    if(listDataEscribir.get(listDataHeader.get(groupPosition)).get(childPosition).equals("true")) {
                         CrearDirectorio();
                         copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);
                         }
@@ -150,7 +152,7 @@ public class CompartirActivity extends AppCompatActivity {
                     toast= Toast.makeText(getApplicationContext(),"El archivo ya existe", Toast.LENGTH_LONG);
                     toast.show();
                 }
-*/
+
                 return false;
             }
         });

@@ -31,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("OnCreate Login");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -57,9 +56,6 @@ public class LoginActivity extends AppCompatActivity {
                     else
                     {
                         Intent siguiente = new Intent(LoginActivity.this, CompartirActivity.class);
-                        System.out.println(" id "+id_usuario);
-                        System.out.println(" url "+url);
-
                         siguiente.putExtra("id",id_usuario);
                         siguiente.putExtra("url",url);
                         startActivity(siguiente);
@@ -82,8 +78,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
                     //Lineas para ocultar el teclado virtual (Hide keyboard)
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(email.getWindowToken(), 0);
+                    //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //imm.hideSoftInputFromWindow(email.getWindowToken(), 0);
                 }
             }
         });
@@ -168,8 +164,6 @@ public class LoginActivity extends AppCompatActivity {
     private void modificar_usu_ultimo_log_in(int id_usuario) {
 
         Calendar c = Calendar.getInstance();
-        System.out.println("Current time => "+c.getTime());
-
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
         String diahora = df.format(c.getTime());
         String comando = "";
@@ -205,8 +199,6 @@ public class LoginActivity extends AppCompatActivity {
             }
             br.close();
             archivo.close();
-            System.out.println("que es todo:");
-            System.out.println(todo);
         } catch (Exception e) {
             System.out.println("error en el try que esta dentro del if");
         }
