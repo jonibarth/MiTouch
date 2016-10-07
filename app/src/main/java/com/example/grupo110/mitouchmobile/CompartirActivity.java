@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -22,14 +20,15 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 /*
-    * // http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
-    * // http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
+    * http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
+    * http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
+    * http://kodehelp.com/java-program-for-downloading-file-from-sftp-server/
  */
 public class CompartirActivity extends AppCompatActivity {
 
@@ -41,8 +40,6 @@ public class CompartirActivity extends AppCompatActivity {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
-    //List<String> listIDHeader;
-    //List<Boolean> puedoEscribir;
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
     HashMap<String, List<String>> listDataID;
@@ -52,13 +49,13 @@ public class CompartirActivity extends AppCompatActivity {
 
     String grupoUsuario=null;
     String id_carpeta=null;
-    final String PATH_BASE_DE_DATOS = "C:\\Program Files\\MiTouch";
+    final String PATH_BASE_DE_DATOS = "/home/toor/galerias/";
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
     static Context context;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compartir3);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -97,7 +94,6 @@ public class CompartirActivity extends AppCompatActivity {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
                                         int groupPosition, long id) {
-                System.out.println("eeeeeeeeeeeeeeeeeeeeeeee");
                 return false;
             }
         });
@@ -112,9 +108,7 @@ public class CompartirActivity extends AppCompatActivity {
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
                 context = getApplicationContext();
-
-
-                System.out.println("grupo de usuario: " + grupoUsuario);
+               /* System.out.println("grupo de usuario: " + grupoUsuario);
 
                 System.out.println("id de la carpeta: " +listDataID.get(
                         listDataHeader.get(groupPosition)).get(
@@ -122,14 +116,12 @@ public class CompartirActivity extends AppCompatActivity {
                 System.out.println("id de la carpeta: " +listDataEscribir.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition));
-
+*/
                // System.out.println("El grupo de uuario es: "+ grupoUsuario);
                 id_carpeta=listDataID.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
                 System.out.println("id_carpeta " +id_carpeta);
-               // System.out.println("childPosition " + childPosition);
-
                 archivoOriginal = obtenerArchivo();
                 String directorio = obtenerDirectorio();
                 Toast toast;
@@ -137,7 +129,7 @@ public class CompartirActivity extends AppCompatActivity {
                     System.out.println("El destino es:" + PATH_MOBILE+"/"+grupoUsuario);
                     System.out.println("el grupo de usuario es: " + grupoUsuario);
                     ActualizarBaseDeDatos();
-
+                    new SFTClienteUploadFile(grupoUsuario, path).execute();
                     if(listDataEscribir.get(listDataHeader.get(groupPosition)).get(childPosition).equals("true")) {
                         CrearDirectorio();
                         copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);
@@ -157,8 +149,9 @@ public class CompartirActivity extends AppCompatActivity {
             }
         });
     }
+
     private boolean ArchivoExiteEnBD() {
-        String pathAVerificar =PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\"+archivoOriginal;
+        String pathAVerificar =PATH_BASE_DE_DATOS+grupoUsuario+"/"+archivoOriginal;
         String comando = "";
 
         //System.out.println("El path es: "+ pathAVerificar);
@@ -185,11 +178,7 @@ public class CompartirActivity extends AppCompatActivity {
     private void ActualizarBaseDeDatos() {
         // Crear Registro en la tabla de archivos
         String id_archivo=null;
-        String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\" + archivoOriginal;
-        System.out.println("el path ");
-        System.out.println("el grupoUsuario es: " + grupoUsuario);
-        System.out.println("el archivoOriginal es: " +archivoOriginal);
-        System.out.println("el path es: " + path);
+        String path= PATH_BASE_DE_DATOS+"/"+grupoUsuario+"/" + archivoOriginal;
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         String fecha = df.format(c.getTime());

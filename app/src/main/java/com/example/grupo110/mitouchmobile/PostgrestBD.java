@@ -1,5 +1,6 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.content.Context;
 import android.widget.Toast;
 
 import java.sql.Connection;

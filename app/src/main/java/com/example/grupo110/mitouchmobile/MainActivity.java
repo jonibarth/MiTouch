@@ -12,9 +12,11 @@ import android.widget.ImageView;
 import android.widget.VideoView;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.SocketException;
 import java.sql.ResultSet;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,10 +28,12 @@ public class MainActivity extends Activity {
     private VideoView videoView;
     private ImageView imageView;
     int id_usuario=-1;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Set portrait orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // Hide title bar
@@ -131,5 +135,4 @@ public class MainActivity extends Activity {
                 return true;
         return false;
     }
-
 }

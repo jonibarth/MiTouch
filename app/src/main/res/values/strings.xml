@@ -127,4 +127,6 @@
         <item>@drawable/folder</item>
     </string-array>
     <string name="title_activity_details">Galeria</string>
+    <string name="title_activity_swype_images">SwypeImagesActivity</string>
+    <string name="title_activity_galeria_de_fotos">GaleriaDeFotos</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.grupo110.mitouchmobile;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,9 +11,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
+
+
+import com.google.api.client.util.Sleeper;
+
 import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -34,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
     List<String> listNombreArchivos; // Guardo el nomre de los archivos que hay en esa carpeta
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
     String nombreArchivo; // nombre del archivo que quiero abrir compartir o eliminar
-
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,8 +158,17 @@ public class DetailsActivity extends AppCompatActivity {
             startActivity(intent);
         }else
         {
-            descargarArchivo();
-            //abrirArchivo("abrete!");
+            // nombre del archivo
+            // carpeta del archivo
+            new SFTClienteDownloadFile(nombre_carpeta, auxiliar,getApplicationContext()).execute();
+            Toast toast = Toast.makeText(getApplicationContext(),"Descargando .. ",Toast.LENGTH_LONG);
+            toast.show();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -203,6 +219,11 @@ public class DetailsActivity extends AppCompatActivity {
         // end Eliminar
         System.out.println("Borrar Archivo Exitoso ");
         //borrar de la carpeta MiTouchMultimedia en el dispositivos android
+
+
+        new SFTClienteDeleteFile(nombre_carpeta, nombreArchivo).execute();
+
+
     }
 
     private void descomponerArchivos() {
@@ -213,7 +234,7 @@ public class DetailsActivity extends AppCompatActivity {
             auxiliar=listArchivosCompletos.get(i);
 
             listExtenciones.add(auxiliar.substring(auxiliar.lastIndexOf(".") + 1));
-            listNombreArchivos.add(auxiliar.substring(auxiliar.lastIndexOf("\\") + 1));
+            listNombreArchivos.add(auxiliar.substring(auxiliar.lastIndexOf("/") + 1));
 
         }
 

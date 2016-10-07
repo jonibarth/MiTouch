@@ -143,11 +143,12 @@ public class LoginActivity extends AppCompatActivity {
     public boolean login(String usuario, String password) {
         String comando = "";
 
-        comando = String.format("SELECT * " +
+        comando = "SELECT * " +
                 "FROM  \"MiTouch\".t_usuarios " +
                 "WHERE usu_nombre_usuario ='"+ usuario +"' " +
                 "AND usu_password = '"+ password +"' " +
-                "AND ( usu_ultimo_log_out IS NOT NULL OR  usu_ultimo_log_in IS NULL);");
+                "AND ( usu_ultimo_log_out IS NOT NULL OR  usu_ultimo_log_in IS NULL);";
+
         System.out.println("la consulta es: " + comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
