@@ -70,6 +70,7 @@ public class CompartirActivity extends AppCompatActivity {
             }
         });
         dumpIntent(getIntent());
+
         try{
             id_usuario = getIntent().getExtras().getInt("id");
             path = getIntent().getExtras().getString("url");
@@ -77,6 +78,7 @@ public class CompartirActivity extends AppCompatActivity {
         catch(Exception e){
             System.out.println("Error: "+e);
         }
+
         System.out.println("url: " + path);
         buscarUsuario();
 
