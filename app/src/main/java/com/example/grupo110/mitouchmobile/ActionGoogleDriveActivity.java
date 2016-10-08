@@ -50,7 +50,9 @@ public class ActionGoogleDriveActivity extends Activity {
 
                                         break;
 
-                                case 1: break;
+                                case 1: Intent shareIntent = new Intent(ActionGoogleDriveActivity.this,ShareDriveActivity.class);
+                                        startActivity(shareIntent);
+                                        break;
 
                                 case 2: if(idDel != null){
 
@@ -58,7 +60,9 @@ public class ActionGoogleDriveActivity extends Activity {
                                     deleteIntent.putExtra("idDel",idDel);
                                     startActivity(deleteIntent);
 
+                                    break;
                                 }
+
                             }
                             finish();
                         }

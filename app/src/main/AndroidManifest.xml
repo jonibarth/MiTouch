@@ -114,18 +114,18 @@
         <activity
             android:name=".CompartirActivity"
             android:label="@string/title_activity_compartir2"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DetailsActivity"
             android:label="@string/title_activity_details"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DeleteFileDrive" />
-        <activity
-            android:name=".GalleryPage"
-            android:label="@string/title_activity_galeria_de_fotos"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <activity android:name=".DeleteFileDrive"></activity>
+
+        <activity android:name=".ShareDriveActivity"></activity>
+
+
+
     </application>
 
 </manifest>
