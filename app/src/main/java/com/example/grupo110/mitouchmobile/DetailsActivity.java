@@ -1,6 +1,7 @@
 package com.example.grupo110.mitouchmobile;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,9 +11,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
+
+
+import com.google.api.client.util.Sleeper;
+
 import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -34,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
     List<String> listNombreArchivos; // Guardo el nomre de los archivos que hay en esa carpeta
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
     String nombreArchivo; // nombre del archivo que quiero abrir compartir o eliminar
-
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,17 +144,31 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void abrirArchivo(String idAbrir) {
         String pathAbrir;
-        pathAbrir =PATH_MOBILE+"/"+nombre_carpeta+"/"+listNombreArchivos.get(posicionAprentada);
+        String auxiliar = listNombreArchivos.get(posicionAprentada);
+        pathAbrir =PATH_MOBILE+"/"+nombre_carpeta+"/"+auxiliar;
         System.out.println(pathAbrir);
         if(ArchivoExiste()){
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(new File(pathAbrir)), "image/*");
+
+            if(esunaImagen(auxiliar.substring(auxiliar.lastIndexOf(".") + 1)))
+                intent.setDataAndType(Uri.fromFile(new File(pathAbrir)), "image/*");
+            else
+                intent.setDataAndType(Uri.fromFile(new File(pathAbrir)), "video/*");
             startActivity(intent);
         }else
         {
-            descargarArchivo();
-            //abrirArchivo("abrete!");
+            // nombre del archivo
+            // carpeta del archivo
+            new SFTClienteDownloadFile(nombre_carpeta, auxiliar,getApplicationContext()).execute();
+            Toast toast = Toast.makeText(getApplicationContext(),"Descargando .. ",Toast.LENGTH_LONG);
+            toast.show();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -198,15 +219,23 @@ public class DetailsActivity extends AppCompatActivity {
         // end Eliminar
         System.out.println("Borrar Archivo Exitoso ");
         //borrar de la carpeta MiTouchMultimedia en el dispositivos android
+
+
+        new SFTClienteDeleteFile(nombre_carpeta, nombreArchivo).execute();
+
+
     }
 
     private void descomponerArchivos() {
         String auxiliar="";
         for (int i=0; i <listArchivosCompletos.size();i++) {
             System.out.println("archivo: " + listArchivosCompletos.get(i));
+
             auxiliar=listArchivosCompletos.get(i);
+
             listExtenciones.add(auxiliar.substring(auxiliar.lastIndexOf(".") + 1));
-            listNombreArchivos.add(auxiliar.substring(auxiliar.lastIndexOf("\\") + 1));
+            listNombreArchivos.add(auxiliar.substring(auxiliar.lastIndexOf("/") + 1));
+
         }
 
         for (int i=0; i <listArchivosCompletos.size();i++) {
@@ -248,6 +277,7 @@ public class DetailsActivity extends AppCompatActivity {
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
             while (resultSet.next()) {
+                System.out.println("archivo leido: " + resultSet.getString("archg_path"));
                 listArchivosCompletos.add(resultSet.getString("archg_path"));
                 listIDArchivosCompletos.add(resultSet.getString("archg_id"));
             }
@@ -296,7 +326,7 @@ public class DetailsActivity extends AppCompatActivity {
         {
             Bitmap item = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                     R.drawable.image_2);
-            imageItems.add(new ImageItem(item, listArchivosCompletos.get(i) ));
+            imageItems.add(new ImageItem(item, listNombreArchivos.get(i) ));
         }
             else {System.out.println("error");}
 

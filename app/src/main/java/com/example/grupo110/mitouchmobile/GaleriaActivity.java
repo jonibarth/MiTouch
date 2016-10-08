@@ -6,15 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 
 
 public class GaleriaActivity extends AppCompatActivity {
@@ -41,6 +47,17 @@ public class GaleriaActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent AgregarArchivoIntent = new Intent(GaleriaActivity.this, GalleryPage.class);
+                AgregarArchivoIntent.putExtra("id",id_usuario);
+                startActivity(AgregarArchivoIntent);
+            }
+        });
+
+
         gridView = (GridView) findViewById(R.id.gridView);
         CrearCarpetas();
         gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
@@ -66,7 +83,6 @@ public class GaleriaActivity extends AppCompatActivity {
         listDataHeader.add("Carpeta Personal");
         listIdHeader.add("Carpeta Personal");
         String comando;
-        int auxiliar;
         comando = String.format("SELECT gru_id,gru_nombre " +
                 "FROM \"MiTouch\".t_usuarios_grupo INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +

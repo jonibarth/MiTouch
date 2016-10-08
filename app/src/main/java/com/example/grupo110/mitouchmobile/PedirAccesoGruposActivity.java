@@ -1,18 +1,11 @@
 package com.example.grupo110.mitouchmobile;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.sql.ResultSet;
@@ -37,7 +30,7 @@ public class PedirAccesoGruposActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+      /*  super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pedir_acceso_grupos);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -57,10 +50,10 @@ public class PedirAccesoGruposActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CrearSolicitudAcceso();
             }
-        });
+        });*/
 
         // get the listview
-        expListView = (ExpandableListView) findViewById(R.id.lvExpNuevoGrupo);
+        expListView = (ExpandableListView) findViewById(R.id.lvExpNuevoGrupoSetting);
         // preparing list data
         prepareListData();
 
@@ -73,9 +66,6 @@ public class PedirAccesoGruposActivity extends AppCompatActivity {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
                                         int groupPosition, long id) {
-                // Toast.makeText(getApplicationContext(),
-                // "Group Clicked " + listDataHeader.get(groupPosition),
-                // Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -118,7 +108,7 @@ public class PedirAccesoGruposActivity extends AppCompatActivity {
 
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario,List<String> grupodeUsuarioid) {
         String comando;
-        comando = String.format( "SELECT * FROM  \"MiTouch\".t_grupos" + ";");
+        comando = String.format( "SELECT gru_id,gru_nombre FROM  \"MiTouch\".t_grupos;");
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {

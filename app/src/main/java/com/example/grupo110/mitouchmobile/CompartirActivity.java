@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -21,35 +20,44 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/*
+    * http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
+    * http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
+    * http://kodehelp.com/java-program-for-downloading-file-from-sftp-server/
+ */
 public class CompartirActivity extends AppCompatActivity {
 
     int id_usuario=-1;
+    int id_carpetausuario;
+    String usuario;
     String path=null;
     String archivoOriginal=null;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
-    List<String> listIDHeader;
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
+    HashMap<String, List<String>> listDataID;
+    List<String> grupodeUsuarioID;
+    HashMap<String, List<String>> listDataEscribir;
+    List<String> grupodeUsuarioEscribir;
+
     String grupoUsuario=null;
     String id_carpeta=null;
-    final String PATH_BASE_DE_DATOS = "C:\\Program Files\\MiTouch";
+    final String PATH_BASE_DE_DATOS = "/home/toor/galerias/";
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
     static Context context;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compartir3);
-        Toast toast;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_previous));
@@ -68,6 +76,9 @@ public class CompartirActivity extends AppCompatActivity {
         catch(Exception e){
             System.out.println("Error: "+e);
         }
+        System.out.println("url: " + path);
+
+        buscarUsuario();
 
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExpCompartir);
@@ -97,19 +108,33 @@ public class CompartirActivity extends AppCompatActivity {
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
                 context = getApplicationContext();
-                //Toast toast = Toast.makeText(getApplicationContext(),"soy: "+id_usuario +"usuario: "+grupoUsuario+"imagen: "+ path ,Toast.LENGTH_LONG);
-                //toast.show();
-                id_carpeta=listIDHeader.get(childPosition);
+               /* System.out.println("grupo de usuario: " + grupoUsuario);
 
+                System.out.println("id de la carpeta: " +listDataID.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition));
+                System.out.println("id de la carpeta: " +listDataEscribir.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition));
+*/
+               // System.out.println("El grupo de uuario es: "+ grupoUsuario);
+                id_carpeta=listDataID.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition);
+                System.out.println("id_carpeta " +id_carpeta);
                 archivoOriginal = obtenerArchivo();
                 String directorio = obtenerDirectorio();
                 Toast toast;
-
                 if(!ArchivoExiteEnBD()){
-
-                    CrearDirectorio();
-                    copyFileOrDirectory(path,PATH_MOBILE+"/"+grupoUsuario);
+                    System.out.println("El destino es:" + PATH_MOBILE+"/"+grupoUsuario);
+                    System.out.println("el grupo de usuario es: " + grupoUsuario);
                     ActualizarBaseDeDatos();
+                    new SFTClienteUploadFile(grupoUsuario, path).execute();
+                    if(listDataEscribir.get(listDataHeader.get(groupPosition)).get(childPosition).equals("true")) {
+                        CrearDirectorio();
+                        copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);
+                        }
+
                     toast= Toast.makeText(getApplicationContext(),"El archivo fue copiado con exito", Toast.LENGTH_LONG);
                     toast.show();
                     finish();
@@ -124,8 +149,9 @@ public class CompartirActivity extends AppCompatActivity {
             }
         });
     }
+
     private boolean ArchivoExiteEnBD() {
-        String pathAVerificar =PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\"+archivoOriginal;
+        String pathAVerificar =PATH_BASE_DE_DATOS+grupoUsuario+"/"+archivoOriginal;
         String comando = "";
 
         //System.out.println("El path es: "+ pathAVerificar);
@@ -141,8 +167,7 @@ public class CompartirActivity extends AppCompatActivity {
 
         return false;
     }
-    // http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
-    // http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
+
     private void CopiarAInternalStorage(){
 
         // obtengo el nombre del archivo que queiro copiar
@@ -153,15 +178,13 @@ public class CompartirActivity extends AppCompatActivity {
     private void ActualizarBaseDeDatos() {
         // Crear Registro en la tabla de archivos
         String id_archivo=null;
-        String path= PATH_BASE_DE_DATOS+"\\"+grupoUsuario+"\\" + archivoOriginal;
+        String path= PATH_BASE_DE_DATOS+"/"+grupoUsuario+"/" + archivoOriginal;
         Calendar c = Calendar.getInstance();
-        //System.out.println("Current time => "+c.getTime());
-
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         String fecha = df.format(c.getTime());
-
         String comando;
         comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+") RETURNING archg_id;";
+        System.out.println("el comando es: " + comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
@@ -174,6 +197,7 @@ public class CompartirActivity extends AppCompatActivity {
 
          //Asociar Carpeta con el archivo
         comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ("+id_carpeta+","+id_archivo+");";
+        System.out.println("el comando es: " + comando);
         baseDeDatos.execute(comando);
     }
     @NonNull
@@ -193,9 +217,16 @@ public class CompartirActivity extends AppCompatActivity {
     }
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
-        listIDHeader = new ArrayList<>();
+
         listDataChild = new HashMap<>();
+        listDataID =new HashMap<>();
+        listDataEscribir = new HashMap<>();
+
         grupodeUsuario = new ArrayList<>();
+        grupodeUsuarioID = new ArrayList<>();
+        grupodeUsuarioEscribir = new ArrayList<>();
+
+
         BuscarGruposdeUsuario(grupodeUsuario);
     }
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario) {
@@ -224,45 +255,104 @@ public class CompartirActivity extends AppCompatActivity {
                 "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
                 "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
+                "WHERE  usu_id<>"+id_usuario+" "+
                 "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario;";
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);
+        System.out.println("El id de la galeria personal es: " + id_carpetausuario);
+
+        grupo="Carpeta Personal";
+
+        listDataHeader.add(grupo);
+        grupodeUsuario.add(usuario);
+        grupodeUsuarioID.add(id_carpetausuario+"");
+        grupodeUsuarioEscribir.add("true");
+
+        listDataChild.put(grupo, grupodeUsuario);
+        listDataID.put(grupo, grupodeUsuarioID);
+        listDataEscribir.put(grupo, grupodeUsuarioEscribir);
+        grupodeUsuario = new ArrayList<>();
+        grupodeUsuarioID = new ArrayList<>();
+        grupodeUsuarioEscribir = new ArrayList<>();
+
+
         try {
             while (resultSet.next()) {
                 if(aux != resultSet.getInt(1)){
+                    System.out.println("Aux: " + aux + " != " +resultSet.getInt(1));
                     if(aux == -1)
-                    {//Lo hago solo para el primer registro!!
-                        grupo=resultSet.getString(2);
-                        listDataHeader.add(grupo);
-                        listIDHeader.add(resultSet.getString(5));
-                        listIDHeader.add(resultSet.getString(6));
-                        grupodeUsuario.add(grupo);
-                        grupodeUsuario.add(resultSet.getString(4));
-                        aux=resultSet.getInt(1);
+                    {
+                        System.out.println("Aux: " + aux + " != " +resultSet.getInt(1) + " --> Entro al if");
+                            grupo=resultSet.getString(2);
+                            listDataHeader.add(grupo);
+
+                            grupodeUsuario.add(grupo);
+                            grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
+                            grupodeUsuarioEscribir.add("true");
+
+
+                            grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                            grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
+
+
+                        System.out.println("inicio tercer subconjunto");
+                        System.out.println("listDataHeader: " + grupo);
+                        System.out.println("grupodeUsuario: " + resultSet.getString("usu_nombre_usuario"));
+                        System.out.println("grupodeUsuarioID: " + resultSet.getString("usu_id_galeria"));
+                        System.out.println("fin tercer subconjunto");
+
+                        aux = resultSet.getInt(1);
+
                     }
                     else
                     {
-                        listDataChild.put(grupo, grupodeUsuario);
-                        grupodeUsuario = new ArrayList<>();
+                        System.out.println("Aux: " + aux + " != " +resultSet.getInt(1) + " --> Entro al else");
 
-                        grupo=resultSet.getString(2);
+                        listDataChild.put(grupo, grupodeUsuario);
+                        listDataID.put(grupo, grupodeUsuarioID);
+                        listDataEscribir.put(grupo, grupodeUsuarioEscribir);
+
+                        grupodeUsuario = new ArrayList<>();
+                        grupodeUsuarioID = new ArrayList<>();
+                        grupodeUsuarioEscribir = new ArrayList<>();
+
+                        grupo = resultSet.getString(2);
                         listDataHeader.add(grupo);
                         grupodeUsuario.add(grupo);
+                        grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
+                        grupodeUsuarioEscribir.add("true");
+
+
                         grupodeUsuario.add(resultSet.getString(4));
-                        aux=resultSet.getInt(1);
-                        listIDHeader.add(resultSet.getString(5));
-                        listIDHeader.add(resultSet.getString(6));
+                        grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        if(resultSet.getInt("ugru_id_usuario")==id_usuario)
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
+
+                        aux = resultSet.getInt(1);
+
                     }
                 }
                 else
                 {
-                    //System.out.println("Agregar usuario a la lista");
-                    grupodeUsuario.add(resultSet.getString(4));
-                    listIDHeader.add(resultSet.getString(6));
+                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                        grupodeUsuarioID.add(resultSet.getString(6));
+                        if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
+
                 }
             }
 
             listDataChild.put(grupo, grupodeUsuario);
+            listDataID.put(grupo, grupodeUsuarioID);
+            listDataEscribir.put(grupo, grupodeUsuarioEscribir);
 
         } catch (Exception e) {
             System.err.println("Error crear explist: " + e );
@@ -271,19 +361,20 @@ public class CompartirActivity extends AppCompatActivity {
     @NonNull
     private Boolean buscarUsuario() {
         String comando = "";
-        //System.out.println("el usuario es" + id_usuario);
         comando = "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_id ="+ id_usuario +";";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
-                //System.out.println("usuario: " + resultSet.getInt("usu_id"));
+                usuario = resultSet.getString("usu_nombre_usuario");
+                id_carpetausuario = resultSet.getInt("usu_id_galeria");
                 return true;
             }
         }catch(Exception e){System.out.println("Error busqueda");}
         return false;
     }
     public void CrearDirectorio(){
+        System.out.println("Cree el directorio!");
         try
         {
 
@@ -302,23 +393,17 @@ public class CompartirActivity extends AppCompatActivity {
         }
     }
     public static void copyFileOrDirectory(String srcDir, String dstDir) {
+        System.out.println("Cree el archivo: copyFileOrDirectory!");
         try {
             File src = new File(srcDir);
             File dst = new File(dstDir, src.getName());
-
-            //System.out.println(src.toString());
-            //System.out.println(dstDir.toString());
-            //System.out.println("so vo imagen ?" +src.getName());
-
             if (src.isDirectory()) {
-
                 String files[] = src.list();
                 int filesLength = files.length;
                 for (int i = 0; i < filesLength; i++) {
                     String src1 = (new File(src, files[i]).getPath());
                     String dst1 = dst.getPath();
                     copyFileOrDirectory(src1, dst1);
-
                 }
             } else {
                     copyFile(src, dst);
@@ -328,6 +413,7 @@ public class CompartirActivity extends AppCompatActivity {
         }
     }
     public static void copyFile(File sourceFile, File destFile) throws IOException {
+        System.out.println("Cree el archivo: copyFile!");
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
 
