@@ -126,9 +126,14 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent AgregarArchivoIntent = new Intent(DetailsActivity.this, GalleryPage.class);
+                System.out.println(id_usuario +"---"+carpeta);
+
                 AgregarArchivoIntent.putExtra("id",id_usuario);
+
                 AgregarArchivoIntent.putExtra("carpeta",carpeta);
+
                 startActivity(AgregarArchivoIntent);
+                finish();
             }
         });
 
