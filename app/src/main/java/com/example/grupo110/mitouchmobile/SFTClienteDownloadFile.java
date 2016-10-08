@@ -69,9 +69,6 @@ public class SFTClienteDownloadFile extends AsyncTask<Void, Void, Void> {
             JSch jsch = new JSch();
             session = jsch.getSession(SFTPUSER,SFTPHOST,SFTPPORT);
             session.setPassword(SFTPPASS);
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
-            session.setConfig(config);
             session.connect();
             channel = session.openChannel("sftp");
             channel.connect();
@@ -83,7 +80,6 @@ public class SFTClienteDownloadFile extends AsyncTask<Void, Void, Void> {
             OutputStream os = new FileOutputStream(newFile);
             BufferedOutputStream bos = new BufferedOutputStream(os);
             int readCount;
-//System.out.println("Getting: " + theLine);
             while( (readCount = bis.read(buffer)) > 0) {
                 System.out.println("Writing: " );
                 bos.write(buffer, 0, readCount);
