@@ -1,5 +1,6 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,7 +50,7 @@ public class CompartirActivity extends AppCompatActivity {
 
     String grupoUsuario=null;
     String id_carpeta=null;
-    final String PATH_BASE_DE_DATOS = "/home/toor/galerias/";
+    final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
     static Context context;
 
@@ -77,7 +78,6 @@ public class CompartirActivity extends AppCompatActivity {
             System.out.println("Error: "+e);
         }
         System.out.println("url: " + path);
-
         buscarUsuario();
 
         // get the listview
@@ -108,15 +108,6 @@ public class CompartirActivity extends AppCompatActivity {
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
                 context = getApplicationContext();
-               /* System.out.println("grupo de usuario: " + grupoUsuario);
-
-                System.out.println("id de la carpeta: " +listDataID.get(
-                        listDataHeader.get(groupPosition)).get(
-                        childPosition));
-                System.out.println("id de la carpeta: " +listDataEscribir.get(
-                        listDataHeader.get(groupPosition)).get(
-                        childPosition));
-*/
                // System.out.println("El grupo de uuario es: "+ grupoUsuario);
                 id_carpeta=listDataID.get(
                         listDataHeader.get(groupPosition)).get(
@@ -129,7 +120,11 @@ public class CompartirActivity extends AppCompatActivity {
                     System.out.println("El destino es:" + PATH_MOBILE+"/"+grupoUsuario);
                     System.out.println("el grupo de usuario es: " + grupoUsuario);
                     ActualizarBaseDeDatos();
+
+
+
                     new SFTClienteUploadFile(grupoUsuario, path).execute();
+
                     if(listDataEscribir.get(listDataHeader.get(groupPosition)).get(childPosition).equals("true")) {
                         CrearDirectorio();
                         copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);

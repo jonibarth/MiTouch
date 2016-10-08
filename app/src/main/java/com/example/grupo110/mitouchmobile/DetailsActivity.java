@@ -25,6 +25,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadFactory;
 
 public class DetailsActivity extends AppCompatActivity {
     private GridView gridView;
@@ -94,7 +95,7 @@ public class DetailsActivity extends AppCompatActivity {
 
                 posicionAprentada = position;
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(DetailsActivity.this, R.style.AlertDialogCustom));
+                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(DetailsActivity.this, R.style.AlertDialogCustom));
                 builder.setTitle("Acción a realizar")
                         .setItems(new String [] {"Abrir","Compartir","Eliminar","Cerrar"}, new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface dialog, int opt){
@@ -108,14 +109,13 @@ public class DetailsActivity extends AppCompatActivity {
                                         break;
                                     case 2:  System.out.println("Archivo que deseo eliminar: " +  listArchivosCompletos.get(posicionAprentada));
                                         borrarArchivo(listIDArchivosCompletos.get(posicionAprentada));
+                                        finish();
                                         break;
                                     case 3:  System.out.println("Salir " );
                                         break;
                                 }
-                                finish();
                             }
                         });
-
                 builder.show();
             }
 
@@ -127,13 +127,9 @@ public class DetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent AgregarArchivoIntent = new Intent(DetailsActivity.this, GalleryPage.class);
                 System.out.println(id_usuario +"---"+carpeta);
-
                 AgregarArchivoIntent.putExtra("id",id_usuario);
-
                 AgregarArchivoIntent.putExtra("carpeta",carpeta);
-
                 startActivity(AgregarArchivoIntent);
-                finish();
             }
         });
 
@@ -173,15 +169,8 @@ public class DetailsActivity extends AppCompatActivity {
         {
             // nombre del archivo
             // carpeta del archivo
-            new SFTClienteDownloadFile(nombre_carpeta, auxiliar,getApplicationContext()).execute();
-            Toast toast = Toast.makeText(getApplicationContext(),"Descargando .. ",Toast.LENGTH_LONG);
-            toast.show();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            progress = new ProgressDialog(this, R.style.MyTheme);
+                new SFTClienteDownloadFile(progress, this, nombre_carpeta, auxiliar, getApplicationContext()).execute();
         }
     }
 

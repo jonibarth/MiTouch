@@ -26,4 +26,22 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="MyTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
+        <item name="android:textColorPrimary">@color/colorVerde</item>
+    </style>
+
+    <style name="CustomAlertDialogStyle">
+        <item name="android:bottomBright">@color/colorGrisOscuro</item>
+        <item name="android:bottomDark">@color/colorGrisOscuro</item>
+        <item name="android:bottomMedium">@color/colorGrisOscuro</item>
+        <item name="android:centerBright">@color/colorGrisOscuro</item>
+        <item name="android:centerDark">@color/colorGrisOscuro</item>
+        <item name="android:centerMedium">@color/colorGrisOscuro</item>
+        <item name="android:fullBright">@color/colorGrisOscuro</item>
+        <item name="android:fullDark">@color/colorGrisOscuro</item>
+        <item name="android:topBright">@color/colorGrisOscuro</item>
+        <item name="android:topDark">@color/colorGrisOscuro</item>
+    </style>
+
 </resources>
