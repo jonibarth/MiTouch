@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
@@ -59,12 +60,8 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
-
         id_usuario = getIntent().getExtras().getInt("id");
         carpeta = getIntent().getExtras().getString("carpeta");
-
-        System.out.println("usuario: " + id_usuario);
-        System.out.println("Carpeta: " + carpeta);
 
         listArchivosCompletos = new ArrayList<>();
         listIDArchivosCompletos = new ArrayList<>();
@@ -122,6 +119,17 @@ public class DetailsActivity extends AppCompatActivity {
                 builder.show();
             }
 
+        });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent AgregarArchivoIntent = new Intent(DetailsActivity.this, GalleryPage.class);
+                AgregarArchivoIntent.putExtra("id",id_usuario);
+                AgregarArchivoIntent.putExtra("carpeta",carpeta);
+                startActivity(AgregarArchivoIntent);
+            }
         });
 
     }

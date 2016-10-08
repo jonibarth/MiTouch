@@ -47,15 +47,7 @@ public class GaleriaActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent AgregarArchivoIntent = new Intent(GaleriaActivity.this, GalleryPage.class);
-                AgregarArchivoIntent.putExtra("id",id_usuario);
-                startActivity(AgregarArchivoIntent);
-            }
-        });
+
 
 
         gridView = (GridView) findViewById(R.id.gridView);
