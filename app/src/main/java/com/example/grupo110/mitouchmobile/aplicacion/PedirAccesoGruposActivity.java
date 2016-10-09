@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.aplicacion;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import com.example.grupo110.mitouchmobile.R;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.expandable_list.ExpandableListAdapter;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;

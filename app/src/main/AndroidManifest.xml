@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".aplicacion.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -31,35 +31,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".aplicacion.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".aplicacion.ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".aplicacion.SettingActivity"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GoogleCalendarActivity"
+            android:name=".google_calendar.GoogleCalendarActivity"
             android:label="@string/title_activity_google_calendar"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".GaleriaActivity"
+            android:name=".galeria.GaleriaActivity"
             android:label="@string/title_activity_galeria"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChatActivity"
+            android:name=".chat.ChatActivity"
             android:label="@string/title_activity_chat"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MainMenuActivity"
+            android:name=".aplicacion.MainMenuActivity"
             android:label="@string/title_activity_probando_layout"
             android:screenOrientation="portrait" />
         <activity
@@ -76,29 +76,29 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".CambiarPasswordActivity"
+            android:name=".aplicacion.CambiarPasswordActivity"
             android:label="@string/title_activity_cambiar_password"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PedirAccesoGruposActivity"
+            android:name=".aplicacion.PedirAccesoGruposActivity"
             android:label="@string/title_activity_pedir_acceso_grupos"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RegistrarActivity"
+            android:name=".aplicacion.RegistrarActivity"
             android:label="@string/title_activity_registrar"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".NewCalendarEventActivity"
+            android:name=".google_calendar.NewCalendarEventActivity"
             android:label="Nuevo evento"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ActionGoogleDriveActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Compartir"
+            android:name=".galeria.Compartir"
             android:label="@string/title_activity_compartir2"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -112,12 +112,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CompartirActivity"
+            android:name=".galeria.CompartirActivity"
             android:label="@string/title_activity_compartir2"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".DetailsActivity"
+            android:name=".galeria.DetailsActivity"
             android:label="@string/title_activity_details"
             android:theme="@style/AppTheme.NoActionBar">
             android:screenOrientation="portrait"
@@ -128,7 +128,7 @@
         <activity android:name=".ShareDriveActivity"></activity>
 
         <activity
-            android:name=".GalleryPage"
+            android:name=".galeria.GalleryPage"
             android:label="@string/title_activity_galeria_de_fotos"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

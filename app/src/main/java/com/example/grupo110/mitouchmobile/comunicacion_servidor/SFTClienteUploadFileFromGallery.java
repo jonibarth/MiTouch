@@ -1,14 +1,12 @@
-package com.example.grupo110.mitouchmobile.comunicacion.servidor;
+package com.example.grupo110.mitouchmobile.comunicacion_servidor;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.example.grupo110.mitouchmobile.CompartirActivity;
-import com.example.grupo110.mitouchmobile.GalleryPage;
+import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
+import com.example.grupo110.mitouchmobile.galeria.GalleryPage;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;

@@ -1,7 +1,6 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.aplicacion;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
@@ -11,12 +10,11 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
+import com.example.grupo110.mitouchmobile.R;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.SocketException;
 import java.sql.ResultSet;
 import java.util.Timer;
 import java.util.TimerTask;

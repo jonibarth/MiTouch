@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.galeria;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -12,7 +12,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteUploadFileFromGallery;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.R;
+import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteUploadFileFromGallery;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.expandable_list;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import com.example.grupo110.mitouchmobile.R;
 /*
 *
 * http://www.androidhive.info/2013/07/android-expandable-list-view-tutorial/

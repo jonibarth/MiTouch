@@ -1,27 +1,18 @@
-package com.example.grupo110.mitouchmobile.comunicacion.servidor;
+package com.example.grupo110.mitouchmobile.comunicacion_servidor;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
-import com.example.grupo110.mitouchmobile.CompartirActivity;
-import com.example.grupo110.mitouchmobile.GalleryPage;
+import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
+import com.example.grupo110.mitouchmobile.galeria.GalleryPage;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 /**
  * Created by Jonathan on 08/10/2016.
@@ -29,16 +20,16 @@ import java.io.PipedOutputStream;
 
 public class SFTClienteUploadNoTengoArchivoLocal extends AsyncTask<Void, Void, Void> {
 
-    String SFTPHOST = "mitouch.hopto.org";
-    int SFTPPORT = 22;
-    String SFTPUSER = "toor";
-    String SFTPPASS = "namekiano";
-    final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
-    final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
-    int id_usuario;
-    String archivoOriginal;
-    String nombre_carpeta_origen;
-    String nombre_carpeta_destino;
+    private String SFTPHOST = "mitouch.hopto.org";
+    private int SFTPPORT = 22;
+    private String SFTPUSER = "toor";
+    private String SFTPPASS = "namekiano";
+    private final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
+    private final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
+    private int id_usuario;
+    private String archivoOriginal;
+    private String nombre_carpeta_origen;
+    private String nombre_carpeta_destino;
 
     Session sessionRead 	= null;
     Channel channelRead 	= null;

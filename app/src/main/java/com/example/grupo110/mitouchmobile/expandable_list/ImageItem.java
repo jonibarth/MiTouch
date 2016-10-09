@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.expandable_list;
 
 import android.graphics.Bitmap;
 

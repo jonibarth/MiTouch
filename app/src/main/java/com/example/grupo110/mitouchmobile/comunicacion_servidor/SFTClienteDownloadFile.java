@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile.comunicacion.servidor;
+package com.example.grupo110.mitouchmobile.comunicacion_servidor;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.grupo110.mitouchmobile.CompartirActivity;
-import com.example.grupo110.mitouchmobile.DetailsActivity;
+import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
+import com.example.grupo110.mitouchmobile.galeria.DetailsActivity;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -17,7 +17,6 @@ import com.jcraft.jsch.Session;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 

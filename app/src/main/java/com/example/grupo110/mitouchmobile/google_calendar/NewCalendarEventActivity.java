@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.google_calendar;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
+import com.example.grupo110.mitouchmobile.R;
 
 import java.util.Calendar;
 

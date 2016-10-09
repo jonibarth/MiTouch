@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile.comunicacion.servidor;
+package com.example.grupo110.mitouchmobile.comunicacion_servidor;
 
 import android.os.AsyncTask;
 

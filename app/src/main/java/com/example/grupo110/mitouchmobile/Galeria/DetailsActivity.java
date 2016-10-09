@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.galeria;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -17,8 +17,12 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 
-import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteDeleteFile;
-import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteDownloadFile;
+import com.example.grupo110.mitouchmobile.expandable_list.GridViewAdapter;
+import com.example.grupo110.mitouchmobile.expandable_list.ImageItem;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.R;
+import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteDeleteFile;
+import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteDownloadFile;
 
 import java.io.File;
 import java.sql.ResultSet;

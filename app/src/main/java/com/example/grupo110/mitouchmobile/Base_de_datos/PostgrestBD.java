@@ -1,7 +1,4 @@
-package com.example.grupo110.mitouchmobile;
-
-import android.content.Context;
-import android.widget.Toast;
+package com.example.grupo110.mitouchmobile.base_de_datos;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

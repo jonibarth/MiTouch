@@ -1,27 +1,29 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.aplicacion;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.menu.MenuView;
-import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.grupo110.mitouchmobile.DriveActivity;
+import com.example.grupo110.mitouchmobile.R;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.chat.ChatActivity;
+import com.example.grupo110.mitouchmobile.galeria.GaleriaActivity;
+import com.example.grupo110.mitouchmobile.google_calendar.GoogleCalendarActivity;
 
 import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -165,7 +167,7 @@ public class MainMenuActivity extends AppCompatActivity {
     public void grabar() {
         try {
             OutputStreamWriter archivo = new OutputStreamWriter(openFileOutput(
-                    "notas.txt", LoginActivity.MODE_PRIVATE));
+                    "notas.txt", MODE_PRIVATE));
             archivo.write("null");
             archivo.flush();
             archivo.close();

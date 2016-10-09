@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.galeria;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,9 +13,11 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
-import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteDownloadFile;
-import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteUploadNoTengoArchivoLocal;
-import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteUploadFileFromGallery;
+import com.example.grupo110.mitouchmobile.expandable_list.ExpandableListAdapter;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.R;
+import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteUploadNoTengoArchivoLocal;
+import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteUploadFileFromGallery;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -179,20 +181,17 @@ public class CompartirActivity extends AppCompatActivity {
     }
 
     private boolean ArchivoExiste() {
-        String pathAbrir= PATH_MOBILE+"/"+grupoUsuario+"/"+path.substring(path.lastIndexOf("/") + 1);
+        String pathAbrir = PATH_MOBILE + "/" + grupoUsuario + "/" + path.substring(path.lastIndexOf("/") + 1);
         String[] separated = path.split("/");
         System.out.println("El path a abrir es: " + separated[4]);
         System.out.println("El path a abrir es: " + path.substring(path.lastIndexOf("/") + 1));
         File file = new File(pathAbrir);
         File file2 = new File(path);
-        if(file.exists()||file2.exists())
+        if (file.exists() || file2.exists())
             return true;
         else
             return false;
     }
-
-
-
     private boolean ArchivoExiteEnBD() {
         String pathAVerificar =PATH_BASE_DE_DATOS+"/"+grupoUsuario+"/"+archivoOriginal;
         String comando;
@@ -200,7 +199,7 @@ public class CompartirActivity extends AppCompatActivity {
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
-            while (resultSet.next())
+            if (resultSet.next())
                 return true;
         }catch(Exception e){System.out.println("Error busqueda:" + e);}
         return false;
@@ -236,27 +235,21 @@ public class CompartirActivity extends AppCompatActivity {
     }
     private String obtenerDirectorio(){
         String directorio="";
-        String[] item =path.split("/");;
-
+        String[] item =path.split("/");
         for(int i = 1 ; i <item.length-1;i++){
             directorio=directorio+"/"+ item[i];
         }
         directorio=directorio+"/";
         return directorio;
-
     }
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
-
         listDataChild = new HashMap<>();
         listDataID =new HashMap<>();
         listDataEscribir = new HashMap<>();
-
         grupodeUsuario = new ArrayList<>();
         grupodeUsuarioID = new ArrayList<>();
         grupodeUsuarioEscribir = new ArrayList<>();
-
-
         BuscarGruposdeUsuario(grupodeUsuario);
     }
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario) {

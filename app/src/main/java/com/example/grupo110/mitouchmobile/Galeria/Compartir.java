@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.galeria;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import com.example.grupo110.mitouchmobile.aplicacion.LoginActivity;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.R;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

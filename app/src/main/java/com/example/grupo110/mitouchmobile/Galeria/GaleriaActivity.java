@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.galeria;
 
 
 import java.sql.ResultSet;
@@ -6,21 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.Toast;
+
+import com.example.grupo110.mitouchmobile.expandable_list.GridViewAdapter;
+import com.example.grupo110.mitouchmobile.expandable_list.ImageItem;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.R;
 
 
 public class GaleriaActivity extends AppCompatActivity {

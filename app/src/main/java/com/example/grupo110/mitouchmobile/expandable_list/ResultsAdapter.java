@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.expandable_list;
 
 import android.content.Context;
 import android.view.View;

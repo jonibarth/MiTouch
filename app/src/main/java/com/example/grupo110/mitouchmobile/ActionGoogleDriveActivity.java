@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+
 import java.sql.ResultSet;
 
 
