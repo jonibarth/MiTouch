@@ -26,7 +26,9 @@ import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteDownlo
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -65,6 +67,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         id_usuario = getIntent().getExtras().getInt("id");
         carpeta = getIntent().getExtras().getString("carpeta");
+
         listArchivosCompletos = new ArrayList<>();
         listIDArchivosCompletos = new ArrayList<>();
         listExtenciones = new ArrayList<>();
@@ -126,9 +129,6 @@ public class DetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Lo que mando es: ");
-                System.out.println("Lo que mando es id_usuario: " + id_usuario);
-                System.out.println("Lo que mando es nombre_carpeta: " +carpeta);
                 Intent AgregarArchivoIntent = new Intent(DetailsActivity.this, AddDesdeGaleria.class);
                 AgregarArchivoIntent.putExtra("id",id_usuario);
                 AgregarArchivoIntent.putExtra("carpeta",carpeta);
@@ -195,23 +195,41 @@ public class DetailsActivity extends AppCompatActivity {
         System.out.println("Descargando archivo...");
     }
 
+    /*
+    * Metodo encargado de ponerle la fecha actual como fecha de null al archivo que se quiere borrar
+    * Esto se realiza en la tabla t_archivo_galeria
+    * se realiza un borrado logico
+    * Ademas se borra el archivo de la base de datos y del dispositivo si es que el mismo existe.
+     */
 
     private void borrarArchivo(String idEliminar) {
-
         // borro fila en t_carpeta_archivo que el cag_id_archivo sea = idEliminar
         String comando;
-        comando = String.format("DELETE " +
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        String dia = df.format(c.getTime());
+        /*comando = String.format("DELETE " +
                 "FROM \"MiTouch\".t_carpeta_archivos_galeria " +
-                "WHERE  cag_id_archivo =" + idEliminar +";");
+                "WHERE  cag_id_archivo =" + idEliminar +";");*/
+
+        comando = String.format("UPDATE " +
+                "\"MiTouch\".t_archivo_galeria " +
+                "SET archg_fecha_baja ='"+dia+"'" +
+                "WHERE  archg_id =" + idEliminar +";");
+
+
+
+
         PostgrestBD baseDeDatos = new PostgrestBD();
         baseDeDatos.execute(comando);
+        /*
         // borro fila en t_archivo archg_id que el archg_id sea = idEliminar
         comando = String.format("DELETE " +
                 "FROM \"MiTouch\".t_archivo_galeria " +
                 "WHERE  archg_id =" + idEliminar +";");
         baseDeDatos.execute(comando);
         // busco nombre archivo, borrar esta en la carpeta MiTouchMultimedia, lo borro
-
+        */
         nombreArchivo=listNombreArchivos.get(posicionAprentada);
         String pArchivo = PATH_MOBILE + "/" +nombre_carpeta+ "/" + nombreArchivo;
         try {
@@ -225,11 +243,7 @@ public class DetailsActivity extends AppCompatActivity {
         // end Eliminar
         System.out.println("Borrar Archivo Exitoso ");
         //borrar de la carpeta MiTouchMultimedia en el dispositivos android
-
-
         new SFTClienteDeleteFile(nombre_carpeta, nombreArchivo).execute();
-
-
     }
 
     private void descomponerArchivos() {
@@ -250,8 +264,6 @@ public class DetailsActivity extends AppCompatActivity {
             System.out.println("archivo: " + listNombreArchivos.get(i));
         }
     }
-
-
     private void  buscarPathCarpetaPersonal() {
         String comando;
         comando = String.format("SELECT cg_id,cg_path,usu_nombre_usuario " +
@@ -271,13 +283,13 @@ public class DetailsActivity extends AppCompatActivity {
         }catch (Exception e) {System.out.println("Error Crear Carpetas: " + e);
         }
     }
-
-
     private void buscarArchivos() {
         String comando;
-        comando = String.format("SELECT archg_path,archg_id " +
+        comando = "SELECT archg_path,archg_id " +
                 "FROM \"MiTouch\".t_carpeta_archivos_galeria INNER JOIN \"MiTouch\".t_archivo_galeria ON archg_id=cag_id_archivo " +
-                " WHERE  cag_id_carpeta =" + id_carpeta+";");
+                " WHERE cag_id_carpeta=" + id_carpeta+" AND archg_fecha_baja IS NULL;";
+
+        System.out.println("el comando a ejectuar es: " + comando);
 
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
