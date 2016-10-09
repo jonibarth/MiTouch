@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class GalleryPage extends Activity{
+public class AddDesdeGaleria extends Activity{
 
     private static final int SELECT_PICTURE = 1;
     String imgDecodableString;
@@ -82,6 +82,7 @@ public class GalleryPage extends Activity{
             Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, SELECT_PICTURE);
+
     }
 
     /*
@@ -161,7 +162,7 @@ public class GalleryPage extends Activity{
 
         crearArchivoMultimedia();
 
-        Intent AgregarArchivoIntent = new Intent(GalleryPage.this, DetailsActivity.class);
+        Intent AgregarArchivoIntent = new Intent(AddDesdeGaleria.this, DetailsActivity.class);
         AgregarArchivoIntent.putExtra("id",id_usuario);
         AgregarArchivoIntent.putExtra("carpeta",carpeta);
         startActivity(AgregarArchivoIntent);

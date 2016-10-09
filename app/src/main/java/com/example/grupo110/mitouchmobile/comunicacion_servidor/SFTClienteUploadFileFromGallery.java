@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
-import com.example.grupo110.mitouchmobile.galeria.GalleryPage;
+import com.example.grupo110.mitouchmobile.galeria.AddDesdeGaleria;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -37,11 +37,12 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
 
     ProgressDialog progress;
     CompartirActivity compartirActivity;
-    GalleryPage galleryPage;
+    AddDesdeGaleria addDesdeGaleria;
     Context context;
 
     public SFTClienteUploadFileFromGallery(ProgressDialog progress, CompartirActivity compartirActivity, String nombre_carpeta, String imgDecodableString, Context applicationContext) {
-            this.progress = progress;
+        System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+        this.progress = progress;
             this.compartirActivity = compartirActivity;
             this.nombre_carpeta = nombre_carpeta;
             this.archivoOriginal = imgDecodableString;
@@ -50,9 +51,9 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
         System.out.println("archivoOriginal" +" " + archivoOriginal);
     }
 
-    public SFTClienteUploadFileFromGallery(ProgressDialog progress, GalleryPage galleryPage, String nombre_carpeta, String imgDecodableString, Context applicationContext) {
+    public SFTClienteUploadFileFromGallery(ProgressDialog progress, AddDesdeGaleria addDesdeGaleria, String nombre_carpeta, String imgDecodableString, Context applicationContext) {
         this.progress = progress;
-        this.galleryPage = galleryPage;
+        this.addDesdeGaleria = addDesdeGaleria;
         this.nombre_carpeta = nombre_carpeta;
         this.archivoOriginal = imgDecodableString;
         this.context = applicationContext;

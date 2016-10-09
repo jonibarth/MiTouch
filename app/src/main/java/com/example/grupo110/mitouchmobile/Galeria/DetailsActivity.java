@@ -129,7 +129,7 @@ public class DetailsActivity extends AppCompatActivity {
                 System.out.println("Lo que mando es: ");
                 System.out.println("Lo que mando es id_usuario: " + id_usuario);
                 System.out.println("Lo que mando es nombre_carpeta: " +carpeta);
-                Intent AgregarArchivoIntent = new Intent(DetailsActivity.this, GalleryPage.class);
+                Intent AgregarArchivoIntent = new Intent(DetailsActivity.this, AddDesdeGaleria.class);
                 AgregarArchivoIntent.putExtra("id",id_usuario);
                 AgregarArchivoIntent.putExtra("carpeta",carpeta);
                 startActivity(AgregarArchivoIntent);

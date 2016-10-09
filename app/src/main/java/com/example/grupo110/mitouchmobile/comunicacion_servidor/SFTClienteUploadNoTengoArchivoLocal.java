@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
-import com.example.grupo110.mitouchmobile.galeria.GalleryPage;
+import com.example.grupo110.mitouchmobile.galeria.AddDesdeGaleria;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -41,7 +41,7 @@ public class SFTClienteUploadNoTengoArchivoLocal extends AsyncTask<Void, Void, V
 
     ProgressDialog progress;
     CompartirActivity compartirActivity;
-    GalleryPage galleryPage;
+    AddDesdeGaleria addDesdeGaleria;
     Context context;
 
 

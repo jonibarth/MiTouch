@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.grupo110.mitouchmobile.RegistrarActivity"
+    tools:context="com.example.grupo110.mitouchmobile.aplicacion.RegistrarActivity"
     android:background="#000000"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"

@@ -128,7 +128,7 @@
         <activity android:name=".ShareDriveActivity"></activity>
 
         <activity
-            android:name=".galeria.GalleryPage"
+            android:name=".galeria.AddDesdeGaleria"
             android:label="@string/title_activity_galeria_de_fotos"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

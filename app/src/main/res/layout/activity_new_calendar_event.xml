@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:background="#000000"
-    tools:context=".NewCalendarEventActivity">
+    tools:context=".google_calendar.NewCalendarEventActivity">
 
     <LinearLayout
         android:layout_height="0dp"

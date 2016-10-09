@@ -156,7 +156,9 @@ public class CompartirActivity extends AppCompatActivity {
 
 
         if(!ArchivoExiste()) {
-
+/*
+* Me falta hacer esta parte!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
             /*progress = new ProgressDialog(this, R.style.MyTheme);
             progress.setMessage("Descargando..");
             String[] separated = path.split("/");
@@ -168,6 +170,7 @@ public class CompartirActivity extends AppCompatActivity {
             new SFTClienteUploadNoTengoArchivoLocal(progress, this, grupoUsuario, path.substring(path.lastIndexOf("/") + 1), separated[4] ,getApplicationContext()).execute();
         }
         else {
+
             progress = new ProgressDialog(this, R.style.MyTheme);
             progress.setMessage("Compartiendo..");
             new SFTClienteUploadFileFromGallery(progress, this, grupoUsuario, path, getApplicationContext()).execute();
