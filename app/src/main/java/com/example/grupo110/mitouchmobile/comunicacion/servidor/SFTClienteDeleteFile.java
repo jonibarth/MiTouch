@@ -1,4 +1,4 @@
-package com.example.grupo110.mitouchmobile;
+package com.example.grupo110.mitouchmobile.comunicacion.servidor;
 
 import android.os.AsyncTask;
 
@@ -21,9 +21,6 @@ public class SFTClienteDeleteFile extends AsyncTask<Void, Void, Void> {
     String SFTPUSER = "toor";
     String SFTPPASS = "namekiano";
     final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
-    final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
-    int id_usuario;
-    int id_carpeta;
     String archivoOriginal;
     String nombre_carpeta;
 
@@ -31,7 +28,11 @@ public class SFTClienteDeleteFile extends AsyncTask<Void, Void, Void> {
     Channel 	channel 	= null;
     ChannelSftp channelSftp = null;
 
-
+/*
+* Parametros de entrada:
+* nombre del archivo que quiero borrar
+* Carpeta donde se encuentra el archivo que quiero borrar
+  */
     public SFTClienteDeleteFile(String nombre_carpeta, String nombreArchivo) {
         this.nombre_carpeta = nombre_carpeta;
         this.archivoOriginal = nombreArchivo;
@@ -43,11 +44,14 @@ public class SFTClienteDeleteFile extends AsyncTask<Void, Void, Void> {
             JSch jsch = new JSch();
             session = jsch.getSession(SFTPUSER,SFTPHOST,SFTPPORT);
             session.setPassword(SFTPPASS);
+            java.util.Properties config = new java.util.Properties();
+            config.put("StrictHostKeyChecking", "no");
+            session.setConfig(config);
             session.connect();
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp)channel;
-            channelSftp.cd(PATH_BASE_DE_DATOS+"/"+ archivoOriginal);
+            channelSftp.cd(PATH_BASE_DE_DATOS+"/"+nombre_carpeta);
             channelSftp.rm(archivoOriginal);
         }catch(Exception ex){
             ex.printStackTrace();

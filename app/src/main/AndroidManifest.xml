@@ -130,6 +130,7 @@
         <activity
             android:name=".GalleryPage"
             android:label="@string/title_activity_galeria_de_fotos"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             />
 

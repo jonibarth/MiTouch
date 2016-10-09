@@ -12,20 +12,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 
-import com.google.api.client.util.Sleeper;
+import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteDeleteFile;
+import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteDownloadFile;
 
 import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadFactory;
 
 public class DetailsActivity extends AppCompatActivity {
     private GridView gridView;
@@ -63,7 +61,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         id_usuario = getIntent().getExtras().getInt("id");
         carpeta = getIntent().getExtras().getString("carpeta");
-
         listArchivosCompletos = new ArrayList<>();
         listIDArchivosCompletos = new ArrayList<>();
         listExtenciones = new ArrayList<>();
@@ -125,11 +122,14 @@ public class DetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("Lo que mando es: ");
+                System.out.println("Lo que mando es id_usuario: " + id_usuario);
+                System.out.println("Lo que mando es nombre_carpeta: " +carpeta);
                 Intent AgregarArchivoIntent = new Intent(DetailsActivity.this, GalleryPage.class);
-                System.out.println(id_usuario +"---"+carpeta);
                 AgregarArchivoIntent.putExtra("id",id_usuario);
                 AgregarArchivoIntent.putExtra("carpeta",carpeta);
                 startActivity(AgregarArchivoIntent);
+                finish();
             }
         });
 
@@ -170,6 +170,7 @@ public class DetailsActivity extends AppCompatActivity {
             // nombre del archivo
             // carpeta del archivo
             progress = new ProgressDialog(this, R.style.MyTheme);
+            progress.setMessage("Descargando..");
                 new SFTClienteDownloadFile(progress, this, nombre_carpeta, auxiliar, getApplicationContext()).execute();
         }
     }
@@ -183,7 +184,6 @@ public class DetailsActivity extends AppCompatActivity {
             return true;
         else
             return false;
-// Do something else.
     }
 
     // Este metodo sirve para descargar el archivo que se encuentra en el servidor!!!

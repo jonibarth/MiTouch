@@ -47,7 +47,7 @@ public class RegistrarActivity extends AppCompatActivity {
     final String PATH_SERVIDOR="C:\\Program Files\\MiTouch\\";
 
     Button botonRegistrar;
-    private final static int  LARGO_CONTRASEÑA = 10;
+    private final static int  LARGO_CONTRASEÑA = 6;
     private final static int  USUARIOMINIMO = 6;
     private final static int  USUARIOMAXIMO = 15;
 

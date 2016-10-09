@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteUploadFileFromGallery;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -38,32 +40,51 @@ public class GalleryPage extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
+        * Le asigno un layout para poder poner el progress dialog
+         */
+        setContentView(R.layout.humo);
+        /*
+        * Lo que recibo es el id del usuario que esta conectado
+        * Lo que recibo es el id de la carpeta, en caso de ser una carpeta compartida,
+        * En caso de ser la carpeta personal, recibo Carpeta Personal
+         */
 
         id_usuario = getIntent().getExtras().getInt("id");
         carpeta = getIntent().getExtras().getString("carpeta");
-        System.out.println("El id del usuario es: " + id_usuario);
-        System.out.println("La carpeta es: " + carpeta);
 
-        // Create intent to Open Image applications like Gallery, Google Photos
-
-        if(!carpeta.equals("Carpeta Personal")) {
-            // Tengo el id de la carpeta, necesito el nombre!!
+        /*
+        *
+        * En caso de que sea la carpeta personal, parte else..
+        * lo que necesito es el nombre de la persona y el id de la carpeta compartida
+        *
+        * En caso que sea una carpeta compartida, ya tengo el id pero necesito el nombre
+        *
+         */
+        if(!carpeta.equals("Carpeta Personal"))
+        {
             id_carpeta = Integer.parseInt(carpeta);
-            System.out.println("el id que voy a buscar es : " + id_carpeta);
             obtenerCarpetaCompartida();
         }
         else {
-            //con el id del usuario puedo obtener el id de la galeria personal
             obtenerCarpeta();
         }
 
+        System.out.println("El nombre de la carpeta es: " + nombre_carpeta);
+        System.out.println("El id de la carpeta es: " + id_carpeta);
 
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        // Start the Intent
-        startActivityForResult(galleryIntent, SELECT_PICTURE);
+        /*
+        * Lanzo la galeria para que el usuario pueda seleccionar un archivo multimedia.
+        * Cantidad maxima de archivo es 1, segun SELECT_PICTURE
+         */
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, SELECT_PICTURE);
     }
 
+    /*
+    * Metodo utilizado para obtener el nombre de la carpeta compartida.
+     */
     private void obtenerCarpetaCompartida() {
         String comando;
         comando = String.format("SELECT gru_nombre " +
@@ -75,12 +96,36 @@ public class GalleryPage extends Activity{
         try {
             while (resultSet.next()) {
                 nombre_carpeta=resultSet.getString("gru_nombre");
-                System.out.println("id Carpeta: "+nombre_carpeta);
+                System.out.println("El nombre de la carpeta es: " + nombre_carpeta);
             }
         }catch (Exception e) {System.out.println("Error Crear Carpetas: " + e);
         }
     }
+    /*
+    * Metodo utilizado para obtener el id de la carpeta personal
+    * Metodo utilizado para obtener el nombre de la carpeta personal( es el nombre de usuario)
+     */
+    private void obtenerCarpeta() {
+        String comando;
+        PostgrestBD baseDeDatos;
+        ResultSet resultSet;
 
+        comando = "SELECT usu_id_galeria, usu_nombre_usuario " +
+                "FROM \"MiTouch\".t_usuarios " +
+                "WHERE usu_id='"+id_usuario+"';";
+        baseDeDatos = new PostgrestBD();
+        resultSet = baseDeDatos.execute(comando);
+        try {
+            while (resultSet.next()) {
+                id_carpeta = resultSet.getInt("usu_id_galeria");
+                nombre_carpeta = resultSet.getString("usu_nombre_usuario");
+
+            }
+        }catch (Exception e){System.out.println("Error obtener carpeta: "+e);}
+    }
+    /*
+    * Este metodo me devuelve el path de la imagen que seleccione desde la galeria de android
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -121,16 +166,39 @@ public class GalleryPage extends Activity{
         finish();
 
     }
+    /*
+    * Metodo que me sirve para saber si el archivo que quiero agregar a la carpeta ya existe o no
+    * Busco en la base de datos el path del archivo.
+     */
+    private boolean ArchivoExiteEnBD() {
+        obtenerArchivo();
+        String pathAVerificar =PATH_BASE_DE_DATOS+"/"+nombre_carpeta+"/"+archivoOriginal;
+        String comando;
+        System.out.println("El path a verificar es: " + pathAVerificar);
+        comando = "SELECT archg_path FROM \"MiTouch\".t_archivo_galeria WHERE archg_path ='"+pathAVerificar+"';";
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try{
+            while (resultSet.next()) {
+                return true;
+            }
+        }catch(Exception e){System.out.println("Error busqueda:" + e);}
 
+        return false;
+    }
+    /*
+    * Metodo que me crea en caso de que no exista, el archivo, tanto en el dispositivo mobile
+    * como en el servidor.
+    * Este metodo lanza al de actualizar base de datos. (Se podria lanzar al reves)
+     */
     private void crearArchivoMultimedia() {
-        obtenerArchivo(); // Obtengo el nombre del archivo que voy a "crear"
         if(!ArchivoExiteEnBD()) {
-            obtenerCarpeta(); // Ya tengo el id de la carpeta ( me sirve para actualizar la BD)
-            System.out.println(id_usuario +" "+nombre_carpeta+" "+id_carpeta);
             ActualizarBaseDeDatos(); // Actualice la base de datos, debo tener el archivo creado
             CrearDirectorio(); // Crear directorio en caso de que no exista
             copyFileOrDirectory(imgDecodableString, PATH_MOBILE + "/" + nombre_carpeta);//Voy a copiar el archivo a la carpeta de MiTouch
-            new SFTClienteUploadFile(nombre_carpeta, imgDecodableString).execute();//Voy a copiar el archivo al servidor
+            progress = new ProgressDialog(this, R.style.MyTheme);
+            progress.setMessage("Cargando..");
+             new SFTClienteUploadFileFromGallery(progress, this, nombre_carpeta, imgDecodableString, getApplicationContext()).execute();//Voy a copiar el archivo al servidor
         }
         else
         {
@@ -140,43 +208,12 @@ public class GalleryPage extends Activity{
         }
 
     }
-    private boolean ArchivoExiteEnBD() {
-        String pathAVerificar =PATH_BASE_DE_DATOS+nombre_carpeta+"/"+archivoOriginal;
-        String comando = "";
 
-        //System.out.println("El path es: "+ pathAVerificar);
-        comando = "SELECT archg_path FROM \"MiTouch\".t_archivo_galeria WHERE archg_path ='"+pathAVerificar+"';";
-        PostgrestBD baseDeDatos = new PostgrestBD();
-        ResultSet resultSet = baseDeDatos.execute(comando);
-        try{
-            while (resultSet.next()) {
-                //System.out.println("eee: " + resultSet.getString(1));
-                return true;
-            }
-        }catch(Exception e){System.out.println("Error busqueda:" + e);}
-
-        return false;
-    }
-
-    private void obtenerCarpeta() {
-            String comando;
-            PostgrestBD baseDeDatos;
-            ResultSet resultSet;
-
-            comando = "SELECT usu_id_galeria, usu_nombre_usuario " +
-                    "FROM \"MiTouch\".t_usuarios " +
-                    "WHERE usu_id='"+id_usuario+"';";
-            baseDeDatos = new PostgrestBD();
-            resultSet = baseDeDatos.execute(comando);
-        try {
-            while (resultSet.next()) {
-                id_carpeta = resultSet.getInt("usu_id_galeria");
-                nombre_carpeta = resultSet.getString("usu_nombre_usuario");
-
-            }
-        }catch (Exception e){System.out.println("Error obtener carpeta: "+e);}
-    }
-
+    /*
+    *Metodo para actualizar la tabla: t_archivo_galeria
+    *
+    * Metodo para actualizar la tabla: t_carpeta_archivos_galeria
+     */
     private void ActualizarBaseDeDatos() {
         String id_archivo=null;
         String path= PATH_BASE_DE_DATOS+"/"+nombre_carpeta+"/" + archivoOriginal;
@@ -201,12 +238,18 @@ public class GalleryPage extends Activity{
         System.out.println("el comando es: " + comando);
         baseDeDatos.execute(comando);
     }
-
+    /*
+    * Metodo utilizado para obtener el nombre del archivo que selccione junto con su extencion
+    * Ejemplo: imagen.jpg
+     */
     @NonNull
     private void obtenerArchivo() {
         archivoOriginal = imgDecodableString.substring(imgDecodableString.lastIndexOf("/") + 1);
     }
-
+    /*
+    * Metodo utilizado para crear directorio en la carpeta mobile en caso de que no exista.
+    * El direcorio es la carpeta general que contendra subcarpeta con el usuario logueado y carpetas compartida
+     */
     public void CrearDirectorio(){
         System.out.println("Cree el directorio!");
         try
@@ -226,6 +269,9 @@ public class GalleryPage extends Activity{
             Log.e("Ficheros", "Error al escribir fichero a memoria interna");
         }
     }
+    /*
+    * Metodo utilizado para ubicar el directorio donde se debe crear el archivo
+     */
     public static void copyFileOrDirectory(String srcDir, String dstDir) {
         System.out.println("Cree el archivo: copyFileOrDirectory!");
         try {
@@ -246,18 +292,18 @@ public class GalleryPage extends Activity{
             e.printStackTrace();
         }
     }
+    /*
+    * Metodo utilizado para la creacion del archivo dentro del dispositivo mobile
+     */
     public static void copyFile(File sourceFile, File destFile) throws IOException {
-        System.out.println("Cree el archivo: copyFile!");
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
 
         if (!destFile.exists()) {
             destFile.createNewFile();
         }
-
         FileChannel source = null;
         FileChannel destination = null;
-
         try {
             source = new FileInputStream(sourceFile).getChannel();
             destination = new FileOutputStream(destFile).getChannel();
@@ -273,3 +319,4 @@ public class GalleryPage extends Activity{
     }
 
 }
+// Bug: Cuando android me pregunta con que aplicacion lo quiero abrir y vuelvo para atras rompe

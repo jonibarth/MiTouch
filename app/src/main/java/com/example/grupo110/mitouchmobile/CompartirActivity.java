@@ -12,6 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteDownloadFile;
+import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteUploadNoTengoArchivoLocal;
+import com.example.grupo110.mitouchmobile.comunicacion.servidor.SFTClienteUploadFileFromGallery;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -53,6 +58,7 @@ public class CompartirActivity extends AppCompatActivity {
     final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
     static Context context;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,29 +115,23 @@ public class CompartirActivity extends AppCompatActivity {
                 grupoUsuario = listDataChild.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
+
                 context = getApplicationContext();
                // System.out.println("El grupo de uuario es: "+ grupoUsuario);
+
                 id_carpeta=listDataID.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
+
                 System.out.println("id_carpeta " +id_carpeta);
+
                 archivoOriginal = obtenerArchivo();
+
                 String directorio = obtenerDirectorio();
                 Toast toast;
                 if(!ArchivoExiteEnBD()){
-                    System.out.println("El destino es:" + PATH_MOBILE+"/"+grupoUsuario);
-                    System.out.println("el grupo de usuario es: " + grupoUsuario);
-                    ActualizarBaseDeDatos();
-
-
-
-                    new SFTClienteUploadFile(grupoUsuario, path).execute();
-
-                    if(listDataEscribir.get(listDataHeader.get(groupPosition)).get(childPosition).equals("true")) {
-                        CrearDirectorio();
-                        copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);
-                        }
-
+                    String PuedoEscribir = listDataEscribir.get(listDataHeader.get(groupPosition)).get(childPosition);
+                    crearArchivo(PuedoEscribir);
                     toast= Toast.makeText(getApplicationContext(),"El archivo fue copiado con exito", Toast.LENGTH_LONG);
                     toast.show();
                     finish();
@@ -146,6 +146,52 @@ public class CompartirActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void crearArchivo(String puedoEscribir) {
+        ActualizarBaseDeDatos();
+        System.out.println("el grupo de usuario es: " + grupoUsuario);
+        System.out.println("el path es: " + path);
+        System.out.println("A que grupo de usuario le voy a compartir: " + grupoUsuario);
+        System.out.println("Que archivo le voy a compartir: " + path);
+
+
+        if(!ArchivoExiste()) {
+            progress = new ProgressDialog(this, R.style.MyTheme);
+            progress.setMessage("Descargando..");
+            String[] separated = path.split("/");
+             // this will contain "Fruit"
+            System.out.println("Grupo de usuario que soy! " + separated[4]);
+            new SFTClienteDownloadFile(progress, this, separated[4], path.substring(path.lastIndexOf("/") + 1), getApplicationContext()).execute();
+
+        }
+
+        progress.setMessage("Compartiendo..");
+        new SFTClienteUploadFileFromGallery(progress, this, grupoUsuario, path, getApplicationContext()).execute();
+        if(puedoEscribir.equals("true")) {
+            CrearDirectorio();
+            copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);
+        }
+
+
+    }
+
+    private boolean ArchivoExiste() {
+
+        String pathAbrir= PATH_MOBILE+"/"+grupoUsuario+"/"+path.substring(path.lastIndexOf("/") + 1);
+
+        String[] separated = path.split("/");
+
+        System.out.println("El path a abrir es: " + separated[4]);
+        System.out.println("El path a abrir es: " + path.substring(path.lastIndexOf("/") + 1));
+
+        File file = new File(pathAbrir);
+        if(file.exists())
+            return true;
+        else
+            return false;
+    }
+
+
 
     private boolean ArchivoExiteEnBD() {
         String pathAVerificar =PATH_BASE_DE_DATOS+grupoUsuario+"/"+archivoOriginal;
