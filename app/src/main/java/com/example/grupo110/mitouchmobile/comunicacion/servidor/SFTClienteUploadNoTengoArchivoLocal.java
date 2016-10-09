@@ -10,10 +10,18 @@ import com.example.grupo110.mitouchmobile.GalleryPage;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 /**
  * Created by Jonathan on 08/10/2016.
@@ -32,9 +40,13 @@ public class SFTClienteUploadNoTengoArchivoLocal extends AsyncTask<Void, Void, V
     String nombre_carpeta_origen;
     String nombre_carpeta_destino;
 
-    Session session 	= null;
-    Channel channel 	= null;
-    ChannelSftp channelSftp = null;
+    Session sessionRead 	= null;
+    Channel channelRead 	= null;
+    ChannelSftp channelSftpRead = null;
+
+    Session sessionWrite 	= null;
+    Channel channelWrite 	= null;
+    ChannelSftp channelSftpWrite = null;
 
     ProgressDialog progress;
     CompartirActivity compartirActivity;
@@ -56,7 +68,7 @@ public class SFTClienteUploadNoTengoArchivoLocal extends AsyncTask<Void, Void, V
         System.out.println("nombre_carpeta destino" +" " + nombre_carpeta_destino);
     }
 
-
+/*
     @Override
     public void onPreExecute() {
         progress.show();
@@ -67,29 +79,116 @@ public class SFTClienteUploadNoTengoArchivoLocal extends AsyncTask<Void, Void, V
         Toast toast = Toast.makeText(context,"El archivo fue compartido con exito..",Toast.LENGTH_LONG);
         toast.show();
     }
+*/
 
 
+    // no se si va a funcionar.. http://stackoverflow.com/questions/32742066/using-sftp-in-java-how-do-i-transfer-a-file-from-one-folder-to-another
     @Override
     protected Void doInBackground(Void... params) {
         try{
             JSch jsch = new JSch();
-            session = jsch.getSession(SFTPUSER,SFTPHOST,SFTPPORT);
-            session.setPassword(SFTPPASS);
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
-            session.setConfig(config);
-            session.connect();
-            channel = session.openChannel("sftp");
-            channel.connect();
-            channelSftp = (ChannelSftp)channel;
-            channelSftp.cd(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta_destino);
-            File f = new File(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta_origen+"/"+archivoOriginal);
-            channelSftp.put(new FileInputStream(f), f.getName());
+
+
+
+
+            sessionRead = jsch.getSession(SFTPUSER,SFTPHOST,SFTPPORT);
+            sessionRead.setPassword(SFTPPASS);
+            sessionRead.setConfig(config);
+            sessionRead.connect();
+
+            cp(sessionRead);
+/*
+            sessionWrite = jsch.getSession(SFTPUSER,SFTPHOST,SFTPPORT);
+            sessionWrite.setPassword(SFTPPASS);
+            sessionWrite.setConfig(config);
+            sessionWrite.connect();
+
+            channelRead = sessionRead.openChannel("sftp");
+            channelRead.connect();
+            channelSftpRead = (ChannelSftp)channelRead;
+
+            channelWrite = sessionWrite.openChannel("sftp");
+            channelWrite.connect();
+            channelSftpWrite = (ChannelSftp)channelWrite;
+
+
+            PipedInputStream pin = new PipedInputStream(2048);
+            PipedOutputStream pout = new PipedOutputStream(pin);
+
+
+            System.out.println("leo de:" +PATH_BASE_DE_DATOS+"/"+nombre_carpeta_origen+"/"+archivoOriginal);
+
+            System.out.println("Escribo en:" +PATH_BASE_DE_DATOS+"/"+nombre_carpeta_destino+"/"+archivoOriginal);
+
+            channelSftpRead.get(PATH_BASE_DE_DATOS+"/"+nombre_carpeta_origen+"/"+archivoOriginal, pout);
+            channelSftpWrite.put(pin, PATH_BASE_DE_DATOS+"/"+nombre_carpeta_destino+"/"+archivoOriginal);
+*/
+
+
+
+
+/*
+            channelRead.disconnect();
+            channelWrite.disconnect();
+
+            sessionRead.disconnect();
+            sessionWrite.disconnect();
+*/
         }catch(Exception ex){
             System.out.println("Error: " + ex);
             ex.printStackTrace();
         }
+        System.out.println("FIN");
         return null;
     }
+
+
+
+
+
+
+    public void cp (Session session) throws Exception {
+        if (!session.isConnected()) {
+            System.out.println ("Session is not connected");
+            throw new Exception("Session is not connected...");
+        }
+        Channel upChannel = null;
+        Channel downChannel = null;
+        ChannelSftp uploadChannel = null;
+        ChannelSftp downloadChannel = null;
+        try {
+            upChannel = session.openChannel("sftp");
+            downChannel = session.openChannel("sftp");
+            upChannel.connect();
+            downChannel.connect();
+            uploadChannel = (ChannelSftp) upChannel;
+            downloadChannel = (ChannelSftp) downChannel;
+            InputStream inputStream = uploadChannel.get(PATH_BASE_DE_DATOS+"/"+nombre_carpeta_origen+"/"+archivoOriginal);
+            downloadChannel.put(inputStream, PATH_BASE_DE_DATOS+"/"+nombre_carpeta_destino+"/"+archivoOriginal);
+
+        } catch (JSchException e) {
+            System.out.println("Auth failure");
+            throw new Exception(e);
+        } finally {
+            if (upChannel == null || downChannel == null) {
+                System.out.println("Channel is null ...");
+            }else if (uploadChannel != null && !uploadChannel.isClosed()){
+                uploadChannel.exit();
+                downloadChannel.exit();
+                uploadChannel.disconnect();
+                downloadChannel.disconnect();
+            }else if (!upChannel.isClosed()) {
+                upChannel.disconnect();
+                downChannel.disconnect();
+            }
+            session.disconnect();
+        }
+    }
+
+
+
+
 
 }

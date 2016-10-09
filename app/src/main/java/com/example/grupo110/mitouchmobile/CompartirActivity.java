@@ -76,7 +76,6 @@ public class CompartirActivity extends AppCompatActivity {
             }
         });
         dumpIntent(getIntent());
-
         try{
             id_usuario = getIntent().getExtras().getInt("id");
             path = getIntent().getExtras().getString("url");
@@ -84,7 +83,6 @@ public class CompartirActivity extends AppCompatActivity {
         catch(Exception e){
             System.out.println("Error: "+e);
         }
-
         System.out.println("url: " + path);
         buscarUsuario();
 
@@ -156,36 +154,38 @@ public class CompartirActivity extends AppCompatActivity {
 
 
         if(!ArchivoExiste()) {
-            progress = new ProgressDialog(this, R.style.MyTheme);
+
+            /*progress = new ProgressDialog(this, R.style.MyTheme);
             progress.setMessage("Descargando..");
             String[] separated = path.split("/");
              // this will contain "Fruit"
             System.out.println("Grupo de usuario que soy! " + separated[4]);
             new SFTClienteDownloadFile(progress, this, separated[4], path.substring(path.lastIndexOf("/") + 1), getApplicationContext()).execute();
-
+*/
+            String[] separated = path.split("/");
+            new SFTClienteUploadNoTengoArchivoLocal(progress, this, grupoUsuario, path.substring(path.lastIndexOf("/") + 1), separated[4] ,getApplicationContext()).execute();
         }
-
-        progress.setMessage("Compartiendo..");
-        new SFTClienteUploadFileFromGallery(progress, this, grupoUsuario, path, getApplicationContext()).execute();
-        if(puedoEscribir.equals("true")) {
-            CrearDirectorio();
-            copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);
+        else {
+            progress = new ProgressDialog(this, R.style.MyTheme);
+            progress.setMessage("Compartiendo..");
+            new SFTClienteUploadFileFromGallery(progress, this, grupoUsuario, path, getApplicationContext()).execute();
+            if (puedoEscribir.equals("true")) {
+                CrearDirectorio();
+                copyFileOrDirectory(path, PATH_MOBILE + "/" + grupoUsuario);
+            }
         }
 
 
     }
 
     private boolean ArchivoExiste() {
-
         String pathAbrir= PATH_MOBILE+"/"+grupoUsuario+"/"+path.substring(path.lastIndexOf("/") + 1);
-
         String[] separated = path.split("/");
-
         System.out.println("El path a abrir es: " + separated[4]);
         System.out.println("El path a abrir es: " + path.substring(path.lastIndexOf("/") + 1));
-
         File file = new File(pathAbrir);
-        if(file.exists())
+        File file2 = new File(path);
+        if(file.exists()||file2.exists())
             return true;
         else
             return false;
@@ -194,29 +194,16 @@ public class CompartirActivity extends AppCompatActivity {
 
 
     private boolean ArchivoExiteEnBD() {
-        String pathAVerificar =PATH_BASE_DE_DATOS+grupoUsuario+"/"+archivoOriginal;
-        String comando = "";
-
-        //System.out.println("El path es: "+ pathAVerificar);
+        String pathAVerificar =PATH_BASE_DE_DATOS+"/"+grupoUsuario+"/"+archivoOriginal;
+        String comando;
         comando = "SELECT archg_path FROM \"MiTouch\".t_archivo_galeria WHERE archg_path ='"+pathAVerificar+"';";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
-            while (resultSet.next()) {
-                //System.out.println("eee: " + resultSet.getString(1));
+            while (resultSet.next())
                 return true;
-            }
         }catch(Exception e){System.out.println("Error busqueda:" + e);}
-
         return false;
-    }
-
-    private void CopiarAInternalStorage(){
-
-        // obtengo el nombre del archivo que queiro copiar
-
-        //obtengo el directorio del archivo que quiero copiar
-
     }
     private void ActualizarBaseDeDatos() {
         // Crear Registro en la tabla de archivos
