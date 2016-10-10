@@ -38,8 +38,6 @@ public class ActionGoogleDriveActivity extends Activity {
 
                         public void onClick(DialogInterface dialog, int opt){
 
-                            System.out.println("Opción elegida: "+ opt);
-
                             switch (opt){
 
                                 case 0: url = getUrl(id);
@@ -53,6 +51,7 @@ public class ActionGoogleDriveActivity extends Activity {
                                         break;
 
                                 case 1: Intent shareIntent = new Intent(ActionGoogleDriveActivity.this,ShareDriveActivity.class);
+                                        shareIntent.putExtra("id",id);
                                         startActivity(shareIntent);
                                         break;
 

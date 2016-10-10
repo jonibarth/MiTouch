@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -25,32 +26,43 @@ public class ShareDriveActivity extends Activity{
         new AsyncTask<Void, Void, Void>() {
             protected Void doInBackground(Void... params) {
 
-            String fileId = "1a4oIGyOYlkZFF9_3wqd7Vieb5B1SxnRMA2_l1nDhcRA";
+            String fileId = null;
 
             try{
+                fileId = getIntent().getExtras().getString("id");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
-            GoogleAccountCredential account;
+            if (fileId != null) {
 
-                account = GoogleAccountCredential.usingOAuth2(getApplicationContext(),Collections.singletonList(DriveScopes.DRIVE));
-                startActivityForResult(account.newChooseAccountIntent(),1);
+                try {
 
-            com.google.api.services.drive.Drive driveService =
-                    new Drive.Builder(
-                            AndroidHttp.newCompatibleTransport(),
-                            JacksonFactory.getDefaultInstance(),
-                            account
-                    ).build();
+                    GoogleAccountCredential account;
+
+                    account = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singletonList(DriveScopes.DRIVE));
+                    account.setSelectedAccountName("grupo110unlam@gmail.com");
+
+                    com.google.api.services.drive.Drive driveService =
+                            new Drive.Builder(
+                                    AndroidHttp.newCompatibleTransport(),
+                                    JacksonFactory.getDefaultInstance(),
+                                    account
+                            ).setApplicationName("MiTouch").build();
+
+                    Permission permission = new Permission();
+                    permission.setEmailAddress("dismal.cj@gmail.com")
+                            .setType("user").setRole("writer");
 
 
-                Permission permission = new Permission();
-                permission.setEmailAddress("martindiazgrizzuti@gmail.com")
-                .setType("user").setRole("owner");
-
-
-                driveService.permissions().create(fileId,permission).execute().setDisplayName("Name");
-                }catch (Exception e){
-                    e.printStackTrace();
+                    driveService.permissions().create(fileId, permission).setFields("id").execute();
+                } catch (UserRecoverableAuthIOException e) {
+                    startActivityForResult(e.getIntent(), 2);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
                 }
+
+            }
                 return null;
 
         }}.execute();

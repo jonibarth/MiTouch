@@ -36,6 +36,7 @@ public class MainMenuActivity extends AppCompatActivity {
     ImageView vCalc;
     ImageView vChat;
     int id_usuario;
+    String email;//Mail para compartir en Drive
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
