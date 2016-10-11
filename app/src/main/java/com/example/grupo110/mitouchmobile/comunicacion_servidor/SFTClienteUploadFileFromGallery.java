@@ -26,7 +26,6 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
     String SFTPUSER = "toor";
     String SFTPPASS = "namekiano";
     final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
-    final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia";
     int id_usuario;
     String archivoOriginal;
     String nombre_carpeta;
@@ -41,7 +40,6 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
     Context context;
 
     public SFTClienteUploadFileFromGallery(ProgressDialog progress, CompartirActivity compartirActivity, String nombre_carpeta, String imgDecodableString, Context applicationContext) {
-        System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
         this.progress = progress;
             this.compartirActivity = compartirActivity;
             this.nombre_carpeta = nombre_carpeta;
@@ -64,11 +62,11 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
 
     @Override
     public void onPreExecute() {
-        progress.show();
+       // progress.show();
     }
     @Override
     public void onPostExecute(Void unused) {
-        progress.dismiss();
+        //progress.dismiss();
         Toast toast = Toast.makeText(context,"El archivo fue compartido con exito..",Toast.LENGTH_LONG);
         toast.show();
     }
@@ -93,9 +91,11 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
                 channelSftp.mkdir(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta);
                 channelSftp.cd(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta);
             }
+
+            System.out.println("El archivo es: " + archivoOriginal);
             File f = new File(archivoOriginal);
             channelSftp.put(new FileInputStream(f), f.getName());
-            System.out.println("11");
+            System.out.println("Ya se subio el archivo al servidor");
         }catch(Exception ex){
             System.out.println("Error: " + ex);
             ex.printStackTrace();

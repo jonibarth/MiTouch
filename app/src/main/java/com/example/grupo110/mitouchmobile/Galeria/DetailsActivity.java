@@ -208,28 +208,27 @@ public class DetailsActivity extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         String dia = df.format(c.getTime());
-        /*comando = String.format("DELETE " +
+        comando = String.format("DELETE " +
                 "FROM \"MiTouch\".t_carpeta_archivos_galeria " +
-                "WHERE  cag_id_archivo =" + idEliminar +";");*/
-
+                "WHERE  cag_id_archivo =" + idEliminar +";");
+        /*
         comando = String.format("UPDATE " +
                 "\"MiTouch\".t_archivo_galeria " +
                 "SET archg_fecha_baja ='"+dia+"'" +
                 "WHERE  archg_id =" + idEliminar +";");
-
+        */
 
 
 
         PostgrestBD baseDeDatos = new PostgrestBD();
         baseDeDatos.execute(comando);
-        /*
+
         // borro fila en t_archivo archg_id que el archg_id sea = idEliminar
         comando = String.format("DELETE " +
                 "FROM \"MiTouch\".t_archivo_galeria " +
                 "WHERE  archg_id =" + idEliminar +";");
         baseDeDatos.execute(comando);
         // busco nombre archivo, borrar esta en la carpeta MiTouchMultimedia, lo borro
-        */
         nombreArchivo=listNombreArchivos.get(posicionAprentada);
         String pArchivo = PATH_MOBILE + "/" +nombre_carpeta+ "/" + nombreArchivo;
         try {
@@ -287,7 +286,7 @@ public class DetailsActivity extends AppCompatActivity {
         String comando;
         comando = "SELECT archg_path,archg_id " +
                 "FROM \"MiTouch\".t_carpeta_archivos_galeria INNER JOIN \"MiTouch\".t_archivo_galeria ON archg_id=cag_id_archivo " +
-                " WHERE cag_id_carpeta=" + id_carpeta+" AND archg_fecha_baja IS NULL;";
+                " WHERE cag_id_carpeta=" + id_carpeta+";";
 
         System.out.println("el comando a ejectuar es: " + comando);
 
@@ -351,20 +350,16 @@ public class DetailsActivity extends AppCompatActivity {
         }
         return imageItems;
     }
-
-
     private boolean esunaImagen(String imagen){
 
-        if(imagen.equals("jpg")||imagen.equals("jpeg")||imagen.equals("png")||imagen.equals("gif")||imagen.equals("bmp"))
+        if(imagen.equals("jpg")||imagen.equals("jpeg")||imagen.equals("bmp")||imagen.equals("png"))
             return true;
         return false;
     }
-
     private boolean esunVideo(String imagen){
 
         if(imagen.equals("mp4")||imagen.equals("avi")||imagen.equals("3gp"))
             return true;
         return false;
     }
-
 }

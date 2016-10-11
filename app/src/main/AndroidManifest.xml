@@ -116,6 +116,13 @@
             android:label="@string/title_activity_compartir2"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".CompartirDrive"
+            android:label="Compartir Documento"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".galeria.DetailsActivity"
             android:label="@string/title_activity_details"

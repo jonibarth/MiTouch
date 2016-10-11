@@ -12,7 +12,13 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Created by Jonathan on 08/10/2016.
@@ -44,7 +50,11 @@ public class SFTClienteUploadNoTengoArchivoLocal extends AsyncTask<Void, Void, V
     AddDesdeGaleria addDesdeGaleria;
     Context context;
 
-
+/*
+* nombre_carpeta_destino = es el grupo de usuario a donde le voy a compartir la carpeta
+* archivoOriginal = es el nombre del archivo a compartir
+* nombre_carpeta_origen = es la carpeta donde se encuentra el archivo a compartir
+ */
 
 
     public SFTClienteUploadNoTengoArchivoLocal(ProgressDialog progress, CompartirActivity compartirActivity, String nombre_carpeta_destino, String archivoOriginal, String nombre_carpeta_origen, Context applicationContext) {
@@ -123,10 +133,10 @@ public class SFTClienteUploadNoTengoArchivoLocal extends AsyncTask<Void, Void, V
 /*
             channelRead.disconnect();
             channelWrite.disconnect();
-
-            sessionRead.disconnect();
-            sessionWrite.disconnect();
 */
+            sessionRead.disconnect();
+            //sessionWrite.disconnect();
+
         }catch(Exception ex){
             System.out.println("Error: " + ex);
             ex.printStackTrace();
@@ -156,9 +166,24 @@ public class SFTClienteUploadNoTengoArchivoLocal extends AsyncTask<Void, Void, V
             downChannel.connect();
             uploadChannel = (ChannelSftp) upChannel;
             downloadChannel = (ChannelSftp) downChannel;
+
+            // Primero voy a crear el directorio donde se alojara el archivo
+            try{
+                uploadChannel.cd(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta_destino);}
+            catch (Exception e){
+                uploadChannel.mkdir(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta_destino);
+                uploadChannel.cd(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta_destino);
+            }
+            System.out.println("el nombre del archivo origen es: " + PATH_BASE_DE_DATOS+"/"+nombre_carpeta_origen +"/"+archivoOriginal);
+            File newFile = new File(PATH_BASE_DE_DATOS+"/"+nombre_carpeta_origen +"/"+archivoOriginal);
+
+            System.out.println("el nombre del archivo es: " + newFile.getName());
+
+            uploadChannel.put(new FileInputStream(newFile),  newFile.getName());
+            /*
             InputStream inputStream = uploadChannel.get(PATH_BASE_DE_DATOS+"/"+nombre_carpeta_origen+"/"+archivoOriginal);
             downloadChannel.put(inputStream, PATH_BASE_DE_DATOS+"/"+nombre_carpeta_destino+"/"+archivoOriginal);
-
+            */
         } catch (JSchException e) {
             System.out.println("Auth failure");
             throw new Exception(e);

@@ -198,7 +198,7 @@ public class CompartirActivity extends AppCompatActivity {
     private boolean ArchivoExiteEnBD() {
         String pathAVerificar =PATH_BASE_DE_DATOS+"/"+grupoUsuario+"/"+archivoOriginal;
         String comando;
-        comando = "SELECT archg_path FROM \"MiTouch\".t_archivo_galeria WHERE archg_path ='"+pathAVerificar+"';";
+        comando = "SELECT archg_path FROM \"MiTouch\".t_archivo_galeria WHERE archg_path ='"+pathAVerificar+"' OR archg_fecha_baja IS NOT NULL;";
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
