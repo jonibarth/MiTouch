@@ -4,26 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
-import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteUploadFileFromGalleriaMiTouch;
-import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTPClienteUploadFileFromGaleriaDispositivo;
-import com.example.grupo110.mitouchmobile.expandable_list.ExpandableListAdapter;
-import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
 import com.example.grupo110.mitouchmobile.R;
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.expandable_list.ExpandableListAdapter;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,17 +24,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-/*
-    * http://blog.openalfa.com/como-cambiar-de-nombre-mover-o-copiar-un-fichero-en-javaç
-    * http://es.stackoverflow.com/questions/4225/error-en-metodo-al-mover-archivos-de-un-directorio-a-otro
-    * http://kodehelp.com/java-program-for-downloading-file-from-sftp-server/
+/**
+ * Created by Jonathan on 10/10/2016.
  */
-public class CompartirActivity extends AppCompatActivity {
+
+public class CompartirDesdePopUp extends AppCompatActivity {
 
     int id_usuario=-1;
     int id_carpetausuario;
     String usuario;
-    String path=null;
+    String nombreArchivo;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
@@ -51,10 +41,21 @@ public class CompartirActivity extends AppCompatActivity {
     List<String> grupodeUsuario;
     HashMap<String, List<String>> listDataID;
     List<String> grupodeUsuarioID;
+    HashMap<String, List<String>> listDataEscribir;
+    List<String> grupodeUsuarioEscribir;
 
     String grupoUsuario=null;
-    String id_carpeta=null;
-    String id_archivo;
+
+
+    static Context context;
+    private ProgressDialog progress;
+
+    // Este es el id del archivo que cree!!
+    int id_archivo;
+    // id de la carpeta la cual va a compartir
+    private int idCarpetaOrigen;
+    // id de la carpeta la cual va a se le va a compartir el archivo
+    private String id_carpetaDestino;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,22 +72,22 @@ public class CompartirActivity extends AppCompatActivity {
 
             }
         });
+        progress = new ProgressDialog(this, R.style.MyTheme);
+        progress.setMessage("Descargando..");
         dumpIntent(getIntent());
         try{
             id_usuario = getIntent().getExtras().getInt("id");
-            path = getIntent().getExtras().getString("url");
-            }
+            nombreArchivo = getIntent().getExtras().getString("url");
+            idCarpetaOrigen = getIntent().getExtras().getInt("idCarpeta");
+        }
         catch(Exception e){
             System.out.println("Error: "+e);
         }
-        System.out.println("url: " + path);
-        buscarUsuario();
-
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExpCompartir);
         // preparing list data
         prepareListData();
-
+        context = getApplication();
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
         // setting list adapter
         expListView.setAdapter(listAdapter);
@@ -109,16 +110,19 @@ public class CompartirActivity extends AppCompatActivity {
                 grupoUsuario = listDataChild.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
-               // System.out.println("El grupo de uuario es: "+ grupoUsuario);
-
-                id_carpeta=listDataID.get(
+                id_carpetaDestino=listDataID.get(
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
-
                 Toast toast;
+                progress.show();
+                System.out.println("id_usuario "+id_usuario);
+                System.out.println("nombreArchivo "+nombreArchivo);
+                System.out.println("idCarpetaOrigen "+idCarpetaOrigen);
+
                 obtenerIdDelArchivo();
+
                 if(!ArchivoExiteEnBD()){
-                    crearArchivoMultimedia();
+                    ActualizarBaseDeDatos();
                     toast= Toast.makeText(getApplicationContext(),"El archivo fue copiado con exito", Toast.LENGTH_LONG);
                     toast.show();
                     finish();
@@ -134,65 +138,13 @@ public class CompartirActivity extends AppCompatActivity {
         });
     }
 
-    private void crearArchivoMultimedia() {
-        System.out.println(path);
-        System.out.println(path.substring(path.lastIndexOf("/") + 1));
-
-        ActualizarBaseDeDatos(); // Actualice la base de datos, debo tener el archivo creado
-
-        /*
-         * Lo que le pando es:
-         * process dialog
-         * la clase
-         * el id del archivo
-         * el nombre del archivo
-         * contexto
-         */
-
-
-
-        System.out.println(id_archivo);
-        System.out.println(id_carpeta);
-
-        new SFTPClienteUploadFileFromGaleriaDispositivo(id_archivo, path).execute();//Voy a copiar el archivo al servidor
-
-    }
-    /*
-    *Metodo para actualizar la tabla: t_archivo_galeria
-    *
-    * Metodo para actualizar la tabla: t_carpeta_archivos_galeria
-     */
-    private void ActualizarBaseDeDatos() {
-
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-        String fecha = df.format(c.getTime());
-        String comando;
-        comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path.substring(path.lastIndexOf("/") + 1)+"','"+fecha+"',"+null+") RETURNING archg_id;";
-        System.out.println("el comando es: " + comando);
-        PostgrestBD baseDeDatos = new PostgrestBD();
-        ResultSet resultSet = baseDeDatos.execute(comando);
-        try {
-            while (resultSet.next()){
-                id_archivo=resultSet.getArray(1).toString();
-            }
-        } catch (Exception e) {
-            System.err.println("Error: " + e);
-        }
-
-        //Asociar Carpeta con el archivo
-        comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ("+id_carpeta+","+id_archivo+");";
-        System.out.println("el comando es: " + comando);
-        baseDeDatos.execute(comando);
-    }
-
     private boolean ArchivoExiteEnBD() {
         String comando;
         System.out.println("Estoy en archivo existe en bd");
         comando = "SELECT * " +
                 "FROM \"MiTouch\".t_carpeta_archivos_galeria " +
                 "WHERE  cag_id_archivo="+id_archivo+" " +
-                "AND cag_id_carpeta ="+ id_carpeta+";";
+                "AND cag_id_carpeta ="+ Integer.parseInt(id_carpetaDestino)+";";
         System.out.println(comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
@@ -206,6 +158,7 @@ public class CompartirActivity extends AppCompatActivity {
         return false;
     }
 
+
     private boolean obtenerIdDelArchivo() {
         System.out.println("Estoy en obtenerIdDelArchivo");
         String comando;
@@ -213,27 +166,35 @@ public class CompartirActivity extends AppCompatActivity {
         comando = "SELECT archg_id " +
                 "FROM \"MiTouch\".t_archivo_galeria " +
                 "INNER JOIN \"MiTouch\".t_carpeta_archivos_galeria ON archg_id = cag_id_archivo " +
-                "WHERE  archg_path='"+path.substring(path.lastIndexOf("/") + 1)+"' " +
-                "AND cag_id_carpeta ="+id_carpeta+";";
+                "WHERE  archg_path='"+nombreArchivo+"' " +
+                "AND cag_id_carpeta ="+idCarpetaOrigen+";";
 
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             if (resultSet.next()) {
-                id_archivo = resultSet.getInt("archg_id")+"";
+                id_archivo = resultSet.getInt("archg_id");
                 return true;
             }
         }catch(Exception e){System.out.println("Error busqueda:" + e);}
         return false;
     }
-
-
+    private void ActualizarBaseDeDatos() {
+        System.out.println("Estoy en actualizar bd");
+        String comando;
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        //Asociar Carpeta con el archivo
+        comando = "INSERT INTO \"MiTouch\".t_carpeta_archivos_galeria (cag_id_carpeta,cag_id_archivo) VALUES ("+Integer.parseInt(id_carpetaDestino)+","+id_archivo+");";
+        baseDeDatos.execute(comando);
+    }
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         listDataID =new HashMap<>();
+        listDataEscribir = new HashMap<>();
         grupodeUsuario = new ArrayList<>();
         grupodeUsuarioID = new ArrayList<>();
+        grupodeUsuarioEscribir = new ArrayList<>();
         BuscarGruposdeUsuario(grupodeUsuario);
     }
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario) {
@@ -266,6 +227,7 @@ public class CompartirActivity extends AppCompatActivity {
                 "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario;";
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);
+        buscarUsuario();
         System.out.println("El id de la galeria personal es: " + id_carpetausuario);
 
         grupo="Carpeta Personal";
@@ -273,11 +235,14 @@ public class CompartirActivity extends AppCompatActivity {
         listDataHeader.add(grupo);
         grupodeUsuario.add(usuario);
         grupodeUsuarioID.add(id_carpetausuario+"");
+        grupodeUsuarioEscribir.add("true");
 
         listDataChild.put(grupo, grupodeUsuario);
         listDataID.put(grupo, grupodeUsuarioID);
+        listDataEscribir.put(grupo, grupodeUsuarioEscribir);
         grupodeUsuario = new ArrayList<>();
         grupodeUsuarioID = new ArrayList<>();
+        grupodeUsuarioEscribir = new ArrayList<>();
 
 
         try {
@@ -285,38 +250,55 @@ public class CompartirActivity extends AppCompatActivity {
                 if(aux != resultSet.getInt(1)){
                     if(aux == -1)
                     {
-                            grupo=resultSet.getString(2);
-                            listDataHeader.add(grupo);
-                            grupodeUsuario.add(grupo);
-                            grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
-                            grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                            grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        grupo=resultSet.getString(2);
+                        listDataHeader.add(grupo);
+                        grupodeUsuario.add(grupo);
+                        grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
+                        grupodeUsuarioEscribir.add("true");
+                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                        grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
                         aux = resultSet.getInt(1);
                     }
                     else
                     {
                         listDataChild.put(grupo, grupodeUsuario);
                         listDataID.put(grupo, grupodeUsuarioID);
+                        listDataEscribir.put(grupo, grupodeUsuarioEscribir);
                         grupodeUsuario = new ArrayList<>();
                         grupodeUsuarioID = new ArrayList<>();
+                        grupodeUsuarioEscribir = new ArrayList<>();
                         grupo = resultSet.getString(2);
                         listDataHeader.add(grupo);
                         grupodeUsuario.add(grupo);
                         grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
+                        grupodeUsuarioEscribir.add("true");
                         grupodeUsuario.add(resultSet.getString(4));
                         grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        if(resultSet.getInt("ugru_id_usuario")==id_usuario)
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
                         aux = resultSet.getInt(1);
                     }
                 }
                 else
                 {
-                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                        grupodeUsuarioID.add(resultSet.getString(6));
+                    grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                    grupodeUsuarioID.add(resultSet.getString(6));
+                    if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                        grupodeUsuarioEscribir.add("true");
+                    else
+                        grupodeUsuarioEscribir.add("false");
                 }
             }
 
             listDataChild.put(grupo, grupodeUsuario);
             listDataID.put(grupo, grupodeUsuarioID);
+            listDataEscribir.put(grupo, grupodeUsuarioEscribir);
 
         } catch (Exception e) {
             System.err.println("Error crear explist: " + e );
@@ -337,7 +319,6 @@ public class CompartirActivity extends AppCompatActivity {
         }catch(Exception e){System.out.println("Error busqueda");}
         return false;
     }
-
     public static void dumpIntent(Intent i){
 
         Bundle bundle = i.getExtras();
@@ -352,5 +333,4 @@ public class CompartirActivity extends AppCompatActivity {
             System.out.println("Dumping Intent end");
         }
     }
-
 }

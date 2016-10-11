@@ -3,6 +3,7 @@ package com.example.grupo110.mitouchmobile.comunicacion_servidor;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
@@ -19,16 +20,18 @@ import java.io.FileInputStream;
  * Created by Jonathan on 08/10/2016.
  */
 
-public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void> {
+public class SFTClienteUploadFileFromGalleriaMiTouch extends AsyncTask<Void, Void, Void> {
+
 
     String SFTPHOST = "mitouch.hopto.org";
     int SFTPPORT = 22;
     String SFTPUSER = "toor";
     String SFTPPASS = "namekiano";
     final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
-    int id_usuario;
-    String archivoOriginal;
-    String nombre_carpeta;
+    private String path_archivo;
+    String nombre_archivo;
+    String extension_archivo;
+    String id_archivo;
 
     Session 	session 	= null;
     Channel 	channel 	= null;
@@ -39,24 +42,13 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
     AddDesdeGaleria addDesdeGaleria;
     Context context;
 
-    public SFTClienteUploadFileFromGallery(ProgressDialog progress, CompartirActivity compartirActivity, String nombre_carpeta, String imgDecodableString, Context applicationContext) {
-        this.progress = progress;
-            this.compartirActivity = compartirActivity;
-            this.nombre_carpeta = nombre_carpeta;
-            this.archivoOriginal = imgDecodableString;
-            this.context = applicationContext;
-        System.out.println("nombre_carpeta" +" " + nombre_carpeta);
-        System.out.println("archivoOriginal" +" " + archivoOriginal);
-    }
-
-    public SFTClienteUploadFileFromGallery(ProgressDialog progress, AddDesdeGaleria addDesdeGaleria, String nombre_carpeta, String imgDecodableString, Context applicationContext) {
+    public SFTClienteUploadFileFromGalleriaMiTouch(ProgressDialog progress, AddDesdeGaleria addDesdeGaleria, String id_archivo, String path_archivo, Context applicationContext) {
         this.progress = progress;
         this.addDesdeGaleria = addDesdeGaleria;
-        this.nombre_carpeta = nombre_carpeta;
-        this.archivoOriginal = imgDecodableString;
+        this.id_archivo = id_archivo;
+        this.path_archivo = path_archivo;
         this.context = applicationContext;
-        System.out.println(nombre_carpeta +" " + nombre_carpeta);
-        System.out.println(archivoOriginal +" " + archivoOriginal);
+
     }
 
 
@@ -74,6 +66,8 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
 
     @Override
     protected Void doInBackground(Void... params) {
+        obtenerArchivo();
+        obtenerExtension();
         try{
             JSch jsch = new JSch();
             session = jsch.getSession(SFTPUSER,SFTPHOST,SFTPPORT);
@@ -85,22 +79,26 @@ public class SFTClienteUploadFileFromGallery extends AsyncTask<Void, Void, Void>
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp)channel;
-            try{
-            channelSftp.cd(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta);}
-            catch (Exception e){
-                channelSftp.mkdir(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta);
-                channelSftp.cd(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta);
-            }
-
-            System.out.println("El archivo es: " + archivoOriginal);
-            File f = new File(archivoOriginal);
-            channelSftp.put(new FileInputStream(f), f.getName());
-            System.out.println("Ya se subio el archivo al servidor");
+            channelSftp.cd(PATH_BASE_DE_DATOS);
+            System.out.println("El archivo es: " + id_archivo+"."+extension_archivo);
+            File f = new File(path_archivo);
+            channelSftp.put(new FileInputStream(f), id_archivo+"."+extension_archivo);
         }catch(Exception ex){
             System.out.println("Error: " + ex);
             ex.printStackTrace();
         }
     return null;
+    }
+
+
+    @NonNull
+    private void obtenerArchivo() {
+        nombre_archivo = path_archivo.substring(path_archivo.lastIndexOf("/") + 1);
+    }
+
+    @NonNull
+    private void obtenerExtension() {
+        extension_archivo = path_archivo.substring(path_archivo.lastIndexOf(".") + 1);
     }
 
 }

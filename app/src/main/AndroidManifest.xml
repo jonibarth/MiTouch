@@ -124,6 +124,14 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name=".galeria.CompartirDesdePopUp"
+            android:label="Compartir Documento"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+
+
+
+        <activity
             android:name=".galeria.DetailsActivity"
             android:label="@string/title_activity_details"
             android:theme="@style/AppTheme.NoActionBar">

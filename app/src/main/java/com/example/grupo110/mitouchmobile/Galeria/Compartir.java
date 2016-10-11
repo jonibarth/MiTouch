@@ -38,20 +38,16 @@ public class Compartir extends AppCompatActivity {
             // Si vengo de la galeria
             Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
             url = getRealPathFromURI(getApplicationContext(), uri);
-          //  System.out.println("la url es: " + url);
         }catch (Exception e){
             try{
                 // Si vengo del file manager
                 Uri uri = (Uri) getIntent().getExtras().get(Intent.EXTRA_STREAM);
                 url = uri.toString();
                 url = url.replaceAll("file://","");
-               // System.out.println("la url es: " + url);
             }catch(Exception ex)
             {
                 try{
-                    System.out.print("sdfsdf");
                 }catch (Exception ee ){System.out.println("Error: " + ee);}
-              //  System.out.println("Error "+ ex);
             }
 
             System.out.print("La url es: " + url);
