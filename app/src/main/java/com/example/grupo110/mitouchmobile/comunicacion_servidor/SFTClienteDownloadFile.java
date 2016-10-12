@@ -37,9 +37,12 @@ public class SFTClienteDownloadFile extends AsyncTask<Void, Void, Void> {
 
     String archivoOriginal;
     String nombre_carpeta;
+    private String nombreArchivoAbrir;
+    private String idArchivoAbrir;
+
     ProgressDialog progress;
     DetailsActivity detailsActivity;
-    CompartirActivity compartirActivity;
+
     Context context;
 
     Session 	session 	= null;
@@ -51,25 +54,19 @@ public class SFTClienteDownloadFile extends AsyncTask<Void, Void, Void> {
 * progress: ProgressDialog que se creo para que el usuario espere a que el archivo se descargue
 * detailsActivity: la actividad que me envio aca
 * nombre_carpeta: carpeta donde se encuentra el archivo a descargar, puede ser la personal o una compartida
-* archivoOriginal: archivo que quiero descargar
+* nombreArchivoAbrir: archivo que quiero descargar
+* idArchivoAbrir: el id del archivo a descargar
 * applicationContext
   */
-
-    public SFTClienteDownloadFile(ProgressDialog progress, DetailsActivity detailsActivity, String nombre_carpeta, String archivoOriginal, Context applicationContext) {
+    public SFTClienteDownloadFile(ProgressDialog progress, DetailsActivity detailsActivity, String nombre_carpeta, String nombreArchivoAbrir, String idArchivoAbrir, Context applicationContext) {
         this.progress = progress;
         this.detailsActivity = detailsActivity;
         this.nombre_carpeta = nombre_carpeta;
-        this.archivoOriginal = archivoOriginal;
+        this.nombreArchivoAbrir = nombreArchivoAbrir;
+        this.idArchivoAbrir = idArchivoAbrir;
         this.context = applicationContext;
     }
 
-    public SFTClienteDownloadFile(ProgressDialog progress, CompartirActivity compartirActivity, String nombre_carpeta, String archivoOriginal, Context applicationContext) {
-        this.progress = progress;
-        this.compartirActivity = compartirActivity;
-        this.nombre_carpeta = nombre_carpeta;
-        this.archivoOriginal = archivoOriginal;
-        this.context = applicationContext;
-    }
 
     @Override
     public void onPreExecute() {
@@ -94,11 +91,14 @@ public class SFTClienteDownloadFile extends AsyncTask<Void, Void, Void> {
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp)channel;
-            channelSftp.cd(PATH_BASE_DE_DATOS+"/"+ nombre_carpeta);
-            byte[] buffer = new byte[1024];
-            BufferedInputStream bis = new BufferedInputStream(channelSftp.get(archivoOriginal));
+            channelSftp.cd(PATH_BASE_DE_DATOS);
+            byte[] buffer = new byte[4096];
+            System.out.println("El archivo a abrir: " + nombreArchivoAbrir);
+            System.out.println("El archivo a abrir: " + idArchivoAbrir+"."+nombreArchivoAbrir.substring(nombreArchivoAbrir.lastIndexOf(".") + 1));
+
+            BufferedInputStream bis = new BufferedInputStream(channelSftp.get(idArchivoAbrir+"."+nombreArchivoAbrir.substring(nombreArchivoAbrir.lastIndexOf(".") + 1)));
             CrearDirectorio();
-            File newFile = new File(PATH_MOBILE+"/"+nombre_carpeta +"/"+archivoOriginal);
+            File newFile = new File(PATH_MOBILE+"/"+nombre_carpeta +"/"+nombreArchivoAbrir);
             OutputStream os = new FileOutputStream(newFile);
             BufferedOutputStream bos = new BufferedOutputStream(os);
             int readCount;

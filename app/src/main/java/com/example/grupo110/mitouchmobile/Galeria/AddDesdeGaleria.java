@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
 import com.example.grupo110.mitouchmobile.R;
-import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteUploadFileFromGallery;
+import com.example.grupo110.mitouchmobile.comunicacion_servidor.SFTClienteUploadFileFromGalleriaMiTouch;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +32,7 @@ public class AddDesdeGaleria extends Activity{
     String imgDecodableString;
     int id_usuario;
     int id_carpeta;
+    String id_archivo;
     String archivoOriginal;
     String nombre_carpeta;
     final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
@@ -79,9 +80,19 @@ public class AddDesdeGaleria extends Activity{
         * Lanzo la galeria para que el usuario pueda seleccionar un archivo multimedia.
         * Cantidad maxima de archivo es 1, segun SELECT_PICTURE
          */
+        try {
+
             Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, SELECT_PICTURE);
+        }catch (Exception e){
+            System.out.println("el usuario se arrepintio en add");
+            Intent AgregarArchivoIntent = new Intent(AddDesdeGaleria.this, DetailsActivity.class);
+            AgregarArchivoIntent.putExtra("id",id_usuario);
+            AgregarArchivoIntent.putExtra("carpeta",carpeta);
+            startActivity(AgregarArchivoIntent);
+            finish();
+        }
 
     }
 
@@ -131,7 +142,9 @@ public class AddDesdeGaleria extends Activity{
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("estoy en onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("estoy en onActivityResult2");
         try {
             // When an Image is picked
             if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK
@@ -151,6 +164,7 @@ public class AddDesdeGaleria extends Activity{
 
                 System.out.println("file: " + imgDecodableString);
                 cursor.close();
+                crearArchivoMultimedia();
             } else {
                 Toast.makeText(this, "You haven't picked Image",
                         Toast.LENGTH_LONG).show();
@@ -159,9 +173,6 @@ public class AddDesdeGaleria extends Activity{
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
                     .show();
         }
-
-        crearArchivoMultimedia();
-
         Intent AgregarArchivoIntent = new Intent(AddDesdeGaleria.this, DetailsActivity.class);
         AgregarArchivoIntent.putExtra("id",id_usuario);
         AgregarArchivoIntent.putExtra("carpeta",carpeta);
@@ -169,46 +180,29 @@ public class AddDesdeGaleria extends Activity{
         finish();
 
     }
-    /*
-    * Metodo que me sirve para saber si el archivo que quiero agregar a la carpeta ya existe o no
-    * Busco en la base de datos el path del archivo.
-     */
-    private boolean ArchivoExiteEnBD() {
-        obtenerArchivo();
-        String pathAVerificar =PATH_BASE_DE_DATOS+"/"+nombre_carpeta+"/"+archivoOriginal;
-        String comando;
-        System.out.println("El path a verificar es: " + pathAVerificar);
-        comando = "SELECT archg_path FROM \"MiTouch\".t_archivo_galeria WHERE archg_path ='"+pathAVerificar+"';";
-        PostgrestBD baseDeDatos = new PostgrestBD();
-        ResultSet resultSet = baseDeDatos.execute(comando);
-        try{
-            while (resultSet.next()) {
-                return true;
-            }
-        }catch(Exception e){System.out.println("Error busqueda:" + e);}
 
-        return false;
-    }
     /*
     * Metodo que me crea en caso de que no exista, el archivo, tanto en el dispositivo mobile
     * como en el servidor.
     * Este metodo lanza al de actualizar base de datos. (Se podria lanzar al reves)
      */
     private void crearArchivoMultimedia() {
-        if(!ArchivoExiteEnBD()) {
-            ActualizarBaseDeDatos(); // Actualice la base de datos, debo tener el archivo creado
-            CrearDirectorio(); // Crear directorio en caso de que no exista
-            copyFileOrDirectory(imgDecodableString, PATH_MOBILE + "/" + nombre_carpeta);//Voy a copiar el archivo a la carpeta de MiTouch
-            progress = new ProgressDialog(this, R.style.MyTheme);
-            progress.setMessage("Cargando..");
-             new SFTClienteUploadFileFromGallery(progress, this, nombre_carpeta, imgDecodableString, getApplicationContext()).execute();//Voy a copiar el archivo al servidor
-        }
-        else
-        {
-            Toast toast;
-            toast= Toast.makeText(getApplicationContext(),"El archivo ya existe", Toast.LENGTH_LONG);
-            toast.show();
-        }
+        obtenerArchivo();
+        ActualizarBaseDeDatos(); // Actualice la base de datos, debo tener el archivo creado
+        CrearDirectorio(); // Crear directorio en caso de que no exista
+        copyFileOrDirectory(imgDecodableString, PATH_MOBILE + "/" + nombre_carpeta);//Voy a copiar el archivo a la carpeta de MiTouch
+
+        progress = new ProgressDialog(this, R.style.MyTheme);
+        progress.setMessage("Cargando..");
+        /*
+         * Lo que le pando es:
+         * process dialog
+         * la clase
+         * el id del archivo
+         * el nombre del archivo
+         * contexto
+         */
+        new SFTClienteUploadFileFromGalleriaMiTouch(progress, this, id_archivo, imgDecodableString, getApplicationContext()).execute();//Voy a copiar el archivo al servidor
 
     }
 
@@ -218,8 +212,9 @@ public class AddDesdeGaleria extends Activity{
     * Metodo para actualizar la tabla: t_carpeta_archivos_galeria
      */
     private void ActualizarBaseDeDatos() {
-        String id_archivo=null;
-        String path= PATH_BASE_DE_DATOS+"/"+nombre_carpeta+"/" + archivoOriginal;
+
+        String path= archivoOriginal;
+        System.out.println("el path es: " + path);
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
         String fecha = df.format(c.getTime());
@@ -322,4 +317,3 @@ public class AddDesdeGaleria extends Activity{
     }
 
 }
-// Bug: Cuando android me pregunta con que aplicacion lo quiero abrir y vuelvo para atras rompe

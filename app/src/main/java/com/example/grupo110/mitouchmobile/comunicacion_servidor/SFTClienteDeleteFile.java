@@ -21,8 +21,8 @@ public class SFTClienteDeleteFile extends AsyncTask<Void, Void, Void> {
     String SFTPUSER = "toor";
     String SFTPPASS = "namekiano";
     final String PATH_BASE_DE_DATOS = "/home/toor/galerias";
-    String archivoOriginal;
-    String nombre_carpeta;
+    String idEliminar;
+    String extension;
 
     Session 	session 	= null;
     Channel 	channel 	= null;
@@ -30,16 +30,20 @@ public class SFTClienteDeleteFile extends AsyncTask<Void, Void, Void> {
 
 /*
 * Parametros de entrada:
-* nombre del archivo que quiero borrar
-* Carpeta donde se encuentra el archivo que quiero borrar
+* id del archivo que quiero borrar
+* extension del archivo a borrar
   */
-    public SFTClienteDeleteFile(String nombre_carpeta, String nombreArchivo) {
-        this.nombre_carpeta = nombre_carpeta;
-        this.archivoOriginal = nombreArchivo;
+
+
+
+    public SFTClienteDeleteFile(String idEliminar, String extension) {
+        this.idEliminar = idEliminar;
+        this.extension = extension;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
+        System.out.println("Archivo a borrar:" + idEliminar+"."+extension);
         try{
             JSch jsch = new JSch();
             session = jsch.getSession(SFTPUSER,SFTPHOST,SFTPPORT);
@@ -51,8 +55,8 @@ public class SFTClienteDeleteFile extends AsyncTask<Void, Void, Void> {
             channel = session.openChannel("sftp");
             channel.connect();
             channelSftp = (ChannelSftp)channel;
-            channelSftp.cd(PATH_BASE_DE_DATOS+"/"+nombre_carpeta);
-            channelSftp.rm(archivoOriginal);
+            channelSftp.cd(PATH_BASE_DE_DATOS);
+            channelSftp.rm(idEliminar+"."+extension);
         }catch(Exception ex){
             ex.printStackTrace();
         }
