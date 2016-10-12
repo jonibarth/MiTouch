@@ -207,15 +207,13 @@ public class DetailsActivity extends AppCompatActivity {
         String comando;
         comando = String.format("DELETE " +
                 "FROM \"MiTouch\".t_carpeta_archivos_galeria " +
-                "WHERE  cag_id_archivo =" + idEliminar + ";");
+                "WHERE  cag_id_archivo =" + idEliminar + " AND cag_id_carpeta="+id_carpeta+";");
         PostgrestBD baseDeDatos = new PostgrestBD();
         baseDeDatos.execute(comando);
+        /*
 
-        // borro fila en t_archivo archg_id que el archg_id sea = idEliminar
-        comando = String.format("DELETE " +
-                "FROM \"MiTouch\".t_archivo_galeria " +
-                "WHERE  archg_id =" + idEliminar + ";");
-        baseDeDatos.execute(comando);
+        */
+
         // busco nombre archivo, borrar esta en la carpeta MiTouchMultimedia, lo borro
         nombreArchivo = listArchivosCompletos.get(posicionAprentada);
         String pArchivo = PATH_MOBILE + "/" + nombre_carpeta + "/" + nombreArchivo;
@@ -237,8 +235,14 @@ public class DetailsActivity extends AppCompatActivity {
         // si no existe borro el archivo
 
 
-        if (!ExisteArchivo(idEliminar))
+        if (!ExisteArchivo(idEliminar)) {
+            // borro fila en t_archivo archg_id que el archg_id sea = idEliminar
+            comando = String.format("DELETE " +
+                    "FROM \"MiTouch\".t_archivo_galeria " +
+                    "WHERE  archg_id =" + idEliminar + ";");
+            baseDeDatos.execute(comando);
             new SFTClienteDeleteFile(idEliminar, listExtenciones.get(posicionAprentada)).execute();
+        }
     }
 
     private void descomponerArchivos() {

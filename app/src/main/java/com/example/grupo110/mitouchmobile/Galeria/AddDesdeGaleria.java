@@ -317,4 +317,3 @@ public class AddDesdeGaleria extends Activity{
     }
 
 }
-// Bug: Cuando android me pregunta con que aplicacion lo quiero abrir y vuelvo para atras rompe
