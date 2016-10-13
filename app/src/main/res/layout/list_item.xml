@@ -7,13 +7,13 @@
     <TextView
         android:id="@+id/lblListItem"
         style="?android:textAppearanceSmall"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="17dip"
+        android:textSize="15dip"
         android:paddingTop="15dp"
         android:paddingBottom="5dp"
         android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
-        android:background="@color/colorVerde"
+        android:background="@color/colorGris"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textStyle="bold"
         />
