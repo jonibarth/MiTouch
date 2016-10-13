@@ -27,14 +27,15 @@ public class ShareDriveActivity extends Activity{
             protected Void doInBackground(Void... params) {
 
             String fileId = null;
-
+            String mail   = null;
             try{
-                fileId = getIntent().getExtras().getString("id");
+                fileId = getIntent().getExtras().getString("file");
+                mail   = getIntent().getExtras().getString("mail");
             }catch (Exception e){
                 e.printStackTrace();
             }
 
-            if (fileId != null) {
+            if (fileId != null && mail != null) {
 
                 try {
 
@@ -51,11 +52,14 @@ public class ShareDriveActivity extends Activity{
                             ).setApplicationName("MiTouch").build();
 
                     Permission permission = new Permission();
-                    permission.setEmailAddress("dismal.cj@gmail.com")
+                    permission.setEmailAddress(mail)
                             .setType("user").setRole("writer");
 
 
                     driveService.permissions().create(fileId, permission).setFields("id").execute();
+
+                    finish();
+
                 } catch (UserRecoverableAuthIOException e) {
                     startActivityForResult(e.getIntent(), 2);
                 } catch (Exception e1) {

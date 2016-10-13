@@ -64,6 +64,7 @@ public class DriveActivity extends BaseDriveActivity {
                             OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
 
                     Intent intent = new Intent(DriveActivity.this, ActionGoogleDriveActivity.class);
+                    intent.putExtra("user",getIntent().getExtras().getInt("id"));
                     intent.putExtra("id",driveId.getResourceId());
                     intent.putExtra("idDel",driveId.toString());
                     startActivity(intent);

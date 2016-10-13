@@ -1,5 +1,6 @@
 package com.example.grupo110.mitouchmobile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -108,17 +109,25 @@ public class CompartirDrive extends AppCompatActivity {
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
 
-                // Cuando hago click sobre un usuario!!!
+                // Aca viene el problema de saber si es un usuario o grupo,
+                // y compartir
+                String mail = null;
 
-                System.out.println("Nombre del usuario "+listDataChild.get(
-                        listDataHeader.get(groupPosition)).get(
-                        childPosition));
-                System.out.println("ID del usuario "+ listDataID.get(
-                        listDataHeader.get(groupPosition)).get(
-                        childPosition));
-                System.out.println("Email del usuario "+listDataEmailUsuario.get(
-                        listDataHeader.get(groupPosition)).get(
-                        childPosition));
+                mail = listDataEmailUsuario.get(listDataHeader.get(groupPosition)).get(childPosition);
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("mail",mail);
+                setResult(Activity.RESULT_OK,returnIntent);
+                finish();
+                //System.out.println("Nombre del usuario "+listDataChild.get(
+                  //      listDataHeader.get(groupPosition)).get(
+                    //    childPosition));
+                //System.out.println("ID del usuario "+ listDataID.get(
+                  //      listDataHeader.get(groupPosition)).get(
+                    //    childPosition));
+                //System.out.println("Email del usuario "+listDataEmailUsuario.get(
+                  //      listDataHeader.get(groupPosition)).get(
+                    //    childPosition));
                 return false;
             }
         });

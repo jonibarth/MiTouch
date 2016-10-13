@@ -50,9 +50,9 @@ public class ActionGoogleDriveActivity extends Activity {
 
                                         break;
 
-                                case 1: Intent shareIntent = new Intent(ActionGoogleDriveActivity.this,ShareDriveActivity.class);
-                                        shareIntent.putExtra("id",id);
-                                        startActivity(shareIntent);
+                                case 1: Intent newintent = new Intent(ActionGoogleDriveActivity.this, CompartirDrive.class);
+                                        newintent.putExtra("id",getIntent().getExtras().getInt("user"));
+                                        startActivityForResult(newintent,1);
                                         break;
 
                                 case 2: if(idDel != null){
@@ -65,7 +65,7 @@ public class ActionGoogleDriveActivity extends Activity {
                                 }
 
                             }
-                            finish();
+                            //finish();
                         }
 
                     });
@@ -93,5 +93,26 @@ public class ActionGoogleDriveActivity extends Activity {
 
         return res;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                String mail = data.getStringExtra("mail");
+
+                Intent shareIntent = new Intent(ActionGoogleDriveActivity.this,ShareDriveActivity.class);
+
+                shareIntent.putExtra("mail",mail);
+                shareIntent.putExtra("file",id);
+
+                startActivity(shareIntent);
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
 
 }
