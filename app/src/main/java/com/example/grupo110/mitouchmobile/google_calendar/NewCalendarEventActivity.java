@@ -34,6 +34,8 @@ public class NewCalendarEventActivity extends Activity {
     private Button   vcanc    = null;
     private Button   vacep    = null;
 
+    // Respuesta porque el mes esta mal: http://stackoverflow.com/questions/4467816/datepicker-shows-wrong-value-of-month
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +61,12 @@ public class NewCalendarEventActivity extends Activity {
             public void onClick(View v) {
                 c  = Calendar.getInstance();
                 year  = c.get(Calendar.YEAR);
-                month = c.get(Calendar.MONTH);
+                month = c.get(Calendar.MONTH)+1;
                 day   = c.get(Calendar.DAY_OF_MONTH);
 
-                new DatePickerDialog(NewCalendarEventActivity.this, date, c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+                System.out.println("setOnClickListener: "+ day+"/"+month+"/"+year);
+
+                new DatePickerDialog(NewCalendarEventActivity.this, date, c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,
                         c.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
@@ -134,17 +138,15 @@ public class NewCalendarEventActivity extends Activity {
         });
 
     }
-
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
         @Override
         public void onDateSet(DatePicker view, int year1, int month1,
                               int day1) {
             year  = year1;
-            month = month1;
+            month = month1+1;
             day   = day1;
             vdate.setText(day1+"/"+month1+"/"+year1);
-
         }
 
     };

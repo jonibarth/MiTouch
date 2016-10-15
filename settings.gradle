@@ -1,1 +1,1 @@
-include ':app', ':jsch-0.1.54'
+include ':app', ':jsch-0.1.54', ':javax.mail-1.5.5'

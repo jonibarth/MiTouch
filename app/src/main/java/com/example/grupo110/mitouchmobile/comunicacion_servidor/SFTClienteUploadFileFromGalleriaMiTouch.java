@@ -43,22 +43,18 @@ public class SFTClienteUploadFileFromGalleriaMiTouch extends AsyncTask<Void, Voi
     Context context;
 
     public SFTClienteUploadFileFromGalleriaMiTouch(ProgressDialog progress, AddDesdeGaleria addDesdeGaleria, String id_archivo, String path_archivo, Context applicationContext) {
-        this.progress = progress;
         this.addDesdeGaleria = addDesdeGaleria;
         this.id_archivo = id_archivo;
         this.path_archivo = path_archivo;
         this.context = applicationContext;
 
+        this.progress = ProgressDialog.show(addDesdeGaleria, "", "Sending Mail...", true);
+
     }
 
-
-    @Override
-    public void onPreExecute() {
-       // progress.show();
-    }
     @Override
     public void onPostExecute(Void unused) {
-        //progress.dismiss();
+        progress.dismiss();
         Toast toast = Toast.makeText(context,"El archivo fue compartido con exito..",Toast.LENGTH_LONG);
         toast.show();
     }

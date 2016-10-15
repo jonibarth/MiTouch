@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.envioEmail.ForgotPasswordActivity;
 import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
 
 import java.io.BufferedReader;

@@ -7,9 +7,6 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 
 /**
  * Created by Jonathan on 08/10/2016.
