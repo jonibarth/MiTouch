@@ -177,7 +177,7 @@ public class CompartirActivity extends AppCompatActivity {
     private void ActualizarBaseDeDatos() {
 
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat df =new SimpleDateFormat("yyyyMMdd");
         String fecha = df.format(c.getTime());
         String comando;
         comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path.substring(path.lastIndexOf("/") + 1)+"','"+fecha+"',"+null+") RETURNING archg_id;";

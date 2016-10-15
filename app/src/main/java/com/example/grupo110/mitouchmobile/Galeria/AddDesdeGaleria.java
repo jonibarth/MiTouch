@@ -86,7 +86,6 @@ public class AddDesdeGaleria extends Activity{
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, SELECT_PICTURE);
         }catch (Exception e){
-            System.out.println("el usuario se arrepintio en add");
             Intent AgregarArchivoIntent = new Intent(AddDesdeGaleria.this, DetailsActivity.class);
             AgregarArchivoIntent.putExtra("id",id_usuario);
             AgregarArchivoIntent.putExtra("carpeta",carpeta);
@@ -216,7 +215,7 @@ public class AddDesdeGaleria extends Activity{
         String path= archivoOriginal;
         System.out.println("el path es: " + path);
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         String fecha = df.format(c.getTime());
         String comando;
         comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+") RETURNING archg_id;";
@@ -271,7 +270,6 @@ public class AddDesdeGaleria extends Activity{
     * Metodo utilizado para ubicar el directorio donde se debe crear el archivo
      */
     public static void copyFileOrDirectory(String srcDir, String dstDir) {
-        System.out.println("Cree el archivo: copyFileOrDirectory!");
         try {
             File src = new File(srcDir);
             File dst = new File(dstDir, src.getName());
