@@ -111,23 +111,35 @@ public class CompartirDrive extends AppCompatActivity {
 
                 // Aca viene el problema de saber si es un usuario o grupo,
                 // y compartir
-                String mail = null;
+                String usuario = null;
+                String mail    = null;
+                String grupo   = null;
 
-                mail = listDataEmailUsuario.get(listDataHeader.get(groupPosition)).get(childPosition);
+                usuario = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
+
+                if(!usuario.contains("[Grupo]")){
+                    mail = listDataEmailUsuario.get(listDataHeader.get(groupPosition)).get(childPosition);
+                }else{
+                    grupo = listDataID.get(listDataHeader.get(groupPosition)).get(childPosition);
+                }
 
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("mail",mail);
+                returnIntent.putExtra("grupo",grupo);
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
-                //System.out.println("Nombre del usuario "+listDataChild.get(
-                  //      listDataHeader.get(groupPosition)).get(
-                    //    childPosition));
-                //System.out.println("ID del usuario "+ listDataID.get(
-                  //      listDataHeader.get(groupPosition)).get(
-                    //    childPosition));
-                //System.out.println("Email del usuario "+listDataEmailUsuario.get(
-                  //      listDataHeader.get(groupPosition)).get(
-                    //    childPosition));
+
+                /*System.out.println("Nombre cabecera "+listDataHeader.get(groupPosition));
+
+                System.out.println("Nombre del usuario "+listDataChild.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition));
+                System.out.println("ID del usuario "+ listDataID.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition));
+                System.out.println("Email del usuario "+listDataEmailUsuario.get(
+                        listDataHeader.get(groupPosition)).get(
+                        childPosition));*/
                 return false;
             }
         });
@@ -203,7 +215,7 @@ public class CompartirDrive extends AppCompatActivity {
                         grupo=resultSet.getString("gru_nombre");
                         listDataHeader.add(grupo);
                         // Si queres borrar del child el grupo de usuario borra estas 3
-                        grupodeUsuario.add(grupo);
+                        grupodeUsuario.add(grupo+"[Grupo]");
                         grupodeUsuarioID.add(resultSet.getString("ugru_id_grupo"));
                         grupodeUsuarioEmail.add(resultSet.getString("gru_id_carpeta"));
 
@@ -237,7 +249,7 @@ public class CompartirDrive extends AppCompatActivity {
                         grupo=resultSet.getString("gru_nombre");
                         listDataHeader.add(grupo);
                         // Si queres borrar el grupo borra estas 3 lineas
-                        grupodeUsuario.add(grupo);
+                        grupodeUsuario.add(grupo+"[Grupo]");
                         grupodeUsuarioID.add(resultSet.getString("ugru_id_grupo"));
                         // En la bd no esta esto asi que lo comento
                         grupodeUsuarioEmail.add(resultSet.getString("gru_id_carpeta"));

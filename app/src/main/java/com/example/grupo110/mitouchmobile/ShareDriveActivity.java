@@ -13,6 +13,9 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.model.Permission;
 
+import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+
+import java.sql.ResultSet;
 import java.util.Collections;
 
 
@@ -26,11 +29,22 @@ public class ShareDriveActivity extends Activity{
         new AsyncTask<Void, Void, Void>() {
             protected Void doInBackground(Void... params) {
 
+            GoogleAccountCredential account;
+
             String fileId = null;
             String mail   = null;
+            String grupo  = null;
+            String list   = null;
+            String array[];
+            int    user   = 0;
+
             try{
                 fileId = getIntent().getExtras().getString("file");
                 mail   = getIntent().getExtras().getString("mail");
+                grupo  = getIntent().getExtras().getString("grupo");
+                list   = getIntent().getExtras().getString("list");
+                user   = getIntent().getExtras().getInt("user");
+
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -39,12 +53,10 @@ public class ShareDriveActivity extends Activity{
 
                 try {
 
-                    GoogleAccountCredential account;
-
                     account = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singletonList(DriveScopes.DRIVE));
                     account.setSelectedAccountName("grupo110unlam@gmail.com");
 
-                    com.google.api.services.drive.Drive driveService =
+                    Drive driveService =
                             new Drive.Builder(
                                     AndroidHttp.newCompatibleTransport(),
                                     JacksonFactory.getDefaultInstance(),
@@ -64,6 +76,42 @@ public class ShareDriveActivity extends Activity{
                     startActivityForResult(e.getIntent(), 2);
                 } catch (Exception e1) {
                     e1.printStackTrace();
+                }
+
+            }else{
+
+                if(fileId != null && grupo != null && user != 0 && list != null){
+
+                    array = list.split("\\$");
+
+                    try {
+                        account = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singletonList(DriveScopes.DRIVE));
+                        account.setSelectedAccountName("grupo110unlam@gmail.com");
+
+                        Drive driveService =
+                                new Drive.Builder(
+                                        AndroidHttp.newCompatibleTransport(),
+                                        JacksonFactory.getDefaultInstance(),
+                                        account
+                                ).setApplicationName("MiTouch").build();
+
+
+                        for (int i = 0; i < array.length; i++) {
+
+                            Permission permission = new Permission();
+                            permission.setEmailAddress(array[i])
+                                    .setType("user").setRole("writer");
+
+
+                            driveService.permissions().create(fileId, permission).setFields("id").execute();
+
+                        }
+                        finish();
+                    }catch (UserRecoverableAuthIOException e) {
+                            startActivityForResult(e.getIntent(), 2);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
                 }
 
             }

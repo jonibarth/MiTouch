@@ -16,13 +16,13 @@ import android.widget.ExpandableListView;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
 
 import java.sql.ResultSet;
-
+import java.util.ArrayList;
 
 
 public class ActionGoogleDriveActivity extends Activity {
 
     private String id, url, idDel;
-    private DeleteFileDrive del;
+    private int user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +51,10 @@ public class ActionGoogleDriveActivity extends Activity {
                                         break;
 
                                 case 1: Intent newintent = new Intent(ActionGoogleDriveActivity.this, CompartirDrive.class);
-                                        newintent.putExtra("id",getIntent().getExtras().getInt("user"));
+
+                                        user = getIntent().getExtras().getInt("user");
+
+                                        newintent.putExtra("id",user);
                                         startActivityForResult(newintent,1);
                                         break;
 
@@ -99,15 +102,48 @@ public class ActionGoogleDriveActivity extends Activity {
 
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-                String mail = data.getStringExtra("mail");
+                String mail  = data.getStringExtra("mail");
+                String grupo = data.getStringExtra("grupo");
+                String list  = "";
 
                 Intent shareIntent = new Intent(ActionGoogleDriveActivity.this,ShareDriveActivity.class);
 
                 shareIntent.putExtra("mail",mail);
+                shareIntent.putExtra("grupo",grupo);
                 shareIntent.putExtra("file",id);
+                shareIntent.putExtra("user",user);
+
+                String comando = null;
+                PostgrestBD baseDeDatos;
+                ResultSet resultSet;
+
+                if(grupo != null){
+
+                comando = "SELECT ugru_id_usuario, usu_mail " +
+                        "FROM \"MiTouch\".t_usuarios_grupo " +
+                        "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
+                        "WHERE ugru_id_grupo = "+ grupo +
+                        " AND usu_id <> "+ Integer.toString(user)+";";
+
+                baseDeDatos = new PostgrestBD();
+                try{
+                    resultSet = baseDeDatos.execute(comando);
+
+                    try{
+                        while (resultSet.next()) {
+
+                            System.out.println(resultSet.getString("usu_mail"));
+                            list = list + resultSet.getString("usu_mail") + "$";
+                        }
+                    }catch(Exception e){e.printStackTrace();}
+                }catch (Exception e){ e.printStackTrace();}
+
+                }
+
+                shareIntent.putExtra("list",list);
 
                 startActivity(shareIntent);
-
+                finish();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
