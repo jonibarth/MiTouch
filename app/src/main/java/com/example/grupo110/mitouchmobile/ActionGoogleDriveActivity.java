@@ -4,14 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.ImageFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.view.ContextThemeWrapper;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ExpandableListView;
 
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
 
@@ -46,6 +41,7 @@ public class ActionGoogleDriveActivity extends Activity {
 
                                             Intent docIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                                             startActivity(docIntent);
+                                            finish();
                                         }
 
                                         break;
@@ -56,6 +52,7 @@ public class ActionGoogleDriveActivity extends Activity {
 
                                         newintent.putExtra("id",user);
                                         startActivityForResult(newintent,1);
+
                                         break;
 
                                 case 2: if(idDel != null){
@@ -63,7 +60,7 @@ public class ActionGoogleDriveActivity extends Activity {
                                     Intent deleteIntent = new Intent(ActionGoogleDriveActivity.this,DeleteFileDrive.class);
                                     deleteIntent.putExtra("idDel",idDel);
                                     startActivity(deleteIntent);
-
+                                    finish();
                                     break;
                                 }
 

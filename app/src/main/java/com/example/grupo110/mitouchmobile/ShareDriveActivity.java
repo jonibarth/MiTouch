@@ -3,6 +3,7 @@ package com.example.grupo110.mitouchmobile;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.batch.BatchRequest;
@@ -70,12 +71,16 @@ public class ShareDriveActivity extends Activity{
 
                     driveService.permissions().create(fileId, permission).setFields("id").execute();
 
+                    Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
+
                     finish();
 
                 } catch (UserRecoverableAuthIOException e) {
                     startActivityForResult(e.getIntent(), 2);
                 } catch (Exception e1) {
                     e1.printStackTrace();
+                    Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
+                    finish();
                 }
 
             }else{
@@ -99,19 +104,22 @@ public class ShareDriveActivity extends Activity{
                         for (int i = 0; i < array.length; i++) {
 
                             Permission permission = new Permission();
-                            permission.setEmailAddress(array[i])
-                                    .setType("user").setRole("writer");
-
+                            permission.setEmailAddress(array[i]).setType("user").setRole("writer");
 
                             driveService.permissions().create(fileId, permission).setFields("id").execute();
 
                         }
+
+                        Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
+
                         finish();
                     }catch (UserRecoverableAuthIOException e) {
                             startActivityForResult(e.getIntent(), 2);
                         } catch (Exception e1) {
                             e1.printStackTrace();
-                        }
+                        Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
+                        finish();
+                    }
                 }
 
             }

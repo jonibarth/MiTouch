@@ -66,7 +66,7 @@ public class NewCalendarEventActivity extends Activity {
 
                 System.out.println("setOnClickListener: "+ day+"/"+month+"/"+year);
 
-                new DatePickerDialog(NewCalendarEventActivity.this, date, c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1,
+                new DatePickerDialog(NewCalendarEventActivity.this, date, c.get(Calendar.YEAR), c.get(Calendar.MONTH),
                         c.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
@@ -146,7 +146,7 @@ public class NewCalendarEventActivity extends Activity {
             year  = year1;
             month = month1+1;
             day   = day1;
-            vdate.setText(day1+"/"+month1+"/"+year1);
+            vdate.setText(day+"/"+month+"/"+year);
         }
 
     };
