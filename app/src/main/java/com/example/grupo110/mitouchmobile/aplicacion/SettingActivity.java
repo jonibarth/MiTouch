@@ -164,7 +164,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void actualizarBasedeDatos() {
-        System.out.println("aca en actualizar");
         String comando;
         if((validarUsuario(editTextUsuario.getText().toString()))) {
             comando = "UPDATE \"MiTouch\".t_usuarios SET usu_nombre_usuario = '" + editTextUsuario.getText().toString() + "', usu_nombre_completo = '" + editTextNombreCompleto.getText().toString() + "', usu_mail = '" + editTextMail.getText().toString() + "'" + " WHERE usu_id = " + id_usuario + ";";

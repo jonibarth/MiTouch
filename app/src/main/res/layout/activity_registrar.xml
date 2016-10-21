@@ -9,6 +9,9 @@
     android:background="#000000"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
+
+    android:focusable="true"
+
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -116,8 +119,10 @@
                     android:textColor="@color/colorVerde"
                     android:textStyle="bold"
                     android:background="#313131"
+                    android:nextFocusLeft="@+id/CustomViewEmail"
                     />
             </android.support.design.widget.TextInputLayout>
+
 
             <ImageView
                 android:layout_width="35dp"
@@ -134,8 +139,35 @@
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/colorVerde"
                 android:layout_below="@+id/CustomViewEmail"
+                android:id="@+id/CustomViewCodigoVerificacion"
+                android:layout_marginBottom="15dp"
+                android:visibility="invisible">
+
+                <EditText
+                    android:id="@+id/CodigoVerificacion_Registro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Codigo de verificación:"
+                    android:layout_marginRight="80dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/colorVerde"
+                    android:textStyle="bold"
+                    android:background="#313131"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/colorVerde"
+                android:layout_below="@+id/CustomViewCodigoVerificacion"
                 android:id="@+id/CustomViewContraseña"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="15dp"
+                android:visibility="invisible">
 
                 <EditText
                     android:id="@+id/passwordRegistrar"
@@ -167,7 +199,8 @@
                 android:textColorHint="@color/colorVerde"
                 android:id="@+id/CustomViewRepiteContraseña"
                 android:layout_below="@+id/CustomViewContraseña"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="15dp"
+                android:visibility="invisible">
 
                 <EditText
                     android:id="@+id/repitepasswordRegistrar"
@@ -201,6 +234,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_form"
+        android:visibility="invisible"
         />
 
     <Button
