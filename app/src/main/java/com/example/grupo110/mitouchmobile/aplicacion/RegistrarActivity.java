@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -89,9 +88,6 @@ public class RegistrarActivity extends AppCompatActivity {
     /************ FIN Variables Envio del mail *********************/
 
     /***************** Variables Layout ***************************/
-    private TextInputLayout textinputlayout;
-    private TextInputLayout CustomViewRepiteContraseña;
-    private TextInputLayout CustomViewContraseña;
     private EditText nombreUsuario;
     private EditText nombreCompleto;
     private EditText direccionEmail;
@@ -127,9 +123,6 @@ public class RegistrarActivity extends AppCompatActivity {
         contraseña = (EditText) findViewById(R.id.passwordRegistrar);
         repetirContraseña = (EditText) findViewById(R.id.repitepasswordRegistrar);
         codigoDeVerificacion = (EditText) findViewById(R.id.CodigoVerificacion_Registro);
-        textinputlayout = (TextInputLayout) findViewById(R.id.CustomViewCodigoVerificacion);
-        CustomViewContraseña = (TextInputLayout) findViewById(R.id.CustomViewContraseña);
-        CustomViewRepiteContraseña  = (TextInputLayout) findViewById(R.id.CustomViewRepiteContraseña);
         botonRegistrar = (Button) findViewById(R.id.buttonregistrarUsuario);
 
         /*
@@ -146,7 +139,11 @@ public class RegistrarActivity extends AppCompatActivity {
                     boolean respuesta = validarUsuario(usuario);
                     insertarImagenNombreUsuario(respuesta);
                 }
-
+                if(hasFocus) {
+                    codigoValido = false;
+                    direccionEmail.setText("");
+                    codigoDeVerificacion.setText("");
+                }
             }
         });
         /*
@@ -163,25 +160,36 @@ public class RegistrarActivity extends AppCompatActivity {
                     if(nombreValido && !codigoValido)
                         if(validarEmail(direccionEmail.getText().toString()))
                             if(!buscarEmail(direccionEmail.getText().toString())) {
-                                //enviarEmail();
-                                textinputlayout.setVisibility(View.VISIBLE);
+                                destintatarioCorreo =direccionEmail.getText().toString();
+                                EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
+                                random = randomGenerator.nextSessionId();
+                                System.out.println("El numero random es:"+random);
+
+                                enviarEmail();
                             }
-                            else
+                            else{
                                 insertarImagenEmail(false);
-                        else
+                                Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo ya esta registrada",Toast.LENGTH_LONG);
+                                toast.show();
+
+                            }
+                        else {
                             insertarImagenEmail(false);
+                            Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo rs invalida",Toast.LENGTH_LONG);
+                            toast.show();
+
+                        }
                     else
                     {
-                        Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo invalida",Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(getApplicationContext(),"el nombre de usuario no es valido o se a modificado",Toast.LENGTH_LONG);
                         toast.show();
                         direccionEmail.setText("");
                         codigoDeVerificacion.setText("");
                         codigoValido = false;
                     }
                 }
-                if (hasFocus){
-                    insertarImagenEmail(true);
-                    codigoDeVerificacion.setVisibility(View.VISIBLE);
+                if (hasFocus) {
+                    codigoDeVerificacion.setText("");
                     codigoValido = false;
                 }
 
@@ -192,13 +200,11 @@ public class RegistrarActivity extends AppCompatActivity {
         codigoDeVerificacion.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
-                random = randomGenerator.nextSessionId();
-
                 if(!hasFocus) {
                     if(random.equals(codigoDeVerificacion.getText().toString())){
                         Toast toast = Toast.makeText(getApplicationContext(),"El codigo de verificacion es correcto",Toast.LENGTH_LONG);
                         toast.show();
+
                         codigoValido = true;
                         insertarImagenEmail(true);
 
@@ -210,14 +216,6 @@ public class RegistrarActivity extends AppCompatActivity {
                         toast.show();
                     }
                 }
-
-                if(hasFocus) {
-                    codigoDeVerificacion.setText(random);
-                    CustomViewRepiteContraseña.setVisibility(View.VISIBLE);
-                    CustomViewContraseña.setVisibility(View.VISIBLE);
-                    expListView.setVisibility(View.VISIBLE);
-                }
-
             }
         });
 
@@ -278,6 +276,15 @@ public class RegistrarActivity extends AppCompatActivity {
         botonRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
+                * Voy a perder los focos de todo
+                 */
+                nombreUsuario.clearFocus();
+                nombreCompleto.clearFocus();
+                direccionEmail.clearFocus();
+                codigoDeVerificacion.clearFocus();
+                contraseña.clearFocus();
+                repetirContraseña.clearFocus();
                 if((nombreValido) && (contraseñaRepiteValida) && (contraseñaValida) && (emailValido) ) {
                     CrearUsuario();
                     Toast toast2 = Toast.makeText(getApplicationContext(),"Usuario Registrado",Toast.LENGTH_LONG);
@@ -286,6 +293,7 @@ public class RegistrarActivity extends AppCompatActivity {
                     startActivity(siguiente);
                     finish();
                 }
+                /*
                 else
                 {
                     if((grupoUsuario!=null))
@@ -299,7 +307,7 @@ public class RegistrarActivity extends AppCompatActivity {
                         toast.show();
                     }
                 }
-
+                */
             }
         });
 
@@ -426,10 +434,17 @@ public class RegistrarActivity extends AppCompatActivity {
         } catch (Exception e) {
             System.err.println("Error: " + e);
         }
-        try {
-            comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES ("+id_usuadioGenerado+",'"+BuscarGruposdeUsuarioenArray()+"','"+ fechadiahora +"',null,null);";
-            baseDeDatos.execute(comando);
-        }catch(Exception e){ System.out.println("no selecciono grupo de usuario");}
+        /*
+        * Solicitud a grupo!
+         */
+        if(grupoUsuario!=null) {
+            try {
+                comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES (" + id_usuadioGenerado + ",'" + BuscarGruposdeUsuarioenArray() + "','" + fechadiahora + "',null,null);";
+                baseDeDatos.execute(comando);
+            } catch (Exception e) {
+                System.out.println("no selecciono grupo de usuario");
+            }
+        }
     }
 
     private String BuscarGruposdeUsuarioenArray() {

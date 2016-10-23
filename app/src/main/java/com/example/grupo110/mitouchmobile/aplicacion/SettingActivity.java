@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -31,14 +33,18 @@ public class SettingActivity extends AppCompatActivity {
 
     private final static int  USUARIOMINIMO = 6;
     private final static int  USUARIOMAXIMO = 15;
-    Button cambiarContraseña;
-    Button ActualizarBasedeDatos;
-    EditText editTextUsuario;
-    EditText editTextNombreCompleto;
-    EditText editTextMail;
-    ImageButton imagenEditUsuario;
-    ImageButton imagenEditNombre;
-    ImageButton imagenEditEmail;
+
+    /***************** Variables Layout ***************************/
+    private Button cambiarContraseña;
+    private Button ActualizarBasedeDatos;
+    private EditText editTextUsuario;
+    private EditText editTextNombreCompleto;
+    private EditText editTextMail;
+
+    private ImageButton imagenEditUsuario;
+    private ImageButton imagenEditNombre;
+    private ImageButton imagenEditEmail;
+    /***************** FIN Variables Layout ***************************/
     String usu_nombre_usuario;
     String usu_nombre_completo;
     String usu_mail;
@@ -165,7 +171,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private void actualizarBasedeDatos() {
         String comando;
-        if((validarUsuario(editTextUsuario.getText().toString()))) {
+        if( validaciones()) {
             comando = "UPDATE \"MiTouch\".t_usuarios SET usu_nombre_usuario = '" + editTextUsuario.getText().toString() + "', usu_nombre_completo = '" + editTextNombreCompleto.getText().toString() + "', usu_mail = '" + editTextMail.getText().toString() + "'" + " WHERE usu_id = " + id_usuario + ";";
             PostgrestBD baseDeDatos = new PostgrestBD();
             baseDeDatos.execute(comando);
@@ -173,6 +179,7 @@ public class SettingActivity extends AppCompatActivity {
         }
 
     }
+
 
     private void AgregarImagenes() {
         String uri = "@drawable/edit";  // where myresource (without the extension) is the file
@@ -224,8 +231,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private boolean validarUsuario(String usuario) {
-        System.out.println("aca en validar"+ usuario.length());
-
         if(USUARIOMINIMO>usuario.length())
         {
             Toast toast = Toast.makeText(getApplicationContext(),"la cantidad de caracteres debe ser mayor que 5",Toast.LENGTH_LONG);
@@ -341,6 +346,67 @@ public class SettingActivity extends AppCompatActivity {
             return null;
         }
     }
+    /*
+    * Metodo que me valida que el email ingreso se de gmail
+    * Llama a otro metodo que me valdia si el mail ingresado existe en la bd o no
+    * Si el email es invalido retorna false
+    * Si el email es valido retorna true
+     */
+    public boolean validarEmail(String email) {
+        Toast toast;
+        Pattern pattern = Pattern
+                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@gmail.com");
 
+        Matcher mather = pattern.matcher(email);
+        if (mather.find()) {
+            return true;
+        } else {
+            System.out.println("");
+            toast = Toast.makeText(getApplicationContext(), "El email ingresado es inválido.", Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+
+    }
+
+    /*
+* Metodo que me devuelve:
+*   false si el email existe
+*   true si el mail no existe
+ */
+    private boolean buscarEmail(String email) {
+        String comando;
+        comando = "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_mail='" + email + "';";
+        PostgrestBD baseDeDatos = new PostgrestBD();
+        ResultSet resultSet = baseDeDatos.execute(comando);
+        try {
+            while (resultSet.next()){
+                Toast toast = Toast.makeText(getApplicationContext(), "El email ya existe.", Toast.LENGTH_SHORT);
+                toast.show();
+                return false;
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error busqueda usuario en Registrar");
+        }
+        return true;
+    }
+    /*
+    * Si el nombre de usuario no esta en la bd y
+    * Si el mail esta escrito correctamente y
+    * Si el mail no esta asociado a otro usuario
+    * => return true ... actualizar!
+    *
+     */
+
+
+    private boolean validaciones() {
+
+        if(validarEmail(editTextMail.getText().toString()))
+            if(buscarEmail(editTextMail.getText().toString()))
+                if(validarUsuario(editTextUsuario.getText().toString()))
+                    return true;
+        return false;
+    }
 
 }

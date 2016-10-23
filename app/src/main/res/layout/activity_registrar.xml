@@ -141,7 +141,7 @@
                 android:layout_below="@+id/CustomViewEmail"
                 android:id="@+id/CustomViewCodigoVerificacion"
                 android:layout_marginBottom="15dp"
-                android:visibility="invisible">
+                >
 
                 <EditText
                     android:id="@+id/CodigoVerificacion_Registro"
@@ -167,7 +167,7 @@
                 android:layout_below="@+id/CustomViewCodigoVerificacion"
                 android:id="@+id/CustomViewContraseña"
                 android:layout_marginBottom="15dp"
-                android:visibility="invisible">
+                >
 
                 <EditText
                     android:id="@+id/passwordRegistrar"
@@ -200,7 +200,7 @@
                 android:id="@+id/CustomViewRepiteContraseña"
                 android:layout_below="@+id/CustomViewContraseña"
                 android:layout_marginBottom="15dp"
-                android:visibility="invisible">
+                >
 
                 <EditText
                     android:id="@+id/repitepasswordRegistrar"
@@ -234,7 +234,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_form"
-        android:visibility="invisible"
         />
 
     <Button
