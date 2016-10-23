@@ -57,7 +57,18 @@
                 android:id="@+id/editarNombreUsuario"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                app:srcCompat="@android:drawable/ic_menu_edit"
+                android:background="@color/colorGrisOscuro" />
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:id="@+id/ImagenViewNombreUsuarioSetting"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -87,7 +98,18 @@
                 android:id="@+id/editarNombreCompleto"
                 android:layout_alignTop="@+id/CustomViewNombreCompleto"
                 android:layout_alignLeft="@+id/editarNombreUsuario"
-                android:layout_alignStart="@+id/editarNombreUsuario" />
+                android:layout_alignStart="@+id/editarNombreUsuario"
+                android:background="@color/colorGrisOscuro"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:id="@+id/ImagenViewNombreCompletoSetting"
+                android:layout_alignTop="@+id/CustomViewNombreCompleto"
+                android:layout_alignLeft="@+id/editarNombreUsuario"
+                android:layout_alignStart="@+id/editarNombreUsuario"
+                android:visibility="invisible"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -111,13 +133,51 @@
                     />
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/colorVerde"
+                android:layout_below="@+id/CustomViewEmail"
+                android:id="@+id/CustomViewCodigoVerificacion"
+                android:layout_marginBottom="15dp"
+                >
+
+                <EditText
+                    android:id="@+id/CodigoVerificacion_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Codigo de verificación:"
+                    android:layout_marginRight="80dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/colorVerde"
+                    android:textStyle="bold"
+                    android:background="#313131"
+                    android:visibility="invisible"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
             <ImageButton
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:id="@+id/editaremailgmailSetting"
                 android:layout_alignTop="@+id/CustomViewEmail"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentEnd="true"
+                android:background="@color/colorGrisOscuro"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
+
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:id="@+id/ImagenViewdireccionEmailSetting"
+                android:layout_alignTop="@+id/CustomViewEmail"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible"/>
+
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -137,7 +197,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_form"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="80dp"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lvExpNuevoGrupoSettingButton"
+        android:layout_alignTop="@+id/lvExpNuevoGrupoSetting"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:background="@color/colorGrisOscuro"
+        android:visibility="invisible"/>
 
     <Button
         android:layout_width="match_parent"

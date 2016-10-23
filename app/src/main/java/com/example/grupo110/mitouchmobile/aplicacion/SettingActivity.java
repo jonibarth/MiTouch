@@ -1,7 +1,10 @@
 package com.example.grupo110.mitouchmobile.aplicacion;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,55 +14,95 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.envioEmail.EmailIdentifierGenerator;
 import com.example.grupo110.mitouchmobile.expandable_list.ExpandableListAdapter;
+import com.example.grupo110.mitouchmobile.aplicacion.SettingActivity;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 public class SettingActivity extends AppCompatActivity {
 
-    /*
-    * Declaracion de variables
-     */
-
+    /************ Variables validacion largo usuario *********************/
     private final static int  USUARIOMINIMO = 6;
     private final static int  USUARIOMAXIMO = 15;
+    /************ FIN Variables validacion largo usuario y contraseña*********************/
 
     /***************** Variables Layout ***************************/
     private Button cambiarContraseña;
     private Button ActualizarBasedeDatos;
-    private EditText editTextUsuario;
-    private EditText editTextNombreCompleto;
-    private EditText editTextMail;
-
+    private EditText nombreUsuario;
+    private EditText nombreCompleto;
+    private EditText direccionEmail;
+    private EditText codigoVerificacion;
     private ImageButton imagenEditUsuario;
     private ImageButton imagenEditNombre;
     private ImageButton imagenEditEmail;
-    /***************** FIN Variables Layout ***************************/
-    String usu_nombre_usuario;
-    String usu_nombre_completo;
-    String usu_mail;
-    int id_usuario;
-    boolean solicitud_acceso=false;
+    private ImageButton imagenlvExp;
 
+    /***************** FIN Variables Layout ***************************/
+
+    /************ Variables Expandable List*********************/
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     List<String> grupodeUsuario;
     List<String> grupodeUsuarioid;
+    /************ FIN Variables Expandable List*********************/
+
+    /************ Variables Envio del mail *********************/
+    Session session = null;
+    ProgressDialog pdialog = null;
+
+    // Credenciales de usuario
+    private static String direccionCorreo = "grupo110unlam@gmail.com";   // Dirección de correo origen
+    private static String contrasenyaCorreo = "mitouch110";                 // Contraseña del correo electronico origen
+
+    private static String destintatarioCorreo; // Dirección de correo destino
+    String subject= "Tu cuenta de MiTouch: verificación de la dirección de email"; // Asunto del mail
+    private String random;
+    /************ FIN Variables Envio del mail *********************/
+
+    String usu_nombre_usuario;
+    String usu_nombre_completo;
+    String usu_mail;
+    int id_usuario;
+
     String grupoUsuario=null;
 
+    private String NombreCompletoString;
+    /************ Variables para las validaciones *********************/
+    private boolean nombreValido = true;
+    private boolean nombreCompletoValido = true;
+    private boolean codigoValido = false;
+    private boolean emailValido = true;
+    private Context context;
+    private boolean aux=false;
 
+    /************ FIN Variables para las validaciones *********************/
 
 
     @Override
@@ -67,13 +110,17 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         id_usuario = getIntent().getExtras().getInt("id");
+        context=this;
         LlenarCampos();
         AgregarImagenes();
         imagenEditUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
 
             public void onClick(View v) {
-                editTextUsuario.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
+                nombreUsuario.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
+                puedesEditar(imagenEditUsuario,"Nombre Usuario");
+                aux=true;
+
             }
         });
 
@@ -81,7 +128,9 @@ public class SettingActivity extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-                editTextNombreCompleto.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
+                nombreCompleto.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
+                puedesEditar(imagenEditNombre,"Nombre Completo");
+
             }
         });
 
@@ -89,9 +138,118 @@ public class SettingActivity extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-                editTextMail.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
+                direccionEmail.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
+                puedesEditar(imagenEditEmail,"Direccion de email");
+                codigoVerificacion.setVisibility(View.VISIBLE);
             }
         });
+
+        imagenlvExp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ValidarSolicitudGrupoDeUsuario()) {
+                    enviarSolicitudGrupo();
+                    prepareListData();
+                    listAdapter = new ExpandableListAdapter(context, listDataHeader, listDataChild);
+                    // setting list adapter
+                    expListView.setAdapter(listAdapter);
+                    imagenlvExp.setVisibility(View.INVISIBLE);
+                }
+
+
+
+            }
+        });
+
+        nombreUsuario.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                    if(aux){
+                    boolean respuesta = validarUsuario(nombreUsuario.getText().toString());
+                    System.out.println("El usuario esta: " + respuesta);
+                    insertarImagenNombreUsuario(respuesta);
+                }
+            }
+        });
+
+        nombreCompleto.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    NombreCompletoString = nombreCompleto.getText().toString();
+                    System.out.println("ghg");
+                }
+            }
+        });
+
+        direccionEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    if(nombreValido && !codigoValido)
+                        if(!nombreCompleto.getText().toString().equals(""))
+                            if(validarEmail(direccionEmail.getText().toString()))
+                                if(!buscarEmail(direccionEmail.getText().toString())) {
+                                    destintatarioCorreo =direccionEmail.getText().toString();
+                                    EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
+                                    random = randomGenerator.nextSessionId();
+                                    System.out.println("El numero random es:"+random);
+
+                                    enviarEmail();
+                                }
+                                else{
+                                    insertarImagenEmail(false);
+                                    Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo ya esta registrada",Toast.LENGTH_LONG);
+                                    toast.show();
+
+                                }
+                            else {
+                                insertarImagenEmail(false);
+                                Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo es invalida",Toast.LENGTH_LONG);
+                                toast.show();
+
+                            }
+                        else
+                        {
+                            Toast toast = Toast.makeText(getApplicationContext(),"el nombre de usuario no es valido o se a modificado",Toast.LENGTH_LONG);
+                            toast.show();
+                            direccionEmail.setText("");
+                            codigoVerificacion.setText("");
+                            codigoValido = false;
+                        }
+                }
+                if (hasFocus) {
+                    codigoVerificacion.setText("");
+                    codigoValido = false;
+                }
+
+            }
+        });
+
+
+        codigoVerificacion.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    if(random.equals(codigoVerificacion.getText().toString())){
+                        Toast toast = Toast.makeText(getApplicationContext(),"El codigo de verificacion es correcto",Toast.LENGTH_LONG);
+                        toast.show();
+                        codigoValido = true;
+                        insertarImagenEmail(true);
+
+                    }
+                    else
+                    {
+                        insertarImagenEmail(false);
+                        Toast toast = Toast.makeText(getApplicationContext(),"El codigo de verificacion es incorrecto",Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                }
+            }
+        });
+
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,8 +280,6 @@ public class SettingActivity extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-                if(solicitud_acceso)
-                    CrearSolicitudAcceso();
                 actualizarBasedeDatos();
 
             }
@@ -162,17 +318,40 @@ public class SettingActivity extends AppCompatActivity {
                 grupodeUsuario = new ArrayList<>();
                 BuscarGruposdeUsuario(grupodeUsuario,grupodeUsuarioid);
                 expListView.collapseGroup(groupPosition);
-                solicitud_acceso=true;
+                imagenlvExp.setVisibility(View.VISIBLE);
                 return false;
             }
         });
 
     }
 
+    private void enviarSolicitudGrupo() {
+        String comando;
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat diahora = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+        String fechadiahora = diahora.format(c.getTime());
+        PostgrestBD baseDeDatos = new PostgrestBD();
+
+        try {
+                comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES (" + id_usuario + ",'" + BuscarGruposdeUsuarioenArray() + "','" + fechadiahora + "',null,null);";
+                baseDeDatos.execute(comando);
+            Toast toast = Toast.makeText(getApplicationContext(),"Solicitud enviada",Toast.LENGTH_LONG);
+            toast.show();
+            } catch (Exception e) {
+            }
+    }
+
+    private void puedesEditar(ImageButton imagenEditUsuario, String s) {
+        imagenEditUsuario.setVisibility(View.INVISIBLE);
+        Toast toast = Toast.makeText(getApplicationContext(),"Ya podes editar tu: "+s,Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+
     private void actualizarBasedeDatos() {
         String comando;
         if( validaciones()) {
-            comando = "UPDATE \"MiTouch\".t_usuarios SET usu_nombre_usuario = '" + editTextUsuario.getText().toString() + "', usu_nombre_completo = '" + editTextNombreCompleto.getText().toString() + "', usu_mail = '" + editTextMail.getText().toString() + "'" + " WHERE usu_id = " + id_usuario + ";";
+            comando = "UPDATE \"MiTouch\".t_usuarios SET usu_nombre_usuario = '" + nombreUsuario.getText().toString() + "', usu_nombre_completo = '" + nombreCompleto.getText().toString() + "', usu_mail = '" + direccionEmail.getText().toString() + "'" + " WHERE usu_id = " + id_usuario + ";";
             PostgrestBD baseDeDatos = new PostgrestBD();
             baseDeDatos.execute(comando);
             finish(); // No se si deberia quedar en el menu o no!!
@@ -187,29 +366,27 @@ public class SettingActivity extends AppCompatActivity {
         imagenEditUsuario= (ImageButton)findViewById(R.id.editarNombreUsuario);
         imagenEditNombre= (ImageButton)findViewById(R.id.editarNombreCompleto);
         imagenEditEmail= (ImageButton)findViewById(R.id.editaremailgmailSetting);
+        imagenlvExp = (ImageButton) findViewById(R.id.lvExpNuevoGrupoSettingButton);
 
-        Drawable res = getResources().getDrawable(imageResource);
-        imagenEditUsuario.setImageDrawable(res);
-        imagenEditNombre.setImageDrawable(res);
-        imagenEditEmail.setImageDrawable(res);
     }
 
     public void LlenarCampos()
     {
         buscarDatos();
-        editTextUsuario =(EditText)findViewById(R.id.nombreUsuarioSetting);
-        editTextNombreCompleto =(EditText)findViewById(R.id.nombreCompletoSetting);
-        editTextMail =(EditText)findViewById(R.id.emailgmailSettings);
+        nombreUsuario =(EditText)findViewById(R.id.nombreUsuarioSetting);
+        nombreCompleto =(EditText)findViewById(R.id.nombreCompletoSetting);
+        direccionEmail =(EditText)findViewById(R.id.emailgmailSettings);
+        codigoVerificacion = (EditText)findViewById(R.id.CodigoVerificacion_setting);
 
         // No permitir edición
-        editTextUsuario.setKeyListener(null);
-        editTextNombreCompleto.setKeyListener(null);
-        editTextMail.setKeyListener(null);
+        nombreUsuario.setKeyListener(null);
+        nombreCompleto.setKeyListener(null);
+        direccionEmail.setKeyListener(null);
 
         // Buscar en base de datos datos del usuario:
-        editTextUsuario.setText(usu_nombre_usuario);
-        editTextNombreCompleto.setText(usu_nombre_completo);
-        editTextMail.setText(usu_mail);
+        nombreUsuario.setText(usu_nombre_usuario);
+        nombreCompleto.setText(usu_nombre_completo);
+        direccionEmail.setText(usu_mail);
 
     }
 
@@ -274,7 +451,6 @@ public class SettingActivity extends AppCompatActivity {
 
 
     private void BuscarGruposdeUsuario(List<String> grupodeUsuario,List<String> grupodeUsuarioid) {
-        System.out.println("buscando grupos de usuario");
         String comando;
         comando = "SELECT gru_id,gru_nombre FROM  \"MiTouch\".t_grupos;";
         PostgrestBD baseDeDatos = new PostgrestBD();
@@ -283,31 +459,12 @@ public class SettingActivity extends AppCompatActivity {
             while (resultSet.next()) {
                 grupodeUsuario.add(resultSet.getString("gru_nombre"));
                 grupodeUsuarioid.add(resultSet.getArray("gru_id").toString());
-
-                System.out.println("buscando grupos de usuario "+ resultSet.getString("gru_nombre"));
-
             }
             listDataChild.put(listDataHeader.get(0), grupodeUsuario); // Header, Child data
         } catch (Exception e) {
             System.err.println("Error busqyeda grupos de usuario: " + e );
         }
 
-    }
-
-    private void CrearSolicitudAcceso(){
-
-        if((ValidarSolicitudGrupoDeUsuario()) && BuscarGruposdeUsuarioenArray()!=null )
-        {
-            String comando2;
-            Date d = new Date();
-            CharSequence diahora = DateFormat.format("yyyy-MM-dd H:mm:ss", d.getTime());
-            System.out.println("Dia hora: " + diahora);
-
-            PostgrestBD baseDeDatos = new PostgrestBD();
-            comando2 = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES (" + id_usuario + ",'" + BuscarGruposdeUsuarioenArray() + "','" + diahora + "',null,null);";
-            baseDeDatos.execute(comando2);
-            finish();
-        }
     }
 
     private boolean ValidarSolicitudGrupoDeUsuario() {
@@ -371,8 +528,8 @@ public class SettingActivity extends AppCompatActivity {
 
     /*
 * Metodo que me devuelve:
-*   false si el email existe
-*   true si el mail no existe
+*   true si el email existe
+*   false si el mail no existe
  */
     private boolean buscarEmail(String email) {
         String comando;
@@ -383,13 +540,13 @@ public class SettingActivity extends AppCompatActivity {
             while (resultSet.next()){
                 Toast toast = Toast.makeText(getApplicationContext(), "El email ya existe.", Toast.LENGTH_SHORT);
                 toast.show();
-                return false;
+                return true;
             }
 
         } catch (Exception e) {
             System.err.println("Error busqueda usuario en Registrar");
         }
-        return true;
+        return false;
     }
     /*
     * Si el nombre de usuario no esta en la bd y
@@ -402,11 +559,127 @@ public class SettingActivity extends AppCompatActivity {
 
     private boolean validaciones() {
 
-        if(validarEmail(editTextMail.getText().toString()))
-            if(buscarEmail(editTextMail.getText().toString()))
-                if(validarUsuario(editTextUsuario.getText().toString()))
+        if(nombreValido)
+            if(nombreCompletoValido)
+                if(emailValido )
                     return true;
         return false;
+    }
+
+
+    private void insertarImagenNombreUsuario(boolean respuesta) {
+        ImageView imagen= (ImageView)findViewById(R.id.ImagenViewNombreUsuarioSetting);
+
+        if(respuesta == false)
+        {
+            String uri = "@drawable/wrong";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            imagen.setImageDrawable(res);
+            imagen.setVisibility(View.VISIBLE);
+            nombreValido = false;
+        }
+        else
+        {
+            String uri = "@drawable/right";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            imagen.setImageDrawable(res);
+            imagen.setVisibility(View.VISIBLE);
+            nombreValido = true;
+        }
+    }
+
+    private void insertarImagenEmail(boolean respuesta) {
+        ImageView imagen= (ImageView)findViewById(R.id.ImagenViewdireccionEmailSetting);
+
+        if(respuesta == false)
+        {
+            String uri = "@drawable/wrong";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            imagen.setImageDrawable(res);
+            imagen.setVisibility(View.VISIBLE);
+            emailValido = false;
+        }
+        else
+        {
+            String uri = "@drawable/right";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            imagen.setImageDrawable(res);
+            imagen.setVisibility(View.VISIBLE);
+            emailValido = true;
+        }
+    }
+
+    private void enviarEmail() {
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+
+        session = Session.getDefaultInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(direccionCorreo, contrasenyaCorreo);
+            }
+        });
+        iniciarpdialog();
+    }
+
+    private void iniciarpdialog() {
+        pdialog = ProgressDialog.show(this, "", "Sending Mail...", true);
+        SettingActivity.RetreiveFeedTask task = new RetreiveFeedTask();
+        task.execute();
+    }
+
+
+
+    class RetreiveFeedTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try{
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(direccionCorreo));
+
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destintatarioCorreo));
+
+                message.setSubject(subject);
+
+
+                message.setContent(getBodyMSG(NombreCompletoString,
+                        "Con el fin de ayudar a mantener la seguridad de tu cuenta de MiTouch, por favor, verifica tu dirección de email.",
+                        "Su código de verificación es: " + random,
+                        "Verificar tu dirección de email te permitirá: aprovecharte de la seguridad de MiTouch, cambiar los datos personales de tu cuenta de MiTouch, recibir notificaciones de MiTouch, recuperar el acceso a tu cuenta de MiTouch en caso de que lo pierdas u olvides tu contraseña.",
+                        "Gracias por ayudarnos a mantener la seguridad de tu cuenta."), "text/html; charset=utf-8");
+
+                Transport.send(message);
+            } catch(MessagingException e) {
+                e.printStackTrace();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            pdialog.dismiss();
+            Toast.makeText(getApplicationContext(), "Message sent", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private static String getBodyMSG(String nombreUsuario,String parrafo1,String parrafo2,String parrafo3,String parrafo4) {
+        return "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"><html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><html><head><meta content=\"text/html;charset=UTF-8\" http-equiv=\"Content-Type\"><style media=\"all\" type=\"text/css\">td, p, h1, h3, a {font-family: Helvetica, Arial, sans-serif;}</style></head><body LINK=\"#00D861\" ALINK=\"#00D861\" VLINK=\"#00D861\" TEXT=\"#00D861\" style=\"font-family: Helvetica, Arial, sans-serif; font-size: 14px; color: #00D861;\" ><table style=\"width: 538px; background-color: #000000;\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\"><tr><td style=\"height: 65px; background-color: #000000; border-bottom: 1px solid #000000; padding: 0px;\">              <img src=\"https://s10.postimg.org/824eha4yh/email_header_logo.png\" width=\"538\" height=\"65\" alt=\"MiTouch\">        </td></tr><tr><td bgcolor=\"#222222\"><table width=\"470\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-left: 5px; padding-right: 5px; padding-bottom: 10px;\"><tr bgcolor=\"#222222\"><td style=\"padding-top: 32px; padding-bottom: 16px;\"><span style=\"font-size: 24px; color: #009F3D; font-family: Arial, Helvetica, sans-serif; font-weight: bold;\">Hola "
+                + nombreUsuario + ",</span><br></td></tr><tr bgcolor=\"#111111\"><td style=\"padding: 20px; font-size: 12px; line-height: 17px; color: #00D861; font-family: Arial, Helvetica, sans-serif;\"><p>" +
+                parrafo1 + " " + parrafo2 + "</p></td></tr><tr><td style=\"padding-top: 16px; font-size: 12px; line-height: 17px; color: #006D2D; font-family: Arial, Helvetica, sans-serif;\"><p>" +
+                parrafo3 + "</p></td></tr><tr><td style=\"font-size: 12px; color: #006D2D; padding-top: 16px; padding-bottom: 60px;\"><p>" +
+                parrafo4 + "</br></br>El equipo del Soporte de MiTouch</br><br></td></tr></table></td></tr><tr><td bgcolor=\"#000000\"><table width=\"460\" height=\"55\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\"><tr valign=\"top\"><td width=\"110\"><a href=\"http://www.valvesoftware.com/\" target=\"_blank\" style=\"color: #8B8B8B; font-size: 10px; font-family: Trebuchet MS, Verdana, Arial, Helvetica, sans-serif; text-transform: uppercase;><span style=\"font-size: 10px; color: #8B8B8B; font-family: Trebuchet MS,Verdana,Arial,Helvetica,sans-serif; text-transform: uppercase\"><img src=\"https://s21.postimg.org/4he32aalj/nombre_Logo.png\" alt=\"MiTouch Argentina\" width=\"122\" height=\"41\" hspace=\"0\" vspace=\"0\" border=\"0\" align=\"top\"></a></td><td width=\"350\" valign=\"top\"><span style=\"color: #006D2D; font-size: 9px; font-family: Verdana, Arial, Helvetica, sans-serif;\">© MiTouch. Todos los derechos reservados. Todas las marcas registradas pertenecen a sus respectivos dueños en Argentina y otros países.</span></td></tr></table></td></tr></table></body></html>";
     }
 
 }
