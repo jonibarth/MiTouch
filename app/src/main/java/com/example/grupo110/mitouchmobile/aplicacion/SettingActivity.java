@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -43,6 +44,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import static com.example.grupo110.mitouchmobile.R.id.CustomViewEmail;
+
 public class SettingActivity extends AppCompatActivity {
 
     /************ Variables validacion largo usuario *********************/
@@ -57,6 +60,7 @@ public class SettingActivity extends AppCompatActivity {
     private EditText nombreCompleto;
     private EditText direccionEmail;
     private EditText codigoVerificacion;
+    private TextInputLayout CustomViewEmail;
     private ImageButton imagenEditUsuario;
     private ImageButton imagenEditNombre;
     private ImageButton imagenEditEmail;
@@ -80,7 +84,6 @@ public class SettingActivity extends AppCompatActivity {
     // Credenciales de usuario
     private static String direccionCorreo = "grupo110unlam@gmail.com";   // Dirección de correo origen
     private static String contrasenyaCorreo = "mitouch110";                 // Contraseña del correo electronico origen
-
     private static String destintatarioCorreo; // Dirección de correo destino
     String subject= "Tu cuenta de MiTouch: verificación de la dirección de email"; // Asunto del mail
     private String random;
@@ -140,7 +143,9 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 direccionEmail.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
                 puedesEditar(imagenEditEmail,"Direccion de email");
+                codigoVerificacion.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
                 codigoVerificacion.setVisibility(View.VISIBLE);
+                CustomViewEmail.setVisibility(View.VISIBLE);
             }
         });
 
@@ -232,19 +237,19 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
-                    if(random.equals(codigoVerificacion.getText().toString())){
-                        Toast toast = Toast.makeText(getApplicationContext(),"El codigo de verificacion es correcto",Toast.LENGTH_LONG);
-                        toast.show();
-                        codigoValido = true;
-                        insertarImagenEmail(true);
+                    try {
+                        if (random.equals(codigoVerificacion.getText().toString())) {
+                            Toast toast = Toast.makeText(getApplicationContext(), "El codigo de verificacion es correcto", Toast.LENGTH_LONG);
+                            toast.show();
+                            codigoValido = true;
+                            insertarImagenEmail(true);
 
-                    }
-                    else
-                    {
-                        insertarImagenEmail(false);
-                        Toast toast = Toast.makeText(getApplicationContext(),"El codigo de verificacion es incorrecto",Toast.LENGTH_LONG);
-                        toast.show();
-                    }
+                        } else {
+                            insertarImagenEmail(false);
+                            Toast toast = Toast.makeText(getApplicationContext(), "El codigo de verificacion es incorrecto", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }catch (Exception e){System.out.println("Error: "+e);}
                 }
             }
         });
@@ -377,11 +382,13 @@ public class SettingActivity extends AppCompatActivity {
         nombreCompleto =(EditText)findViewById(R.id.nombreCompletoSetting);
         direccionEmail =(EditText)findViewById(R.id.emailgmailSettings);
         codigoVerificacion = (EditText)findViewById(R.id.CodigoVerificacion_setting);
+        CustomViewEmail = (TextInputLayout)findViewById(R.id.CustomViewCodigoVerificacion);
 
         // No permitir edición
         nombreUsuario.setKeyListener(null);
         nombreCompleto.setKeyListener(null);
         direccionEmail.setKeyListener(null);
+        codigoVerificacion.setKeyListener(null);
 
         // Buscar en base de datos datos del usuario:
         nombreUsuario.setText(usu_nombre_usuario);
@@ -562,8 +569,22 @@ public class SettingActivity extends AppCompatActivity {
         if(nombreValido)
             if(nombreCompletoValido)
                 if(emailValido )
-                    return true;
+                    if(codigoValido)
+                        return true;
+                    else
+                        print("El codigo no es valido");
+                else
+                    print("El email no es valido");
+            else
+                print("El nombre no es valido");
+        else
+            print("El nombre de usuario no es valido");
         return false;
+    }
+
+    private void print(String s) {
+        Toast toast = Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG);
+        toast.show();
     }
 
 
