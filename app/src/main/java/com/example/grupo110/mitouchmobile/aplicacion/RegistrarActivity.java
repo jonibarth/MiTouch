@@ -447,17 +447,37 @@ public class RegistrarActivity extends AppCompatActivity {
     }
 
     private boolean validarUsuario(String usuario) {
+        Toast toast;
         if(USUARIOMINIMO>usuario.length())
         {
-            Toast toast = Toast.makeText(getApplicationContext(),"la cantidad de caracteres debe ser mayor que 5",Toast.LENGTH_LONG);
+            toast = Toast.makeText(getApplicationContext(),"la cantidad de caracteres debe ser mayor que 5",Toast.LENGTH_LONG);
             toast.show();
             return true;
         }
         if(usuario.length()> USUARIOMAXIMO){
-            Toast toast = Toast.makeText(getApplicationContext(),"la cantidad de caracteres debe ser menor que 16",Toast.LENGTH_LONG);
+            toast = Toast.makeText(getApplicationContext(),"la cantidad de caracteres debe ser menor que 16",Toast.LENGTH_LONG);
             toast.show();
             return true;
         }
+
+        for(int i = 0; i < usuario.length(); ++i) {
+            char caracter = usuario.charAt(i);
+
+            if(i == 0 && ! Character.isLetter(caracter))
+            {
+                toast = Toast.makeText(getApplicationContext(), "El primer caracter debe ser una letra", Toast.LENGTH_SHORT);
+                toast.show();
+                return false;
+            }
+
+
+            if(!Character.isLetterOrDigit(caracter) && caracter != '.') {
+                toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos ni letras", Toast.LENGTH_SHORT);
+                toast.show();
+                return false;
+            }
+        }
+
         String comando;
         comando = "SELECT * FROM  \"MiTouch\".t_usuarios WHERE usu_nombre_usuario='" + usuario + "';";
         PostgrestBD baseDeDatos = new PostgrestBD();

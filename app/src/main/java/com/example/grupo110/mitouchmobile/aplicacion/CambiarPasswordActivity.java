@@ -21,7 +21,7 @@ public class CambiarPasswordActivity extends AppCompatActivity {
     private EditText passwordNuevaRepite;
     private int id_usuario;
     private String password;
-    private final static int  LARGO_CONTRASEÑA = 10;
+    private final static int  LARGO_CONTRASEÑA = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,28 +135,35 @@ public class CambiarPasswordActivity extends AppCompatActivity {
         boolean numero= false;
         boolean letra=false;
         Toast toast;
-        if(cadena.length() < LARGO_CONTRASEÑA)
-        {
-            toast = Toast.makeText(getApplicationContext(), "La cantidad minima de caracteres es 10 ", Toast.LENGTH_SHORT);
+        if(cadena.equals(passwordVieja.getText().toString())){
+            toast = Toast.makeText(getApplicationContext(), "La nueva contraseña debe ser distinta a la anterior ", Toast.LENGTH_SHORT);
             toast.show();
             return false;
         }
-        for(int i = 0; i < cadena.length(); ++i) {
-            char caracter = cadena.charAt(i);
-
-            if(!Character.isLetterOrDigit(caracter)) {
-                toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos y contener espacios", Toast.LENGTH_SHORT);
+        else
+            if(cadena.length() < LARGO_CONTRASEÑA)
+            {
+                toast = Toast.makeText(getApplicationContext(), "La cantidad minima de caracteres es 6 ", Toast.LENGTH_SHORT);
                 toast.show();
                 return false;
-            }else
-            if(Character.isDigit(caracter))
-                numero = true;
-            else
-                letra = true;
-        }
+            }
+            for(int i = 0; i < cadena.length(); ++i) {
+                char caracter = cadena.charAt(i);
+
+                if(!Character.isLetterOrDigit(caracter)) {
+                    toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos y contener espacios", Toast.LENGTH_SHORT);
+                    toast.show();
+                    return false;
+                }else
+                if(Character.isDigit(caracter))
+                    numero = true;
+                else
+                    letra = true;
+            }
 
         if(numero == true && letra == true)
-        return true;
+            return true;
+
         toast = Toast.makeText(getApplicationContext(), "La contraseña debe tener por lo menos un digito y una letra", Toast.LENGTH_SHORT);
         toast.show();
         return false;
