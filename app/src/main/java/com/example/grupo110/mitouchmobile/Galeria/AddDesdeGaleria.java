@@ -141,9 +141,7 @@ public class AddDesdeGaleria extends Activity{
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("estoy en onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("estoy en onActivityResult2");
         try {
             // When an Image is picked
             if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK

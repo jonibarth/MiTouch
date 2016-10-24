@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
 import com.example.grupo110.mitouchmobile.galeria.AddDesdeGaleria;
 import com.jcraft.jsch.Channel;
@@ -47,16 +48,14 @@ public class SFTClienteUploadFileFromGalleriaMiTouch extends AsyncTask<Void, Voi
         this.id_archivo = id_archivo;
         this.path_archivo = path_archivo;
         this.context = applicationContext;
-
-        this.progress = ProgressDialog.show(addDesdeGaleria, "", "Sending Mail...", true);
-
+        this.progress = ProgressDialog.show(addDesdeGaleria, "", "Subiendo Archivo", true);
     }
 
     @Override
     public void onPostExecute(Void unused) {
-        progress.dismiss();
         Toast toast = Toast.makeText(context,"El archivo fue compartido con exito..",Toast.LENGTH_LONG);
         toast.show();
+        progress.dismiss();
     }
 
 
