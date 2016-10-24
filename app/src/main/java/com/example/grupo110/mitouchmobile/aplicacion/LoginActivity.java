@@ -18,7 +18,10 @@ import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -144,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public boolean login(String usuario, String password) {
-        String comando = "";
+        String comando;
 
         comando = "SELECT * " +
                 "FROM  \"MiTouch\".t_usuarios " +
@@ -152,18 +155,33 @@ public class LoginActivity extends AppCompatActivity {
                 "AND usu_password = '"+ password +"' " +
                 "AND ( usu_ultimo_log_out IS NOT NULL OR  usu_ultimo_log_in IS NULL);";
 
-        System.out.println("la consulta es: " + comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
-                    id_usuario = resultSet.getInt("usu_id");
-                    modificar_usu_ultimo_log_in(id_usuario);
-                return true;
+                    if(validarFecha(resultSet.getTimestamp("usu_ultimo_log_in"),resultSet.getTimestamp("usu_ultimo_log_out"))){
+                        id_usuario = resultSet.getInt("usu_id");
+                        modificar_usu_ultimo_log_in(id_usuario);
+                        return true;
+                    }else
+                    {
+                        Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario ya esta logueado ", Toast.LENGTH_SHORT);
+                        toast2.show();
+                        return false;
+                    }
+
             }
         }catch(Exception e){}
         return false;
     }
+
+    private boolean validarFecha(Timestamp usu_ultimo_log_in, Timestamp usu_ultimo_log_out) {
+        if(usu_ultimo_log_out.getTime() - usu_ultimo_log_in.getTime() > 0)
+            return true;
+        else
+            return false;
+    }
+
 
     private void modificar_usu_ultimo_log_in(int id_usuario) {
 
@@ -185,9 +203,6 @@ public class LoginActivity extends AppCompatActivity {
             archivo.close();
         } catch (Exception e) {System.out.println("Error grabar archivo");
         }
-        Toast t = Toast.makeText(this, "Los datos fueron grabados",
-                Toast.LENGTH_SHORT);
-        t.show();
     }
 
     private void leer() {
@@ -205,22 +220,6 @@ public class LoginActivity extends AppCompatActivity {
             archivo.close();
         } catch (Exception e) {
             System.out.println("error en el try que esta dentro del if");
-        }
-    }
-
-
-    public static void dumpIntent(Intent i){
-
-        Bundle bundle = i.getExtras();
-        if (bundle != null) {
-            Set<String> keys = bundle.keySet();
-            Iterator<String> it = keys.iterator();
-           System.out.println("Dumping Intent start");
-            while (it.hasNext()) {
-                String key = it.next();
-                System.out.println("[" + key + "=" + bundle.get(key)+"]");
-            }
-            System.out.println("Dumping Intent end");
         }
     }
 }
