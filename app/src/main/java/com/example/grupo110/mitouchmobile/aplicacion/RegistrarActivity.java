@@ -63,12 +63,15 @@ public class RegistrarActivity extends AppCompatActivity {
     private final static int  LARGO_CONTRASEÑA = 6;
     private final static int  USUARIOMINIMO = 6;
     private final static int  USUARIOMAXIMO = 15;
-    /************ FIN Variables validacion largo usuario y contraseña*********************/
 
     private boolean nombreValido = false;
     private boolean contraseñaValida = false;
     private boolean contraseñaRepiteValida = false;
+    private boolean nombreCompletoValido = false;
     private boolean emailValido = false;
+    /************ FIN Variables validacion largo usuario y contraseña*********************/
+
+
     String grupoUsuario=null;
     final String PATH_SERVIDOR="queres smoke tomaaaaaaaaaaaa!";
 
@@ -150,6 +153,10 @@ public class RegistrarActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus){
                     NombreCompletoString = nombreCompleto.getText().toString();
+                    if(validarNombreCompleto(NombreCompletoString))
+                        insertarImagenNombreCompleto(true);
+                    else
+                        insertarImagenNombreCompleto(false);
                 }
             }
         });
@@ -165,35 +172,30 @@ public class RegistrarActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
                     if(nombreValido && !codigoValido)
-                        if(nombreCompleto.getText().toString().equals(""))
-                        if(validarEmail(direccionEmail.getText().toString()))
-                            if(!buscarEmail(direccionEmail.getText().toString())) {
-                                destintatarioCorreo =direccionEmail.getText().toString();
-                                EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
-                                random = randomGenerator.nextSessionId();
-                                System.out.println("El numero random es:"+random);
-
-                                enviarEmail();
-                            }
-                            else{
+                        if(!nombreCompleto.getText().toString().equals(""))
+                            if(validarEmail(direccionEmail.getText().toString()))
+                                if(!buscarEmail(direccionEmail.getText().toString())) {
+                                    destintatarioCorreo =direccionEmail.getText().toString();
+                                    EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
+                                    random = randomGenerator.nextSessionId();
+                                    enviarEmail();
+                                }
+                                else{
+                                    insertarImagenEmail(false);
+                                    Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo ya esta registrada",Toast.LENGTH_LONG);
+                                    toast.show();
+                                }
+                            else {
                                 insertarImagenEmail(false);
-                                Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo ya esta registrada",Toast.LENGTH_LONG);
+                                Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo es invalida",Toast.LENGTH_LONG);
                                 toast.show();
-
                             }
                         else {
-                            insertarImagenEmail(false);
-                            Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo rs invalida",Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(getApplicationContext(),"el nombre de usuario no es valido o se a modificado",Toast.LENGTH_LONG);
                             toast.show();
-
-                        }
-                    else
-                    {
-                        Toast toast = Toast.makeText(getApplicationContext(),"el nombre de usuario no es valido o se a modificado",Toast.LENGTH_LONG);
-                        toast.show();
-                        direccionEmail.setText("");
-                        codigoDeVerificacion.setText("");
-                        codigoValido = false;
+                            direccionEmail.setText("");
+                            codigoDeVerificacion.setText("");
+                            codigoValido = false;
                     }
                 }
                 if (hasFocus) {
@@ -208,37 +210,26 @@ public class RegistrarActivity extends AppCompatActivity {
         codigoDeVerificacion.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    if(random.equals(codigoDeVerificacion.getText().toString())){
-                        Toast toast = Toast.makeText(getApplicationContext(),"El codigo de verificacion es correcto",Toast.LENGTH_LONG);
-                        toast.show();
+                try {
+                    if (!hasFocus) {
+                        if (random.equals(codigoDeVerificacion.getText().toString())) {
+                            Toast toast = Toast.makeText(getApplicationContext(), "El codigo de verificacion es correcto", Toast.LENGTH_LONG);
+                            toast.show();
 
-                        codigoValido = true;
-                        insertarImagenEmail(true);
+                            codigoValido = true;
+                            insertarImagenEmail(true);
 
+                        } else {
+                            insertarImagenEmail(false);
+                            Toast toast = Toast.makeText(getApplicationContext(), "El codigo de verificacion es incorrecto", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
                     }
-                    else
-                    {
-                        insertarImagenEmail(false);
-                        Toast toast = Toast.makeText(getApplicationContext(),"El codigo de verificacion es incorrecto",Toast.LENGTH_LONG);
-                        toast.show();
-                    }
-                }
+                }catch (Exception e){System.out.println("Error codigo verificacion: " + e);}
             }
         });
 
 
-        codigoDeVerificacion.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_DONE){
-                    codigoDeVerificacion.clearFocus();
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(codigoDeVerificacion.getWindowToken(), 0);
-                }
-                return false;
-            }
-        });
 
         contraseña.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -259,27 +250,11 @@ public class RegistrarActivity extends AppCompatActivity {
                         insertarImagenRepiteContraseña(true);
                     else
                         insertarImagenRepiteContraseña(false);
-                }
-            }
-        });
-
-
-        repetirContraseña.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_DONE){
-                    //Clear focus here from edittext
-                    repetirContraseña.clearFocus();
-                    //Lineas para ocultar el teclado virtual (Hide keyboard)
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(repetirContraseña.getWindowToken(), 0);
                 }
-                return false;
             }
         });
-
-
-
 
         botonRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,13 +268,17 @@ public class RegistrarActivity extends AppCompatActivity {
                 codigoDeVerificacion.clearFocus();
                 contraseña.clearFocus();
                 repetirContraseña.clearFocus();
-                if((nombreValido) && (contraseñaRepiteValida) && (contraseñaValida) && (emailValido) ) {
+                if((nombreValido) && (contraseñaRepiteValida) && (nombreCompletoValido)&& (contraseñaValida) && (emailValido) && codigoValido) {
                     CrearUsuario();
                     Toast toast2 = Toast.makeText(getApplicationContext(),"Usuario Registrado",Toast.LENGTH_LONG);
                     toast2.show();
                     Intent siguiente = new Intent(RegistrarActivity.this, LoginActivity.class);
                     startActivity(siguiente);
                     finish();
+                }
+                else{
+                    Toast toast2 = Toast.makeText(getApplicationContext(),"Datos no validos",Toast.LENGTH_LONG);
+                    toast2.show();
                 }
             }
         });
@@ -339,6 +318,29 @@ public class RegistrarActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void insertarImagenNombreCompleto(boolean respuesta) {
+        ImageView imagen= (ImageView)findViewById(R.id.ImagenViewNombreCompletoRegistro);
+
+        if(respuesta == false)
+        {
+            String uri = "@drawable/wrong";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            imagen.setImageDrawable(res);
+            imagen.setVisibility(View.VISIBLE);
+            nombreCompletoValido = false;
+        }
+        else
+        {
+            String uri = "@drawable/right";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            imagen.setImageDrawable(res);
+            imagen.setVisibility(View.VISIBLE);
+            nombreCompletoValido = true;
+        }
     }
 
     private void enviarEmail() {
@@ -468,6 +470,21 @@ public class RegistrarActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    private boolean validarNombreCompleto(String cadena) {
+        Toast toast;
+
+        for(int i = 0; i < cadena.length(); ++i) {
+            char caracter = cadena.charAt(i);
+            if(!Character.isLetter(caracter) && !Character.isSpaceChar(caracter)) {
+                toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos ni numeros", Toast.LENGTH_SHORT);
+                toast.show();
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     private void insertarImagenNombreUsuario(boolean respuesta) {
 

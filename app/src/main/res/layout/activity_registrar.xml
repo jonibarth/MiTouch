@@ -56,7 +56,7 @@
                 <EditText
                     android:id="@+id/nombreUsuarioRegistrar"
                     android:layout_width="match_parent"
-                    android:layout_marginRight="80dp"
+                    android:layout_marginRight="40dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="text"
@@ -90,6 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nombre Completo:"
+                    android:layout_marginRight="40dp"
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -98,6 +99,14 @@
                     android:background="#313131"
                     />
             </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:id="@+id/ImagenViewNombreCompletoRegistro"
+                android:layout_alignBottom="@+id/CustomViewNombreCompleto"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -112,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Direccion de Gmail:"
-                    android:layout_marginRight="80dp"
+                    android:layout_marginRight="40dp"
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -133,31 +142,6 @@
                 android:layout_alignParentEnd="true"
 
                 />
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/colorVerde"
-                android:layout_below="@+id/CustomViewEmail"
-                android:id="@+id/CustomViewCodigoVerificacion"
-                android:layout_marginBottom="15dp"
-                >
-
-                <EditText
-                    android:id="@+id/CodigoVerificacion_Registro"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Codigo de verificación:"
-                    android:layout_marginRight="80dp"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColor="@color/colorVerde"
-                    android:textStyle="bold"
-                    android:background="#313131"
-                    />
-            </android.support.design.widget.TextInputLayout>
-
 
 
             <android.support.design.widget.TextInputLayout
@@ -225,6 +209,30 @@
                 android:layout_alignTop="@+id/CustomViewRepiteContraseña"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/colorVerde"
+                android:id="@+id/CustomViewCodigoVerificacion"
+                android:layout_below="@+id/CustomViewEmail"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <EditText
+                    android:id="@+id/CodigoVerificacion_Registro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Codigo de verificación:"
+                    android:layout_marginRight="80dp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/colorVerde"
+                    android:textStyle="bold"
+                    android:background="#313131"
+                    />
+            </android.support.design.widget.TextInputLayout>
 
         </RelativeLayout>
     </ScrollView>

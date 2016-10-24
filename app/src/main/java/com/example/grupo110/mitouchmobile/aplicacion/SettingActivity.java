@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -100,10 +101,12 @@ public class SettingActivity extends AppCompatActivity {
     /************ Variables para las validaciones *********************/
     private boolean nombreValido = true;
     private boolean nombreCompletoValido = true;
-    private boolean codigoValido = false;
+    private boolean codigoValido = true;
     private boolean emailValido = true;
     private Context context;
     private boolean aux=false;
+    private boolean aux2=false;
+    private boolean aux3=false;
 
     /************ FIN Variables para las validaciones *********************/
 
@@ -133,6 +136,7 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 nombreCompleto.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
                 puedesEditar(imagenEditNombre,"Nombre Completo");
+                aux2=true;
 
             }
         });
@@ -146,6 +150,7 @@ public class SettingActivity extends AppCompatActivity {
                 codigoVerificacion.setKeyListener(new EditText(getApplicationContext()).getKeyListener());
                 codigoVerificacion.setVisibility(View.VISIBLE);
                 CustomViewEmail.setVisibility(View.VISIBLE);
+                aux3=true;
             }
         });
 
@@ -169,12 +174,18 @@ public class SettingActivity extends AppCompatActivity {
         nombreUsuario.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)
-                    if(aux){
-                    boolean respuesta = validarUsuario(nombreUsuario.getText().toString());
-                    System.out.println("El usuario esta: " + respuesta);
-                    insertarImagenNombreUsuario(respuesta);
+                if(!hasFocus){
+                    if(aux && !nombreUsuario.getText().toString().equals(usu_nombre_usuario) ) {
+                        boolean respuesta = validarUsuario(nombreUsuario.getText().toString());
+                        System.out.println("El usuario esta: " + respuesta);
+                        insertarImagenNombreUsuario(respuesta);
+                    }
+                    if (!aux2) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(nombreUsuario.getWindowToken(), 0);
+                    }
                 }
+
             }
         });
 
@@ -182,9 +193,19 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus){
-                    NombreCompletoString = nombreCompleto.getText().toString();
-                    System.out.println("ghg");
+                    if(!nombreCompleto.getText().toString().equals(usu_nombre_completo)) {
+                        NombreCompletoString = nombreCompleto.getText().toString();
+                        if (validarNombreCompleto(NombreCompletoString))
+                            insertarImagenNombreCompleto(true);
+                        else
+                            insertarImagenNombreCompleto(false);
+                    }
+                    if(!aux3) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(nombreUsuario.getWindowToken(), 0);
+                    }
                 }
+
             }
         });
 
@@ -192,15 +213,15 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
-                    if(nombreValido && !codigoValido)
+                    if(nombreValido  && !direccionEmail.getText().toString().equals(usu_mail))
                         if(!nombreCompleto.getText().toString().equals(""))
                             if(validarEmail(direccionEmail.getText().toString()))
                                 if(!buscarEmail(direccionEmail.getText().toString())) {
+                                    codigoValido=false;
                                     destintatarioCorreo =direccionEmail.getText().toString();
                                     EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
                                     random = randomGenerator.nextSessionId();
                                     System.out.println("El numero random es:"+random);
-
                                     enviarEmail();
                                 }
                                 else{
@@ -213,7 +234,9 @@ public class SettingActivity extends AppCompatActivity {
                                 insertarImagenEmail(false);
                                 Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo es invalida",Toast.LENGTH_LONG);
                                 toast.show();
-
+                                direccionEmail.clearFocus();
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(direccionEmail.getWindowToken(), 0);
                             }
                         else
                         {
@@ -222,11 +245,14 @@ public class SettingActivity extends AppCompatActivity {
                             direccionEmail.setText("");
                             codigoVerificacion.setText("");
                             codigoValido = false;
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(direccionEmail.getWindowToken(), 0);
+                            direccionEmail.clearFocus();
                         }
+
                 }
                 if (hasFocus) {
                     codigoVerificacion.setText("");
-                    codigoValido = false;
                 }
 
             }
@@ -582,6 +608,23 @@ public class SettingActivity extends AppCompatActivity {
         return false;
     }
 
+    private boolean validarNombreCompleto(String cadena) {
+        Toast toast;
+
+        for(int i = 0; i < cadena.length(); ++i) {
+            char caracter = cadena.charAt(i);
+            if(!Character.isLetter(caracter) || !Character.isSpaceChar(caracter)) {
+                toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos ni letras", Toast.LENGTH_SHORT);
+                toast.show();
+                nombreCompletoValido=false;
+                return false;
+
+            }
+        }
+        nombreCompletoValido=true;
+        return true;
+    }
+
     private void print(String s) {
         Toast toast = Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG);
         toast.show();
@@ -608,6 +651,29 @@ public class SettingActivity extends AppCompatActivity {
             imagen.setImageDrawable(res);
             imagen.setVisibility(View.VISIBLE);
             nombreValido = true;
+        }
+    }
+
+    private void insertarImagenNombreCompleto(boolean respuesta) {
+        ImageView imagen= (ImageView)findViewById(R.id.ImagenViewNombreCompletoSetting);
+
+        if(respuesta == false)
+        {
+            String uri = "@drawable/wrong";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            imagen.setImageDrawable(res);
+            imagen.setVisibility(View.VISIBLE);
+            emailValido = false;
+        }
+        else
+        {
+            String uri = "@drawable/right";  // where myresource (without the extension) is the file
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            imagen.setImageDrawable(res);
+            imagen.setVisibility(View.VISIBLE);
+            emailValido = true;
         }
     }
 
