@@ -351,14 +351,14 @@ public class DetailsActivity extends AppCompatActivity {
 
     private boolean esunaImagen(String imagen) {
 
-        if (imagen.equals("jpg") || imagen.equals("JPG") || imagen.equals("jpeg") || imagen.equals("JPEG") || imagen.equals("bmp") ||imagen.equals("BMP"))
+        if (imagen.equals("jpg") || imagen.equals("JPG")  || imagen.equals("bmp") ||imagen.equals("BMP"))
             return true;
         return false;
     }
 
     private boolean esunVideo(String imagen) {
 
-        if (imagen.equals("mp4") || imagen.equals("avi") || imagen.equals("3gp")|| imagen.equals("MP4") || imagen.equals("AVI") || imagen.equals("3GP"))
+        if (imagen.equals("mp4") || imagen.equals("avi") || imagen.equals("MP4") || imagen.equals("AVI") )
             return true;
         return false;
     }

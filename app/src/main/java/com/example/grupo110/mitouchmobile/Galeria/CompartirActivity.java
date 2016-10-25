@@ -375,16 +375,15 @@ public class CompartirActivity extends AppCompatActivity {
 
         if(     imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("jpg") ||
                 imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("JPG") ||
-                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("jpeg") ||
-                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("JPEG") ||
+
                 imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("bmp") ||
                 imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("BMP") ||
+
                 imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("mp4") ||
                 imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("MP4") ||
+
                 imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("avi") ||
-                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("AVI") ||
-                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("3gp") ||
-                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("3GP")
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("AVI")
                 )
             return true;
 
