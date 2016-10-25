@@ -164,6 +164,7 @@ public class SettingActivity extends AppCompatActivity {
                     // setting list adapter
                     expListView.setAdapter(listAdapter);
                     imagenlvExp.setVisibility(View.INVISIBLE);
+
                 }
 
 
@@ -213,7 +214,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
-                    if(nombreValido  && !direccionEmail.getText().toString().equals(usu_mail))
+                    if(nombreValido  && !direccionEmail.getText().toString().equals(usu_mail) && !destintatarioCorreo.equals(direccionEmail.getText().toString()))
                         if(!nombreCompleto.getText().toString().equals(""))
                             if(validarEmail(direccionEmail.getText().toString()))
                                 if(!buscarEmail(direccionEmail.getText().toString())) {
@@ -364,7 +365,7 @@ public class SettingActivity extends AppCompatActivity {
         PostgrestBD baseDeDatos = new PostgrestBD();
 
         try {
-                comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES (" + id_usuario + ",'" + BuscarGruposdeUsuarioenArray() + "','" + fechadiahora + "',null,null);";
+                comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES (" + id_usuario + ",'" + BuscarGruposdeUsuarioenArray() + "','" + fechadiahora + "',null,0);";
                 baseDeDatos.execute(comando);
             Toast toast = Toast.makeText(getApplicationContext(),"Solicitud enviada",Toast.LENGTH_LONG);
             toast.show();
@@ -385,8 +386,14 @@ public class SettingActivity extends AppCompatActivity {
             comando = "UPDATE \"MiTouch\".t_usuarios SET usu_nombre_usuario = '" + nombreUsuario.getText().toString() + "', usu_nombre_completo = '" + nombreCompleto.getText().toString() + "', usu_mail = '" + direccionEmail.getText().toString() + "'" + " WHERE usu_id = " + id_usuario + ";";
             PostgrestBD baseDeDatos = new PostgrestBD();
             baseDeDatos.execute(comando);
-            finish(); // No se si deberia quedar en el menu o no!!
         }
+        if(grupodeUsuario!=null)
+            if( ValidarSolicitudGrupoDeUsuario() ) {
+                enviarSolicitudGrupo();
+                finish(); // No se si deberia quedar en el menu o no!!
+             }
+
+
 
     }
 
@@ -532,7 +539,7 @@ public class SettingActivity extends AppCompatActivity {
             while (resultSet.next()) {
                 if( resultSet.getInt("sol_estado") == 0 )
                 {
-                    Toast toast2 = Toast.makeText(getApplicationContext(), "El acceso esta pendiente", Toast.LENGTH_SHORT);
+                    Toast toast2 = Toast.makeText(getApplicationContext(), "El acceso ya esta pendiente", Toast.LENGTH_SHORT);
                     toast2.show();
                     return false;
                 }else if( resultSet.getInt("sol_estado") == 1)
@@ -630,20 +637,35 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private boolean validarNombreCompleto(String cadena) {
+        boolean nombreVa=false;
+        nombreCompletoValido = nombreVa;
         Toast toast;
+
+        if(cadena.length()<1){
+            toast = Toast.makeText(getApplicationContext(), "Debe tener minimamente una letra", Toast.LENGTH_SHORT);
+            toast.show();
+            return nombreVa;
+        }
 
         for(int i = 0; i < cadena.length(); ++i) {
             char caracter = cadena.charAt(i);
-            if(!Character.isLetter(caracter) || !Character.isSpaceChar(caracter)) {
-                toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos ni letras", Toast.LENGTH_SHORT);
+            if(i==0 && !Character.isLetter(caracter))
+            {
+                toast = Toast.makeText(getApplicationContext(), "El nombre debe comenzar con una letra", Toast.LENGTH_SHORT);
                 toast.show();
-                nombreCompletoValido=false;
-                return false;
-
+                return nombreVa;
             }
+            if(!Character.isLetter(caracter) && !Character.isSpaceChar(caracter)) {
+                toast = Toast.makeText(getApplicationContext(), "El nombre no puede tener simbolos ni numeros", Toast.LENGTH_SHORT);
+                toast.show();
+                return nombreVa;
+            }
+            if(Character.isLetter(caracter))
+                nombreVa=true;
+
         }
-        nombreCompletoValido=true;
-        return true;
+        nombreCompletoValido = true;
+        return nombreVa;
     }
 
     private void print(String s) {

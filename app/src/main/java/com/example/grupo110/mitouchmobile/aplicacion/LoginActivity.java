@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Si el usuario y pass son INvalidas!
     private void ErrorLogueo(String email, String password) {
-        Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario y contraseña invalidos... o El usuario ya esta conectado ", Toast.LENGTH_SHORT);
+        Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario y contraseña invalido", Toast.LENGTH_SHORT);
         toast2.show();
     }
 
@@ -153,25 +153,32 @@ public class LoginActivity extends AppCompatActivity {
                 "FROM  \"MiTouch\".t_usuarios " +
                 "WHERE usu_nombre_usuario ='"+ usuario +"' " +
                 "AND usu_password = '"+ password +"' " +
-                "AND ( usu_ultimo_log_out IS NOT NULL OR  usu_ultimo_log_in IS NULL);";
+                ";";
 
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
+
+                if(resultSet.getTimestamp("usu_ultimo_log_in")==null ){
+                    id_usuario = resultSet.getInt("usu_id");
+                    System.out.println("Sdfsdfsdf: " +id_usuario);
+                    modificar_usu_ultimo_log_in(id_usuario);
+                    return true;
+                }else
                     if(validarFecha(resultSet.getTimestamp("usu_ultimo_log_in"),resultSet.getTimestamp("usu_ultimo_log_out"))){
                         id_usuario = resultSet.getInt("usu_id");
                         modificar_usu_ultimo_log_in(id_usuario);
                         return true;
                     }else
-                    {
+                        {
                         Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario ya esta logueado ", Toast.LENGTH_SHORT);
                         toast2.show();
                         return false;
                     }
 
             }
-        }catch(Exception e){}
+        }catch(Exception e){System.out.println("Aca hay un error: "+ e);}
         return false;
     }
 

@@ -160,8 +160,15 @@ public class AddDesdeGaleria extends Activity{
                 imgDecodableString = cursor.getString(columnIndex);
 
                 System.out.println("file: " + imgDecodableString);
-                cursor.close();
-                crearArchivoMultimedia();
+                if(validarExtenciones(imgDecodableString)){
+                    cursor.close();
+                    crearArchivoMultimedia();
+                }
+                else
+                {
+                    Toast.makeText(this, "MiTouch no admite la archivo multimedia con la extensión",
+                            Toast.LENGTH_LONG).show();
+                }
             } else {
                 Toast.makeText(this, "You haven't picked Image",
                         Toast.LENGTH_LONG).show();
@@ -176,6 +183,26 @@ public class AddDesdeGaleria extends Activity{
         startActivity(AgregarArchivoIntent);
         finish();
 
+    }
+
+    private boolean validarExtenciones(String imgDecodableString) {
+
+        if(     imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("jpg") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("JPG") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("jpeg") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("JPEG") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("bmp") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("BMP") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("mp4") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("MP4") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("avi") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("AVI") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("3gp") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("3GP")
+                )
+            return true;
+
+        return false;
     }
 
     /*
@@ -311,5 +338,7 @@ public class AddDesdeGaleria extends Activity{
             }
         }
     }
+
+
 
 }

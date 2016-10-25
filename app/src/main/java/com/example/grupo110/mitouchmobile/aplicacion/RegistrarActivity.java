@@ -171,8 +171,8 @@ public class RegistrarActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
-                    if(nombreValido && !codigoValido)
-                        if(!nombreCompleto.getText().toString().equals(""))
+                    if(nombreValido && !codigoValido )
+                        if(!nombreCompleto.getText().toString().equals("") && !destintatarioCorreo.equals(direccionEmail.getText().toString()))
                             if(validarEmail(direccionEmail.getText().toString()))
                                 if(!buscarEmail(direccionEmail.getText().toString())) {
                                     destintatarioCorreo =direccionEmail.getText().toString();
@@ -434,7 +434,7 @@ public class RegistrarActivity extends AppCompatActivity {
          */
         if(grupoUsuario!=null) {
             try {
-                comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES (" + id_usuadioGenerado + ",'" + BuscarGruposdeUsuarioenArray() + "','" + fechadiahora + "',null,null);";
+                comando = "INSERT INTO \"MiTouch\".t_solicitud_acceso (sol_id_usuario,sol_id_grupo,sol_fecha_hora,sol_fecha_hora_respuesta,sol_estado) VALUES (" + id_usuadioGenerado + ",'" + BuscarGruposdeUsuarioenArray() + "','" + fechadiahora + "',null,0);";
                 baseDeDatos.execute(comando);
             } catch (Exception e) {
                 System.out.println("no selecciono grupo de usuario");
@@ -492,17 +492,35 @@ public class RegistrarActivity extends AppCompatActivity {
     }
 
     private boolean validarNombreCompleto(String cadena) {
+        boolean nombreVa=false;
         Toast toast;
+
+        if(cadena.length()<1){
+            toast = Toast.makeText(getApplicationContext(), "debe tener minimamente una letra", Toast.LENGTH_SHORT);
+            toast.show();
+            return nombreVa;
+        }
 
         for(int i = 0; i < cadena.length(); ++i) {
             char caracter = cadena.charAt(i);
-            if(!Character.isLetter(caracter) && !Character.isSpaceChar(caracter)) {
-                toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos ni numeros", Toast.LENGTH_SHORT);
+
+            if(i==0 && !Character.isLetter(caracter))
+            {
+                toast = Toast.makeText(getApplicationContext(), "El nombre debe comenzar con una letra", Toast.LENGTH_SHORT);
                 toast.show();
-                return false;
+                return nombreVa;
             }
+
+            if(!Character.isLetter(caracter) && !Character.isSpaceChar(caracter)) {
+                toast = Toast.makeText(getApplicationContext(), "El nombre no puede tener simbolos ni numeros", Toast.LENGTH_SHORT);
+                toast.show();
+                return nombreVa;
+            }
+            if(Character.isLetter(caracter))
+                nombreVa=true;
+
         }
-        return true;
+        return nombreVa;
     }
 
 

@@ -81,6 +81,12 @@ public class CompartirActivity extends AppCompatActivity {
         catch(Exception e){
             System.out.println("Error: "+e);
         }
+        if(!validarExtenciones(path))
+        {
+            Toast.makeText(this, "MiTouch no admite la archivo multimedia con la extensión", Toast.LENGTH_LONG).show();
+
+            finish();
+        }
         System.out.println("url: " + path);
         buscarUsuario();
 
@@ -288,15 +294,14 @@ public class CompartirActivity extends AppCompatActivity {
 
         listDataChild.put(grupo, grupodeUsuario);
         listDataID.put(grupo, grupodeUsuarioID);
-        grupodeUsuario = new ArrayList<>();
-        grupodeUsuarioID = new ArrayList<>();
-
 
         try {
             while (resultSet.next()) {
                 if(aux != resultSet.getInt(1)){
                     if(aux == -1)
                     {
+                            grupodeUsuario = new ArrayList<>();
+                            grupodeUsuarioID = new ArrayList<>();
                             grupo=resultSet.getString(2);
                             listDataHeader.add(grupo);
                             grupodeUsuario.add(grupo);
@@ -343,6 +348,7 @@ public class CompartirActivity extends AppCompatActivity {
         try{
             while (resultSet.next()) {
                 usuario = resultSet.getString("usu_nombre_usuario");
+                System.out.println("El usuario es: " + usuario);
                 id_carpetausuario = resultSet.getInt("usu_id_galeria");
                 return true;
             }
@@ -363,6 +369,26 @@ public class CompartirActivity extends AppCompatActivity {
             }
             System.out.println("Dumping Intent end");
         }
+    }
+
+    private boolean validarExtenciones(String imgDecodableString) {
+
+        if(     imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("jpg") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("JPG") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("jpeg") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("JPEG") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("bmp") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("BMP") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("mp4") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("MP4") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("avi") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("AVI") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("3gp") ||
+                imgDecodableString.substring(imgDecodableString.lastIndexOf(".") + 1).equals("3GP")
+                )
+            return true;
+
+        return false;
     }
 
 }

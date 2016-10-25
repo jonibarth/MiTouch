@@ -351,7 +351,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private boolean esunaImagen(String imagen) {
 
-        if (imagen.equals("jpg") || imagen.equals("JPG") || imagen.equals("jpeg") || imagen.equals("JPEG") || imagen.equals("bmp") ||imagen.equals("BMP") || imagen.equals("png") || imagen.equals("PNG"))
+        if (imagen.equals("jpg") || imagen.equals("JPG") || imagen.equals("jpeg") || imagen.equals("JPEG") || imagen.equals("bmp") ||imagen.equals("BMP"))
             return true;
         return false;
     }
