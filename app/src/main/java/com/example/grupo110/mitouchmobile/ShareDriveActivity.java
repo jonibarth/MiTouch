@@ -23,6 +23,8 @@ import java.util.Collections;
 
 public class ShareDriveActivity extends Activity{
 
+    private int result = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +73,7 @@ public class ShareDriveActivity extends Activity{
 
                     driveService.permissions().create(fileId, permission).setFields("id").execute();
 
-                    Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
 
                     finish();
 
@@ -79,7 +81,8 @@ public class ShareDriveActivity extends Activity{
                     startActivityForResult(e.getIntent(), 2);
                 } catch (Exception e1) {
                     e1.printStackTrace();
-                    Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
+                    result = 1;
+                    //Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
                     finish();
                 }
 
@@ -110,14 +113,16 @@ public class ShareDriveActivity extends Activity{
 
                         }
 
-                        Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
 
                         finish();
                     }catch (UserRecoverableAuthIOException e) {
                             startActivityForResult(e.getIntent(), 2);
                         } catch (Exception e1) {
                             e1.printStackTrace();
-                        Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
+
+                        result = 1;
+                        //Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
                         finish();
                     }
                 }
@@ -125,7 +130,22 @@ public class ShareDriveActivity extends Activity{
             }
                 return null;
 
-        }}.execute();
+        }
+
+            protected void onPostExecute(Void param){
+
+                if(result != 0){
+
+                    Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
+
+                }else{
+
+                    Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+        }.execute();
     }
 }
 
