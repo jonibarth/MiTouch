@@ -5,13 +5,23 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.view.ContextThemeWrapper;
+import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class ActionGoogleDriveActivity extends Activity {
@@ -35,14 +45,11 @@ public class ActionGoogleDriveActivity extends Activity {
 
                             switch (opt){
 
-                                case 0: url = getUrl(id);
+                                case 0: Intent docIntent = new Intent(ActionGoogleDriveActivity.this, OpenDriveFileActivity.class);
+                                        docIntent.putExtra("id",id);
+                                        startActivity(docIntent);
+                                        finish();
 
-                                        if(url != ""){
-
-                                            Intent docIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                            startActivity(docIntent);
-                                            finish();
-                                        }
 
                                         break;
 
@@ -65,7 +72,6 @@ public class ActionGoogleDriveActivity extends Activity {
                                 }
 
                             }
-                            //finish();
                         }
 
                     });
@@ -74,24 +80,6 @@ public class ActionGoogleDriveActivity extends Activity {
 
         }
 
-    }
-
-    public String getUrl (String id) {
-        String comando = "";
-        String res = "";
-
-        comando = String.format("SELECT * FROM  \"MiTouch\".t_archivos WHERE arch_id_google_drive ='"+ id +"';");
-        PostgrestBD baseDeDatos = new PostgrestBD();
-        ResultSet resultSet = baseDeDatos.execute(comando);
-        try{
-            while (resultSet.next()) {
-
-
-                res = resultSet.getString("arch_url_acceso");
-            }
-        }catch(Exception e){res = "";}
-
-        return res;
     }
 
     @Override
@@ -143,7 +131,7 @@ public class ActionGoogleDriveActivity extends Activity {
                 finish();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
+
             }
         }
     }//onActivityResult
