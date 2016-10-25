@@ -73,7 +73,6 @@ public class ShareDriveActivity extends Activity{
 
                     driveService.permissions().create(fileId, permission).setFields("id").execute();
 
-                    //Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
 
                     finish();
 
@@ -82,7 +81,6 @@ public class ShareDriveActivity extends Activity{
                 } catch (Exception e1) {
                     e1.printStackTrace();
                     result = 1;
-                    //Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
                     finish();
                 }
 
@@ -113,8 +111,6 @@ public class ShareDriveActivity extends Activity{
 
                         }
 
-                        //Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
-
                         finish();
                     }catch (UserRecoverableAuthIOException e) {
                             startActivityForResult(e.getIntent(), 2);
@@ -122,7 +118,6 @@ public class ShareDriveActivity extends Activity{
                             e1.printStackTrace();
 
                         result = 1;
-                        //Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
                         finish();
                     }
                 }

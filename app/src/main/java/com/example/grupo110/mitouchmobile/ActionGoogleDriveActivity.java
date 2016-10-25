@@ -58,7 +58,7 @@ public class ActionGoogleDriveActivity extends Activity {
                                 case 2: if(idDel != null){
 
                                     Intent deleteIntent = new Intent(ActionGoogleDriveActivity.this,DeleteFileDrive.class);
-                                    deleteIntent.putExtra("idDel",idDel);
+                                    deleteIntent.putExtra("idDel",id);
                                     startActivity(deleteIntent);
                                     finish();
                                     break;

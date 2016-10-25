@@ -130,5 +130,7 @@
     <string name="title_activity_swype_images">SwypeImagesActivity</string>
     <string name="title_activity_galeria_de_fotos">GaleriaDeFotos</string>
     <string name="exito_share">El archivo se compartió exitosamente</string>
-    <string name="error_share">Hubo un error al compartir</string>
+    <string name="error_share">Ocurrió un error al compartir</string>
+    <string name="exito_delete">El archivo se eliminó exitosamente</string>
+    <string name="error_delete">Ocurrió un error al eliminar el archivo</string>
 </resources>
