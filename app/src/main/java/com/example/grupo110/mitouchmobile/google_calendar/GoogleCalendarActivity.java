@@ -63,18 +63,9 @@ public class GoogleCalendarActivity extends Activity {
             @Override
             public void onClick(View v){
 
-                Intent mainIntent = new Intent(GoogleCalendarActivity.this, NewCalendarEventActivity.class);
-                startActivity(mainIntent);
-                /*
-                Calendar beginTime = Calendar.getInstance();
-                Calendar endTime = Calendar.getInstance();
                 Intent intent = new Intent(Intent.ACTION_INSERT)
-                        .setData(CalendarContract.Events.CONTENT_URI)
-                        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
-                        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
+                        .setData(CalendarContract.Events.CONTENT_URI);
                 startActivity(intent);
-                finish();
-                */
             }
 
         });

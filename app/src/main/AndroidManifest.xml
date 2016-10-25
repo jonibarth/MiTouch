@@ -91,10 +91,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".google_calendar.NewCalendarEventActivity"
-            android:label="Nuevo evento"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ActionGoogleDriveActivity"
             android:screenOrientation="portrait" />
         <activity
