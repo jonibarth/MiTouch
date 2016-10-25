@@ -80,6 +80,7 @@ public abstract class BaseDriveActivity extends Activity implements
     protected void onResume() {
         super.onResume();
         if (mGoogleApiClient == null) {
+
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(Drive.API)
                     .addScope(Drive.SCOPE_FILE)

@@ -1,6 +1,7 @@
 package com.example.grupo110.mitouchmobile;
 
 
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,84 +22,100 @@ import java.util.Collections;
 public class OpenDriveFileActivity extends Activity {
 
     private int result = 0;
+    GoogleAccountCredential account;
+    String fileId = null;
+    String url = null;
+    private String cuenta = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new AsyncTask<Void, Void, Void>(){
-            protected Void doInBackground(Void... params) {
+        try {
+            fileId = getIntent().getExtras().getString("id");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-                GoogleAccountCredential account;
-                String fileId = null;
-                String url = null;
-                try {
-                    fileId = getIntent().getExtras().getString("id");
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+        account = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singletonList(DriveScopes.DRIVE));
+        startActivityForResult(account.newChooseAccountIntent(), 1000);
+    }
 
-                if(fileId != null){
-                    try {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case 1000:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    if (accountName != null) {
+                        cuenta = accountName;
+                        new AsyncTask<Void, Void, Void>(){
+                            protected Void doInBackground(Void... params) {
 
-                        account = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singletonList(DriveScopes.DRIVE));
-                        account.setSelectedAccountName("grupo110unlam@gmail.com");
+                                if(fileId != null){
+                                    try {
 
-                        Drive driveService =
-                                new Drive.Builder(
-                                        AndroidHttp.newCompatibleTransport(),
-                                        JacksonFactory.getDefaultInstance(),
-                                        account
-                                ).setApplicationName("MiTouch").build();
+                                        account.setSelectedAccountName(cuenta);
 
-                        File file = driveService.files().get(fileId).execute();
+                                        Drive driveService =
+                                                new Drive.Builder(
+                                                        AndroidHttp.newCompatibleTransport(),
+                                                        JacksonFactory.getDefaultInstance(),
+                                                        account
+                                                ).setApplicationName("MiTouch").build();
 
-                        String mime = file.getMimeType();
+                                        File file = driveService.files().get(fileId).execute();
 
-                        switch (mime){
+                                        String mime = file.getMimeType();
 
-                            case "application/vnd.google-apps.spreadsheet":
-                                url = "https://docs.google.com/spreadsheets/d/" + fileId;
-                                break;
-                            case "application/vnd.google-apps.presentation":
-                                url = "https://docs.google.com/presentation/d/" + fileId;
-                                break;
-                            case "application/vnd.google-apps.document":
-                                url = "https://docs.google.com/document/d/" + fileId;
-                                break;
-                            default: url = null;
-                                break;
-                        }
+                                        switch (mime){
 
-                        if(url != null) {
+                                            case "application/vnd.google-apps.spreadsheet":
+                                                url = "https://docs.google.com/spreadsheets/d/" + fileId;
+                                                break;
+                                            case "application/vnd.google-apps.presentation":
+                                                url = "https://docs.google.com/presentation/d/" + fileId;
+                                                break;
+                                            case "application/vnd.google-apps.document":
+                                                url = "https://docs.google.com/document/d/" + fileId;
+                                                break;
+                                            default: url = null;
+                                                break;
+                                        }
 
-                            Intent docIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                            startActivity(docIntent);
-                            finish();
-                        }else{
-                            result = 1;
-                        }
+                                        if(url != null) {
 
-                    }catch (UserRecoverableAuthIOException e) {
-                        startActivityForResult(e.getIntent(), 2);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                        result = 1;
-                        finish();
+                                            Intent docIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                            startActivity(docIntent);
+                                            finish();
+                                        }else{
+                                            result = 1;
+                                        }
+
+                                    }catch (UserRecoverableAuthIOException e) {
+                                        startActivityForResult(e.getIntent(), 2);
+                                    } catch (Exception e1) {
+                                        e1.printStackTrace();
+                                        result = 1;
+                                        finish();
+                                    }
+                                }
+
+                                return null;
+                            }
+
+                            protected void onPostExecute(Void param){
+                                if (result == 1){
+                                    Toast.makeText(OpenDriveFileActivity.this,"No se pudo abrir el archivo",Toast.LENGTH_LONG);
+                                }
+
+                            }
+
+                        }.execute();
+
                     }
                 }
-
-                return null;
-            }
-
-            protected void onPostExecute(Void param){
-                if (result == 1){
-                    Toast.makeText(OpenDriveFileActivity.this,"No se pudo abrir el archivo",Toast.LENGTH_LONG);
-                }
-
-            }
-
-        }.execute();
-
+        }
     }
 }
 
