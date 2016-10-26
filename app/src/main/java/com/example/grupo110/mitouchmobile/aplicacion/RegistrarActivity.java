@@ -88,7 +88,7 @@ public class RegistrarActivity extends AppCompatActivity {
     private static String direccionCorreo = "grupo110unlam@gmail.com";   // Dirección de correo origen
     private static String contrasenyaCorreo = "mitouch110";                 // Contraseña del correo electronico origen
 
-    private static String destintatarioCorreo; // Dirección de correo destino
+    private static String destintatarioCorreo="as"; // Dirección de correo destino
     String subject= "Tu cuenta de MiTouch: verificación de la dirección de email"; // Asunto del mail
     private String random;
     /************ FIN Variables Envio del mail *********************/
@@ -417,7 +417,7 @@ public class RegistrarActivity extends AppCompatActivity {
 
         System.out.println("el id de la carpeta generada es: " + id_carpetaGenerada);
 
-        comando = "INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail,usu_id_galeria) VALUES ('"+ fechadia +"','Alan Bobo dame el id', null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"',"+parseInt(id_carpetaGenerada)+") RETURNING usu_id;";
+        comando = "INSERT INTO \"MiTouch\".t_usuarios ( usu_fecha_alta, usu_id_carpeta, usu_ultimo_log_in,usu_ultimo_log_out, usu_password, usu_nombre_usuario, usu_nombre_completo,usu_fecha_baja, usu_administrador, usu_mail,usu_id_galeria) VALUES ('"+ fechadia +"','id Drive', null ,null, '"+contraseña.getText().toString() +"', '"+nombreUsuario.getText().toString() +"', '"+nombreCompleto.getText().toString()+"',null, false, '"+direccionEmail.getText().toString()+"',"+parseInt(id_carpetaGenerada)+") RETURNING usu_id;";
 
         // Inserto usuario en la tabla usuarios
         // Busco el ID del usuario que genere para insertarlo en la tabla de solicitud de acceso!

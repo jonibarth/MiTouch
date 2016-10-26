@@ -287,8 +287,6 @@ public class DetailsActivity extends AppCompatActivity {
                 "FROM \"MiTouch\".t_carpeta_archivos_galeria INNER JOIN \"MiTouch\".t_archivo_galeria ON archg_id=cag_id_archivo " +
                 " WHERE cag_id_carpeta=" + id_carpeta + ";";
 
-        System.out.println("el comando a ejectuar es: " + comando);
-
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {
@@ -306,7 +304,7 @@ public class DetailsActivity extends AppCompatActivity {
         String comando;
         comando = String.format("SELECT cg_id,cg_path,gru_nombre " +
                 "FROM \"MiTouch\".t_carpetas_galeria INNER JOIN \"MiTouch\".t_grupos ON cg_id = gru_id_galeria " +
-                "WHERE  gru_id =" + id_grupo + ";");
+                "WHERE  gru_id_galeria =" + id_grupo + ";");
 
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
