@@ -112,8 +112,32 @@ public class DetailsActivity extends AppCompatActivity {
                                         break;
                                     case 2:
                                         System.out.println("Archivo que deseo eliminar: " + listArchivosCompletos.get(posicionAprentada));
-                                        borrarArchivo(listIDArchivosCompletos.get(posicionAprentada));
-                                        finish();
+
+                                        AlertDialog.Builder builder1 = new AlertDialog.Builder(new ContextThemeWrapper(DetailsActivity.this, R.style.AlertDialogCustom));
+                                        builder1.setMessage("Deseas Eliminar el archivo?");
+                                        builder1.setCancelable(true);
+                                        builder1.setPositiveButton(
+                                                "Yes",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        borrarArchivo(listIDArchivosCompletos.get(posicionAprentada));
+                                                        dialog.cancel();
+                                                    }
+                                                });
+
+                                        builder1.setNegativeButton(
+                                                "No",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+
+                                        AlertDialog alert11 = builder1.create();
+                                        alert11.show();
+
+
+
                                         break;
                                     case 3:
                                         System.out.println("Salir ");
