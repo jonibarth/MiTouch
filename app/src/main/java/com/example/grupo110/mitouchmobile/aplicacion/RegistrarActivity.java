@@ -63,6 +63,9 @@ public class RegistrarActivity extends AppCompatActivity {
     private final static int  LARGO_CONTRASEÑA = 6;
     private final static int  USUARIOMINIMO = 6;
     private final static int  USUARIOMAXIMO = 15;
+	
+	private final static int  NOMBRECOMPLETOMINIMO = 5;
+    private final static int  NOMBRECOMPLETOMAXIMO = 51;
 
     private boolean nombreValido = false;
     private boolean contraseñaValida = false;
@@ -495,8 +498,14 @@ public class RegistrarActivity extends AppCompatActivity {
         boolean nombreVa=false;
         Toast toast;
 
-        if(cadena.length()<1){
-            toast = Toast.makeText(getApplicationContext(), "debe tener minimamente una letra", Toast.LENGTH_SHORT);
+        if(cadena.length()< NOMBRECOMPLETOMINIMO  ){
+            toast = Toast.makeText(getApplicationContext(), "El nombre de usuario debe tener 6 caracteres minimamente", Toast.LENGTH_SHORT);
+            toast.show();
+            return nombreVa;
+        }
+
+        if(cadena.length() > NOMBRECOMPLETOMAXIMO){
+            toast = Toast.makeText(getApplicationContext(), "El nombre de usuario debe tener menos de 50 caracteres", Toast.LENGTH_SHORT);
             toast.show();
             return nombreVa;
         }

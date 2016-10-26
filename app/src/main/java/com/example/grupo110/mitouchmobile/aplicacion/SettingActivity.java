@@ -52,6 +52,10 @@ public class SettingActivity extends AppCompatActivity {
     /************ Variables validacion largo usuario *********************/
     private final static int  USUARIOMINIMO = 6;
     private final static int  USUARIOMAXIMO = 15;
+
+    private final static int  NOMBRECOMPLETOMINIMO = 5;
+    private final static int  NOMBRECOMPLETOMAXIMO = 51;
+
     /************ FIN Variables validacion largo usuario y contraseña*********************/
 
     /***************** Variables Layout ***************************/
@@ -641,8 +645,14 @@ public class SettingActivity extends AppCompatActivity {
         nombreCompletoValido = nombreVa;
         Toast toast;
 
-        if(cadena.length()<1){
-            toast = Toast.makeText(getApplicationContext(), "Debe tener minimamente una letra", Toast.LENGTH_SHORT);
+        if(cadena.length()< NOMBRECOMPLETOMINIMO  ){
+            toast = Toast.makeText(getApplicationContext(), "El nombre de usuario debe tener 6 caracteres minimamente", Toast.LENGTH_SHORT);
+            toast.show();
+            return nombreVa;
+        }
+
+        if(cadena.length() > NOMBRECOMPLETOMAXIMO){
+            toast = Toast.makeText(getApplicationContext(), "El nombre de usuario debe tener menos de 50 caracteres", Toast.LENGTH_SHORT);
             toast.show();
             return nombreVa;
         }
