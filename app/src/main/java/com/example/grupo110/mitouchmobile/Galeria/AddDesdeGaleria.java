@@ -56,6 +56,8 @@ public class AddDesdeGaleria extends Activity{
         id_usuario = getIntent().getExtras().getInt("id");
         carpeta = getIntent().getExtras().getString("carpeta");
 
+        System.out.println("onCreate Add desde galeria: id: " +id_usuario + "carpeta: " + carpeta);
+
         /*
         *
         * En caso de que sea la carpeta personal, parte else..
@@ -102,7 +104,7 @@ public class AddDesdeGaleria extends Activity{
         String comando;
         comando = String.format("SELECT gru_nombre " +
                 "FROM \"MiTouch\".t_grupos  " +
-                "WHERE  gru_id =" + id_carpeta +";");
+                "WHERE  gru_id_galeria =" + id_carpeta +";");
 
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
@@ -178,6 +180,9 @@ public class AddDesdeGaleria extends Activity{
                     .show();
         }
         Intent AgregarArchivoIntent = new Intent(AddDesdeGaleria.this, DetailsActivity.class);
+
+        System.out.println("id: add desde galeria " + id_usuario);
+        System.out.println("Carpeta: add desde galeria " + carpeta);
         AgregarArchivoIntent.putExtra("id",id_usuario);
         AgregarArchivoIntent.putExtra("carpeta",carpeta);
         startActivity(AgregarArchivoIntent);
@@ -243,7 +248,6 @@ public class AddDesdeGaleria extends Activity{
         String fecha = df.format(c.getTime());
         String comando;
         comando = "INSERT INTO \"MiTouch\".t_archivo_galeria (archg_path,archg_fecha_desde,archg_fecha_baja) VALUES ('"+path+"','"+fecha+"',"+null+") RETURNING archg_id;";
-        System.out.println("el comando es: " + comando);
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         try {

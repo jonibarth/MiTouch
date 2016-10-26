@@ -46,9 +46,6 @@ public class GaleriaActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         gridView = (GridView) findViewById(R.id.gridView);
         CrearCarpetas();
         gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, getData());
@@ -74,7 +71,7 @@ public class GaleriaActivity extends AppCompatActivity {
         listDataHeader.add("Carpeta Personal");
         listIdHeader.add("Carpeta Personal");
         String comando;
-        comando = String.format("SELECT gru_id,gru_nombre " +
+        comando = String.format("SELECT gru_id,gru_nombre, gru_id_galeria " +
                 "FROM \"MiTouch\".t_usuarios_grupo INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
                 "WHERE  usu_id =" + id_usuario +";");
@@ -84,9 +81,9 @@ public class GaleriaActivity extends AppCompatActivity {
         try {
             while (resultSet.next()) {
                 listDataHeader.add(resultSet.getString("gru_nombre"));
-                listIdHeader.add("" +resultSet.getInt("gru_id"));
+                listIdHeader.add("" +resultSet.getInt("gru_id_galeria"));
             }
-        } catch (Exception e) {System.out.println("ERror Crear Carpetas: " + e);
+        } catch (Exception e) {System.out.println("Error Crear Carpetas: " + e);
         }
     }
 

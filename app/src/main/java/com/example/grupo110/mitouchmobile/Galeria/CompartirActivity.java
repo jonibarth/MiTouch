@@ -291,17 +291,18 @@ public class CompartirActivity extends AppCompatActivity {
         listDataHeader.add(grupo);
         grupodeUsuario.add(usuario);
         grupodeUsuarioID.add(id_carpetausuario+"");
-
         listDataChild.put(grupo, grupodeUsuario);
         listDataID.put(grupo, grupodeUsuarioID);
+
+        grupodeUsuario = new ArrayList<>();
+        grupodeUsuarioID = new ArrayList<>();
 
         try {
             while (resultSet.next()) {
                 if(aux != resultSet.getInt(1)){
                     if(aux == -1)
                     {
-                            grupodeUsuario = new ArrayList<>();
-                            grupodeUsuarioID = new ArrayList<>();
+
                             grupo=resultSet.getString(2);
                             listDataHeader.add(grupo);
                             grupodeUsuario.add(grupo);
