@@ -42,9 +42,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private static String contrasenyaCorreo = "mitouch110";                 // Contraseña
 
     // Correo al que enviaremos el mensaje
-    private static String destintatarioCorreo = "jonathan.barth05@gmail.com";
+    private static String destintatarioCorreo = "@gmail.com";
     String subject= "Tu cuenta de MiTouch: verificación de la dirección de email";
-    String email;
 
     // Layout
     private TextInputLayout textinputlayout;
@@ -75,9 +74,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
 
         context = getApplicationContext();
-        EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
-        random = randomGenerator.nextSessionId();
-        System.out.println("El random es: " + random);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,10 +92,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         restablecerContraseña.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email = emailGmail.getText().toString();
-                System.out.println("el mail es:" + email);
-                if(validarEmail(email))
-                    if(BuscaremailenBD(email))
+                destintatarioCorreo = emailGmail.getText().toString();
+                System.out.println("el mail es:" + destintatarioCorreo);
+                if(validarEmail(destintatarioCorreo))
+                    if(BuscaremailenBD(destintatarioCorreo))
                     {
                         Properties props = new Properties();
                         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -169,8 +165,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         Matcher mather = pattern.matcher(email);
         if (mather.find()) {
-            toast = Toast.makeText(getApplicationContext(), "El email ingresado es válido.", Toast.LENGTH_SHORT);
-            toast.show();
             return true;
         } else {
             toast = Toast.makeText(getApplicationContext(), "El email ingresado es inválido.", Toast.LENGTH_SHORT);
@@ -194,7 +188,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             } catch (Exception e) {
                 System.err.println("Error busqyeda grupos de usuario: " + e );
             }
+        Toast toast = Toast.makeText(getApplicationContext(), "El email ingresado no pertenece a un usuario registrado.", Toast.LENGTH_SHORT);
+        toast.show();
         return false;
+
     }
 
     class RetreiveFeedTask extends AsyncTask<String, Void, String> {
@@ -203,8 +200,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             try{
+
+                EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
+                random = randomGenerator.nextSessionId();
+                System.out.println("El random es: " + random);
+
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(direccionCorreo));
+
+                System.out.println("Direccion de correo:" + direccionCorreo);
 
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destintatarioCorreo));
 
