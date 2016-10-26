@@ -67,7 +67,7 @@ public class DeleteFileDrive extends Activity {
                                                 ).setApplicationName("MiTouch").build();
 
                                         driveService.files().delete(fileId).execute();
-
+                                        finish();
                                     }catch (UserRecoverableAuthIOException e) {
                                         startActivityForResult(e.getIntent(), 2);
                                     } catch (Exception e1) {
