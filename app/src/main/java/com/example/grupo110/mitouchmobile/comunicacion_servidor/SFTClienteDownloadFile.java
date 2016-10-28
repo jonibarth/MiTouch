@@ -29,7 +29,7 @@ public class SFTClienteDownloadFile extends AsyncTask<Void, Void, Void> {
 
 
     //String SFTPHOST = "mitouch.hopto.org";
-    String SFTPHOST = "192.168.1.33";
+    String SFTPHOST = "192.168.2.104";
     int SFTPPORT = 22;
     String SFTPUSER = "toor";
     String SFTPPASS = "namekiano";

@@ -285,7 +285,7 @@ public class CompartirActivity extends AppCompatActivity {
                 "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
                 "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
-                "WHERE  usu_id<>"+id_usuario+" "+
+                //"WHERE  usu_id<>"+id_usuario+" "+
                 "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario;";
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);
@@ -299,21 +299,21 @@ public class CompartirActivity extends AppCompatActivity {
         listDataChild.put(grupo, grupodeUsuario);
         listDataID.put(grupo, grupodeUsuarioID);
 
-        grupodeUsuario = new ArrayList<>();
-        grupodeUsuarioID = new ArrayList<>();
-
         try {
             while (resultSet.next()) {
                 if(aux != resultSet.getInt(1)){
                     if(aux == -1)
                     {
-
-                            grupo=resultSet.getString(2);
-                            listDataHeader.add(grupo);
-                            grupodeUsuario.add(grupo);
-                            grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
+                        grupodeUsuario = new ArrayList<>();
+                        grupodeUsuarioID = new ArrayList<>();
+                        grupo=resultSet.getString(2);
+                        listDataHeader.add(grupo);
+                        grupodeUsuario.add(grupo);
+                        grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
+                        if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
                             grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
                             grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        }
                         aux = resultSet.getInt(1);
                     }
                     else
@@ -326,15 +326,19 @@ public class CompartirActivity extends AppCompatActivity {
                         listDataHeader.add(grupo);
                         grupodeUsuario.add(grupo);
                         grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
-                        grupodeUsuario.add(resultSet.getString(4));
-                        grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
+                            grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                            grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                        }
                         aux = resultSet.getInt(1);
                     }
                 }
                 else
                 {
+                    if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
                         grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                        grupodeUsuarioID.add(resultSet.getString(6));
+                        grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+                    }
                 }
             }
 
@@ -344,6 +348,8 @@ public class CompartirActivity extends AppCompatActivity {
         } catch (Exception e) {
             System.err.println("Error crear explist: " + e );
         }
+
+
     }
     @NonNull
     private Boolean buscarUsuario() {

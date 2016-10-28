@@ -276,7 +276,7 @@ public class CompartirDesdePopUp extends AppCompatActivity {
                         grupodeUsuario.add(grupo);
                         grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
                         grupodeUsuarioEscribir.add("true");
-                        if(id_carpetausuario == resultSet.getInt("usu_id_galeria")) {
+                        if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
                             grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
                             grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
 
@@ -300,8 +300,7 @@ public class CompartirDesdePopUp extends AppCompatActivity {
                         grupodeUsuario.add(grupo);
                         grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
                         grupodeUsuarioEscribir.add("true");
-                        grupodeUsuario.add(resultSet.getString(4));
-                        if(id_carpetausuario == resultSet.getInt("usu_id_galeria")) {
+                        if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
                             grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
                             grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
 
@@ -315,7 +314,7 @@ public class CompartirDesdePopUp extends AppCompatActivity {
                 }
                 else
                 {
-                    if(id_carpetausuario == resultSet.getInt("usu_id_galeria")) {
+                    if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
                         grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
                         grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
 
