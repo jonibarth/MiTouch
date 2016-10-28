@@ -34,5 +34,5 @@
         android:verticalSpacing="5dp"
         android:focusable="true"
         android:clickable="true"/>
-    
+
 </android.support.design.widget.CoordinatorLayout>
