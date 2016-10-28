@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -275,6 +276,10 @@ public class CompartirActivity extends AppCompatActivity {
         try{
             baseDeDatos.execute(comando);
         }catch (Exception e){System.out.println("Error creacion vista: "+ e );}
+
+
+
+
 
         comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, gru_id_galeria, usu_id_galeria " +
                 "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +

@@ -174,36 +174,46 @@ public class RegistrarActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus) {
-                    if(nombreValido && !codigoValido )
-                        if(!nombreCompleto.getText().toString().equals("") && !destintatarioCorreo.equals(direccionEmail.getText().toString()))
+                    if(!destintatarioCorreo.equals(direccionEmail.getText().toString()))
+                        if(!nombreCompleto.getText().toString().equals(""))
                             if(validarEmail(direccionEmail.getText().toString()))
                                 if(!buscarEmail(direccionEmail.getText().toString())) {
+                                    codigoValido=false;
                                     destintatarioCorreo =direccionEmail.getText().toString();
                                     EmailIdentifierGenerator randomGenerator = new EmailIdentifierGenerator();
                                     random = randomGenerator.nextSessionId();
+                                    System.out.println("El numero random es:"+random);
                                     enviarEmail();
                                 }
                                 else{
                                     insertarImagenEmail(false);
                                     Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo ya esta registrada",Toast.LENGTH_LONG);
                                     toast.show();
+
                                 }
                             else {
                                 insertarImagenEmail(false);
                                 Toast toast = Toast.makeText(getApplicationContext(),"Direccion de correo es invalida",Toast.LENGTH_LONG);
                                 toast.show();
+                                direccionEmail.clearFocus();
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(direccionEmail.getWindowToken(), 0);
                             }
-                        else {
-                            Toast toast = Toast.makeText(getApplicationContext(),"el nombre de usuario no es valido o se a modificado",Toast.LENGTH_LONG);
+                        else
+                        {
+                            Toast toast = Toast.makeText(getApplicationContext(),"Ingrese nombre completo ",Toast.LENGTH_LONG);
                             toast.show();
                             direccionEmail.setText("");
                             codigoDeVerificacion.setText("");
                             codigoValido = false;
-                    }
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(direccionEmail.getWindowToken(), 0);
+                            direccionEmail.clearFocus();
+                        }
+
                 }
                 if (hasFocus) {
                     codigoDeVerificacion.setText("");
-                    codigoValido = false;
                 }
 
             }
@@ -470,14 +480,14 @@ public class RegistrarActivity extends AppCompatActivity {
             {
                 toast = Toast.makeText(getApplicationContext(), "El primer caracter debe ser una letra", Toast.LENGTH_SHORT);
                 toast.show();
-                return false;
+                return true;
             }
 
 
             if(!Character.isLetterOrDigit(caracter) && caracter != '.') {
-                toast = Toast.makeText(getApplicationContext(), "La contraseña no puede tener simbolos ni letras", Toast.LENGTH_SHORT);
+                toast = Toast.makeText(getApplicationContext(), "El nombre de usuario no puede tener simbolos ni letras", Toast.LENGTH_SHORT);
                 toast.show();
-                return false;
+                return true;
             }
         }
 
@@ -499,15 +509,15 @@ public class RegistrarActivity extends AppCompatActivity {
         Toast toast;
 
         if(cadena.length()< NOMBRECOMPLETOMINIMO  ){
-            toast = Toast.makeText(getApplicationContext(), "El nombre de usuario debe tener 6 caracteres minimamente", Toast.LENGTH_SHORT);
+            toast = Toast.makeText(getApplicationContext(), "El nombre debe tener 6 caracteres minimamente", Toast.LENGTH_SHORT);
             toast.show();
-            return nombreVa;
+            return false;
         }
 
         if(cadena.length() > NOMBRECOMPLETOMAXIMO){
-            toast = Toast.makeText(getApplicationContext(), "El nombre de usuario debe tener menos de 50 caracteres", Toast.LENGTH_SHORT);
+            toast = Toast.makeText(getApplicationContext(), "El nombre debe tener menos de 50 caracteres", Toast.LENGTH_SHORT);
             toast.show();
-            return nombreVa;
+            return false;
         }
 
         for(int i = 0; i < cadena.length(); ++i) {
@@ -517,13 +527,13 @@ public class RegistrarActivity extends AppCompatActivity {
             {
                 toast = Toast.makeText(getApplicationContext(), "El nombre debe comenzar con una letra", Toast.LENGTH_SHORT);
                 toast.show();
-                return nombreVa;
+                return false;
             }
 
             if(!Character.isLetter(caracter) && !Character.isSpaceChar(caracter)) {
                 toast = Toast.makeText(getApplicationContext(), "El nombre no puede tener simbolos ni numeros", Toast.LENGTH_SHORT);
                 toast.show();
-                return nombreVa;
+                return false;
             }
             if(Character.isLetter(caracter))
                 nombreVa=true;
@@ -754,4 +764,3 @@ public class RegistrarActivity extends AppCompatActivity {
 
 
 }
-

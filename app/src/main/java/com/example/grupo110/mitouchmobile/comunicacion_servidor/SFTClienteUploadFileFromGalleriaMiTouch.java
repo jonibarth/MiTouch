@@ -25,7 +25,7 @@ public class SFTClienteUploadFileFromGalleriaMiTouch extends AsyncTask<Void, Voi
 
 
     //String SFTPHOST = "mitouch.hopto.org";
-    String SFTPHOST = "192.168.0.105";
+    String SFTPHOST = "192.168.1.33";
     int SFTPPORT = 22;
     String SFTPUSER = "toor";
     String SFTPPASS = "namekiano";

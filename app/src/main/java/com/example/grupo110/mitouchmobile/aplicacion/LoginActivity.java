@@ -159,13 +159,13 @@ public class LoginActivity extends AppCompatActivity {
         ResultSet resultSet = baseDeDatos.execute(comando);
         try{
             while (resultSet.next()) {
-
+                /*
                 if(resultSet.getTimestamp("usu_ultimo_log_in")==null ){
                     id_usuario = resultSet.getInt("usu_id");
-                    System.out.println("Sdfsdfsdf: " +id_usuario);
                     modificar_usu_ultimo_log_in(id_usuario);
                     return true;
                 }else
+
                     if(validarFecha(resultSet.getTimestamp("usu_ultimo_log_in"),resultSet.getTimestamp("usu_ultimo_log_out"))){
                         id_usuario = resultSet.getInt("usu_id");
                         modificar_usu_ultimo_log_in(id_usuario);
@@ -175,10 +175,20 @@ public class LoginActivity extends AppCompatActivity {
                         Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario ya esta logueado ", Toast.LENGTH_SHORT);
                         toast2.show();
                         return false;
-                    }
+                    }*/
+
+                id_usuario = resultSet.getInt("usu_id");
+                modificar_usu_ultimo_log_in(id_usuario);
+                return true;
 
             }
-        }catch(Exception e){System.out.println("Aca hay un error: "+ e);}
+        }catch(Exception e){
+            Toast toast2 = Toast.makeText(getApplicationContext(), "Error Base de datos! ", Toast.LENGTH_SHORT);
+            toast2.show();
+            return false;
+        }
+        Toast toast2 = Toast.makeText(getApplicationContext(), "Usuario no se encuentra registrado ", Toast.LENGTH_SHORT);
+        toast2.show();
         return false;
     }
 
