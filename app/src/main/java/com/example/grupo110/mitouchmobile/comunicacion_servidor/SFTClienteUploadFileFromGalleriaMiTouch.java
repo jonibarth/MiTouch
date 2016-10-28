@@ -49,7 +49,12 @@ public class SFTClienteUploadFileFromGalleriaMiTouch extends AsyncTask<Void, Voi
         this.id_archivo = id_archivo;
         this.path_archivo = path_archivo;
         this.context = applicationContext;
-        this.progress = ProgressDialog.show(addDesdeGaleria, "", "Subiendo Archivo", true);
+        this.progress = progress;
+    }
+
+    @Override
+    public void onPreExecute() {
+        progress.show();
     }
 
     @Override
@@ -62,6 +67,7 @@ public class SFTClienteUploadFileFromGalleriaMiTouch extends AsyncTask<Void, Voi
 
     @Override
     protected Void doInBackground(Void... params) {
+        progress.show();
         obtenerArchivo();
         obtenerExtension();
         try{

@@ -45,8 +45,9 @@ public class AddDesdeGaleria extends Activity{
         super.onCreate(savedInstanceState);
         /*
         * Le asigno un layout para poder poner el progress dialog
+                 setContentView(R.layout.humo);
          */
-        setContentView(R.layout.humo);
+
         /*
         * Lo que recibo es el id del usuario que esta conectado
         * Lo que recibo es el id de la carpeta, en caso de ser una carpeta compartida,
@@ -86,7 +87,9 @@ public class AddDesdeGaleria extends Activity{
 
             Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            galleryIntent.setType("image/* video/*");
             startActivityForResult(galleryIntent, SELECT_PICTURE);
+
         }catch (Exception e){
             Intent AgregarArchivoIntent = new Intent(AddDesdeGaleria.this, DetailsActivity.class);
             AgregarArchivoIntent.putExtra("id",id_usuario);
@@ -221,7 +224,7 @@ public class AddDesdeGaleria extends Activity{
         copyFileOrDirectory(imgDecodableString, PATH_MOBILE + "/" + nombre_carpeta);//Voy a copiar el archivo a la carpeta de MiTouch
 
         progress = new ProgressDialog(this, R.style.MyTheme);
-        progress.setMessage("Cargando..");
+        progress.setMessage("Subiendo el archivo multimedia..");
         /*
          * Lo que le pando es:
          * process dialog

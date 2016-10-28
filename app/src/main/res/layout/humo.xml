@@ -4,4 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/colorNegro">
 
+    <TextView
+        android:text="El video esta en proceso"
+        android:textColor="@color/colorVerde"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2" />
 </LinearLayout>
