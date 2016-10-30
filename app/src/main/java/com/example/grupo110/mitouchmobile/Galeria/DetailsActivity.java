@@ -122,6 +122,12 @@ public class DetailsActivity extends AppCompatActivity {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         borrarArchivo(listIDArchivosCompletos.get(posicionAprentada));
                                                         dialog.cancel();
+                                                        // Hago un refresh de la pantalla!
+                                                        Intent intent = new Intent(DetailsActivity.this, DetailsActivity.class);
+                                                        intent.putExtra("id", id_usuario);
+                                                        intent.putExtra("carpeta", carpeta);
+                                                        startActivity(intent);
+                                                        finish();
                                                     }
                                                 });
 
@@ -184,6 +190,10 @@ public class DetailsActivity extends AppCompatActivity {
         String pathAbrir;
         String nombreArchivoAbrir = listArchivosCompletos.get(posicionAprentada);
         String idArchivoAbrir = listIDArchivosCompletos.get(posicionAprentada);
+
+
+
+
         pathAbrir = PATH_MOBILE + "/" + nombre_carpeta + "/" + nombreArchivoAbrir;
         System.out.println("Id del path a abrir:" + pathAbrir);
         System.out.println("Id del archivo a abrir:" + idArchivoAbrir);
@@ -202,6 +212,7 @@ public class DetailsActivity extends AppCompatActivity {
 
                 progress = new ProgressDialog(this, R.style.MyTheme);
                 progress.setMessage("Descargando..");
+
                 new SFTClienteDownloadFile(progress, this, nombre_carpeta, nombreArchivoAbrir, idArchivoAbrir, getApplicationContext()).execute();
             }
         }catch (Exception e){System.out.println("El usuario se arrepintio y no quiere ver la imagen");}

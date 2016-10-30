@@ -20,7 +20,7 @@ public class PostgrestBD  implements Runnable {
     /* Usuario Base de Datos: MiTouch password grupo 110*/
 
     private String host = "mitouch.hopto.org";
-    //private String host = "192.168.0.105";
+    //private String host = "192.168.2.106";
     private String db = "postgres";
     private int port = 5432;
     private String user = "postgres";
@@ -34,10 +34,11 @@ public class PostgrestBD  implements Runnable {
 
 
     private String host = "10.0.2.2";
-    private String db = "MiTouch";
+    private String db = "postgres";
     private int port = 5432;
     private String user = "postgres";
-    private String pass = "admin";
+    private String pass = "namekiano";
+    //private String pass = "admin";
 */
     private String url = "jdbc:postgresql://%s:%d/%s";
     public PostgrestBD() {

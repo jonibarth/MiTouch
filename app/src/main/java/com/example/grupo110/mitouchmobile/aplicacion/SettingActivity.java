@@ -648,13 +648,13 @@ public class SettingActivity extends AppCompatActivity {
         if(cadena.length()< NOMBRECOMPLETOMINIMO  ){
             toast = Toast.makeText(getApplicationContext(), "El nombre de usuario debe tener 6 caracteres minimamente", Toast.LENGTH_SHORT);
             toast.show();
-            return nombreVa;
+            return false;
         }
 
         if(cadena.length() > NOMBRECOMPLETOMAXIMO){
             toast = Toast.makeText(getApplicationContext(), "El nombre de usuario debe tener menos de 50 caracteres", Toast.LENGTH_SHORT);
             toast.show();
-            return nombreVa;
+            return false;
         }
 
         for(int i = 0; i < cadena.length(); ++i) {
@@ -663,12 +663,12 @@ public class SettingActivity extends AppCompatActivity {
             {
                 toast = Toast.makeText(getApplicationContext(), "El nombre debe comenzar con una letra", Toast.LENGTH_SHORT);
                 toast.show();
-                return nombreVa;
+                return false;
             }
             if(!Character.isLetter(caracter) && !Character.isSpaceChar(caracter)) {
                 toast = Toast.makeText(getApplicationContext(), "El nombre no puede tener simbolos ni numeros", Toast.LENGTH_SHORT);
                 toast.show();
-                return nombreVa;
+                return false;
             }
             if(Character.isLetter(caracter))
                 nombreVa=true;

@@ -12,6 +12,8 @@ import android.widget.VideoView;
 
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.chat.SocketCliente;
+import com.example.grupo110.mitouchmobile.chat.Utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -31,6 +33,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         // Set portrait orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -90,6 +93,10 @@ public class MainActivity extends Activity {
                 if(!texto.equals("null")) {
                     id_usuario = Integer.parseInt(texto);
                     if (buscarUsuario()) {
+                        // creo el socket!7
+                        System.out.println("Creo socket!");
+                        SocketCliente socketCliente = new SocketCliente(id_usuario);
+                        System.out.println("fim socket!");
                         IniciarPantalla();
                     }
                 }

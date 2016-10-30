@@ -16,6 +16,7 @@ import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
 import com.example.grupo110.mitouchmobile.expandable_list.ExpandableListAdapter;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -218,17 +219,23 @@ public class CompartirDesdePopUp extends AppCompatActivity {
         try{
             baseDeDatos.execute(comando);
         }catch (Exception e){System.out.println("Error creacion vista: "+ e );}
-
-        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, gru_id_galeria, usu_id_galeria " +
-                "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
-                "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
-                "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
-                "WHERE  usu_id<>"+id_usuario+" "+
-                "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario;";
+/*
+        comando = "SELECT * FROM tablaVista;";
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);
+        try {
+            while (resultSet.next())
+                System.out.println(resultSet.getInt("ugru_id_grupo"));
+        } catch (SQLException e) {
+            System.out.println("Error select vista" + e);
+        }
+
+        System.out.println("pase la vista");
+*/
+
         buscarUsuario();
         System.out.println("El id de la galeria personal es: " + id_carpetausuario);
+        System.out.println("El id del usuario es " + id_usuario);
 
         grupo="Carpeta Personal";
 
@@ -240,27 +247,44 @@ public class CompartirDesdePopUp extends AppCompatActivity {
         listDataChild.put(grupo, grupodeUsuario);
         listDataID.put(grupo, grupodeUsuarioID);
         listDataEscribir.put(grupo, grupodeUsuarioEscribir);
-        grupodeUsuario = new ArrayList<>();
-        grupodeUsuarioID = new ArrayList<>();
-        grupodeUsuarioEscribir = new ArrayList<>();
 
+
+
+        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, gru_id_galeria, usu_id_galeria " +
+                "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
+                "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
+
+                "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
+
+                //"WHERE  usu_id<>"+id_usuario+" "+
+
+                "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario,gru_id_galeria, usu_id_galeria;";
+
+        baseDeDatos = new PostgrestBD();
+        resultSet = baseDeDatos.execute(comando);
 
         try {
             while (resultSet.next()) {
                 if(aux != resultSet.getInt(1)){
                     if(aux == -1)
                     {
+                        grupodeUsuario = new ArrayList<>();
+                        grupodeUsuarioID = new ArrayList<>();
+                        grupodeUsuarioEscribir = new ArrayList<>();
                         grupo=resultSet.getString(2);
                         listDataHeader.add(grupo);
                         grupodeUsuario.add(grupo);
                         grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
                         grupodeUsuarioEscribir.add("true");
-                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                        grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
-                        if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
-                            grupodeUsuarioEscribir.add("true");
-                        else
-                            grupodeUsuarioEscribir.add("false");
+                        if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
+                            grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                            grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+
+                            if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                                grupodeUsuarioEscribir.add("true");
+                            else
+                                grupodeUsuarioEscribir.add("false");
+                        }
                         aux = resultSet.getInt(1);
                     }
                     else
@@ -276,23 +300,29 @@ public class CompartirDesdePopUp extends AppCompatActivity {
                         grupodeUsuario.add(grupo);
                         grupodeUsuarioID.add(resultSet.getString("gru_id_galeria"));
                         grupodeUsuarioEscribir.add("true");
-                        grupodeUsuario.add(resultSet.getString(4));
-                        grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
-                        if(resultSet.getInt("ugru_id_usuario")==id_usuario)
-                            grupodeUsuarioEscribir.add("true");
-                        else
-                            grupodeUsuarioEscribir.add("false");
+                        if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
+                            grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                            grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+
+                            if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                                grupodeUsuarioEscribir.add("true");
+                            else
+                                grupodeUsuarioEscribir.add("false");
+                        }
                         aux = resultSet.getInt(1);
                     }
                 }
                 else
                 {
-                    grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                    grupodeUsuarioID.add(resultSet.getString(6));
-                    if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
-                        grupodeUsuarioEscribir.add("true");
-                    else
-                        grupodeUsuarioEscribir.add("false");
+                    if(id_carpetausuario != resultSet.getInt("usu_id_galeria")) {
+                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                        grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
+
+                        if (resultSet.getString("ugru_id_usuario").equals(id_usuario))
+                            grupodeUsuarioEscribir.add("true");
+                        else
+                            grupodeUsuarioEscribir.add("false");
+                    }
                 }
             }
 
