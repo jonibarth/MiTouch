@@ -19,8 +19,8 @@ public class PostgrestBD  implements Runnable {
     private Connection conn;
     /* Usuario Base de Datos: MiTouch password grupo 110*/
 
-    private String host = "mitouch.hopto.org";
-    //private String host = "192.168.2.106";
+    //private String host = "mitouch.hopto.org";
+    private String host = "10.5.100.90";
     private String db = "postgres";
     private int port = 5432;
     private String user = "postgres";

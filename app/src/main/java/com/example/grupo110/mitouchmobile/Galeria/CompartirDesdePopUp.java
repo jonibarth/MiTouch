@@ -124,13 +124,13 @@ public class CompartirDesdePopUp extends AppCompatActivity {
 
                 if(!ArchivoExiteEnBD()){
                     ActualizarBaseDeDatos();
-                    toast= Toast.makeText(getApplicationContext(),"El archivo fue copiado con exito", Toast.LENGTH_LONG);
+                    toast= Toast.makeText(getApplicationContext(),"El archivo fue compartido con exito", Toast.LENGTH_LONG);
                     toast.show();
                     finish();
                 }
                 else
                 {
-                    toast= Toast.makeText(getApplicationContext(),"El archivo ya existe", Toast.LENGTH_LONG);
+                    toast= Toast.makeText(getApplicationContext(),"El usuario o grupo de usuario ya tiene acceso a ese archivo multimedia", Toast.LENGTH_LONG);
                     toast.show();
                 }
 
@@ -141,7 +141,6 @@ public class CompartirDesdePopUp extends AppCompatActivity {
 
     private boolean ArchivoExiteEnBD() {
         String comando;
-        System.out.println("Estoy en archivo existe en bd");
         comando = "SELECT * " +
                 "FROM \"MiTouch\".t_carpeta_archivos_galeria " +
                 "WHERE  cag_id_archivo="+id_archivo+" " +

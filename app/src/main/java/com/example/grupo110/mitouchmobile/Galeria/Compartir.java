@@ -150,9 +150,6 @@ public class Compartir extends AppCompatActivity {
             archivo.close();
         } catch (Exception e) {System.out.println("Error grabar archivo");
         }
-        Toast t = Toast.makeText(this, "Los datos fueron grabados",
-                Toast.LENGTH_SHORT);
-        t.show();
     }
 // Metodo que transforma uri en path!!
     public String getRealPathFromURI(Context context, Uri contentUri) {

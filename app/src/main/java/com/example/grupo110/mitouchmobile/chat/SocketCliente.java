@@ -1,6 +1,7 @@
 package com.example.grupo110.mitouchmobile.chat;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -25,7 +26,7 @@ import static java.lang.Integer.parseInt;
 /**
  * Created by Jonathan on 22/09/2016.
  */
-public class SocketCliente implements Runnable {
+public class SocketCliente extends AsyncTask<String, Void, ResultSet> {
     private String ip;
     private int id_usuario;
 
@@ -33,31 +34,9 @@ public class SocketCliente implements Runnable {
     public SocketCliente(int id_usuario) {
         super();
         this.id_usuario = id_usuario;
-        this.conectaChat();
     }
 
-    @Override
-    public void run() {
-        try {
-            System.out.println("Estoy en el run: " + Utils.getIPAddress(true).toString()); // IPv4
-        }catch (Exception e){System.out.println("Estoy en el run1: ");}
-        //System.out.println( "Estoy en el run: " + Utils.getMACAddress("wlan0").toString());
-        //System.out.println( "Estoy en el run: " + Utils.getMACAddress("eth0").toString());
 
-        buscarGruposdeUsuario();
-
-        leerBaseDeDatos();
-    }
-
-    /*
-    * Busco los grupos de usuario y sus usuarios
-     */
-    private void leerBaseDeDatos() {
-    }
-
-    /*
-    * Este metodo de dice a que grupos pertenezco, valido que no me hayan quitado acceso!
-     */
     private void buscarGruposdeUsuario() {
         System.out.println("buscarGruposdeUsuario ");
         String comando;
@@ -79,14 +58,20 @@ public class SocketCliente implements Runnable {
         }
     }
 
-    private void conectaChat(){
-        Thread thread = new Thread(this);
-        thread.start();
-        try{
-            thread.join();
-        }catch (Exception e){
-            e.printStackTrace();
-            System.err.println("Error: clase conecta!");
+
+    @Override
+    protected ResultSet doInBackground(String... params) {
+        //while(true) {
+        try {
+            System.out.println("Estoy en el run: " + Utils.getIPAddress(true).toString()); // IPv4
+            Thread.sleep(3000);
+        } catch (Exception e) {
+            System.out.println("Estoy en el run1: ");
         }
+        //System.out.println( "Estoy en el run: " + Utils.getMACAddress("wlan0").toString());
+        //System.out.println( "Estoy en el run: " + Utils.getMACAddress("eth0").toString());
+
+        //}
+        return null;
     }
 }

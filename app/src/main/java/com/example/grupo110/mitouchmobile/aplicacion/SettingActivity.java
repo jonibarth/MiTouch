@@ -89,7 +89,7 @@ public class SettingActivity extends AppCompatActivity {
     // Credenciales de usuario
     private static String direccionCorreo = "grupo110unlam@gmail.com";   // Dirección de correo origen
     private static String contrasenyaCorreo = "mitouch110";                 // Contraseña del correo electronico origen
-    private static String destintatarioCorreo; // Dirección de correo destino
+    private static String destintatarioCorreo = "null"; // Dirección de correo destino
     String subject= "Tu cuenta de MiTouch: verificación de la dirección de email"; // Asunto del mail
     private String random;
     /************ FIN Variables Envio del mail *********************/
@@ -217,6 +217,7 @@ public class SettingActivity extends AppCompatActivity {
         direccionEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+
                 if(!hasFocus) {
                     if(nombreValido  && !direccionEmail.getText().toString().equals(usu_mail) && !destintatarioCorreo.equals(direccionEmail.getText().toString()))
                         if(!nombreCompleto.getText().toString().equals(""))
@@ -575,6 +576,7 @@ public class SettingActivity extends AppCompatActivity {
     * Si el email es valido retorna true
      */
     public boolean validarEmail(String email) {
+        System.out.println("estoy en validar email");
         Toast toast;
         Pattern pattern = Pattern
                 .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@gmail.com");

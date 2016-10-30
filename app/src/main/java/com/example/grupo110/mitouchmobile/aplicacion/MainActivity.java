@@ -93,10 +93,9 @@ public class MainActivity extends Activity {
                 if(!texto.equals("null")) {
                     id_usuario = Integer.parseInt(texto);
                     if (buscarUsuario()) {
-                        // creo el socket!7
+                        // creo el socket!
                         System.out.println("Creo socket!");
                         SocketCliente socketCliente = new SocketCliente(id_usuario);
-                        System.out.println("fim socket!");
                         IniciarPantalla();
                     }
                 }

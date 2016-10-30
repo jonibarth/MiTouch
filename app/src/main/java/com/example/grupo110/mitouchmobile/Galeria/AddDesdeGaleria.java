@@ -175,11 +175,11 @@ public class AddDesdeGaleria extends Activity{
                             Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, "You haven't picked Image",
+                Toast.makeText(this, "No se selecciono ninguna foto",
                         Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
+            Toast.makeText(this, "La galeria de MiTouch Falló", Toast.LENGTH_LONG)
                     .show();
         }
         Intent AgregarArchivoIntent = new Intent(AddDesdeGaleria.this, DetailsActivity.class);

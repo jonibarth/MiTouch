@@ -138,7 +138,7 @@ public class CompartirActivity extends AppCompatActivity {
                 obtenerIdDelArchivo();
                 if(!ArchivoExiteEnBD()){
                     crearArchivoMultimedia();
-                    toast= Toast.makeText(getApplicationContext(),"El archivo fue copiado con exito", Toast.LENGTH_LONG);
+                    toast= Toast.makeText(getApplicationContext(),"El archivo fue creado con exito", Toast.LENGTH_LONG);
                     toast.show();
                     finish();
                 }
