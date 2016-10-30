@@ -20,15 +20,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.grupo110.mitouchmobile.DeleteFileDrive;
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
 import com.example.grupo110.mitouchmobile.envioEmail.EmailIdentifierGenerator;
 import com.example.grupo110.mitouchmobile.expandable_list.ExpandableListAdapter;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
 
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -443,7 +452,72 @@ public class RegistrarActivity extends AppCompatActivity {
                 System.out.println("no selecciono grupo de usuario");
             }
         }
+
+        final String id_user = id_usuadioGenerado;
+
+        new AsyncTask<Void, Void, Void>(){
+            protected Void doInBackground(Void... params) {
+
+                if(id_user != null){
+                    try {
+                        GoogleAccountCredential account;
+
+                        account = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singletonList(DriveScopes.DRIVE));
+
+                        account.setSelectedAccountName(direccionCorreo);
+
+                        Drive driveService =
+                                new Drive.Builder(
+                                        AndroidHttp.newCompatibleTransport(),
+                                        JacksonFactory.getDefaultInstance(),
+                                        account
+                                ).setApplicationName("MiTouch").build();
+
+                        File filemetadata = new File();
+
+                        filemetadata.setName(id_user);
+                        filemetadata.setMimeType("application/vnd.google-apps.folder");
+
+                        File file = driveService.files().create(filemetadata)
+                                .setFields("id").execute();
+
+                        if (file != null){
+
+                            String com;
+                            PostgrestBD bdd = new PostgrestBD();
+
+                            com = "UPDATE \"MiTouch\".t_usuarios " +
+                            "SET usu_id_carpeta = " + "'" + file.getId() + "'" +
+                            " WHERE usu_nombre_usuario = " + "'" + id_user + "';";
+
+                            try{
+                                bdd.execute(com);
+
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }catch (UserRecoverableAuthIOException e) {
+                        startActivityForResult(e.getIntent(), 2);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+
+                return null;
+            }
+
+            protected void onPostExecute(Void param){
+
+            }
+
+        }.execute();
+
     }
+
+
 
     private String BuscarGruposdeUsuarioenArray() {
         return grupodeUsuarioid.get(grupodeUsuario.indexOf(grupoUsuario));
