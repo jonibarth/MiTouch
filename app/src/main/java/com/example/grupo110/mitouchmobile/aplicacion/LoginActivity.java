@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.chat.SocketCliente;
 import com.example.grupo110.mitouchmobile.envioEmail.ForgotPasswordActivity;
 import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
 
@@ -178,6 +179,10 @@ public class LoginActivity extends AppCompatActivity {
                     }*/
 
                 id_usuario = resultSet.getInt("usu_id");
+                try {
+                    SocketCliente socketCliente = new SocketCliente(id_usuario);
+                }catch (Exception e){System.out.println("error socket cliente");}
+
                 modificar_usu_ultimo_log_in(id_usuario);
                 return true;
 
