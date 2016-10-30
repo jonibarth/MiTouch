@@ -1,10 +1,14 @@
 package com.example.grupo110.mitouchmobile.aplicacion;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,6 +73,8 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mainmenu);
         id_usuario = getIntent().getExtras().getInt("id");
         setListeners();
+
+        f_enviar_notificacion("Hola","Entro al menú");
     }
 
     protected void setListeners() {
@@ -175,6 +181,25 @@ public class MainMenuActivity extends AppCompatActivity {
         } catch (Exception e) {System.out.println("Error grabar archivo");
         }
     }
+
+    public void f_enviar_notificacion(String title, String text){
+
+        int mId = 1;
+        NotificationManager mNotificationManager;
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_chat_green)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSound(defaultSoundUri);
+
+        mNotificationManager.notify(mId, mBuilder.build());
+
+    }
+
 
 
 }

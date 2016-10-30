@@ -23,140 +23,129 @@ import java.util.Collections;
 
 
 
-public class ShareDriveActivity extends Activity{
+public class ShareDriveActivity extends Activity {
 
     String fileId = null;
-    String mail   = null;
-    String grupo  = null;
-    String list   = null;
+    String mail = null;
+    String grupo = null;
+    String list = null;
     String array[];
-    int    user   = 0;
+    int user = 0;
     private int result = 0;
     private String cuenta = null;
     GoogleAccountCredential account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
+        try {
             fileId = getIntent().getExtras().getString("file");
-            mail   = getIntent().getExtras().getString("mail");
-            grupo  = getIntent().getExtras().getString("grupo");
-            list   = getIntent().getExtras().getString("list");
-            user   = getIntent().getExtras().getInt("user");
+            mail = getIntent().getExtras().getString("mail");
+            grupo = getIntent().getExtras().getString("grupo");
+            list = getIntent().getExtras().getString("list");
+            user = getIntent().getExtras().getInt("user");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         account = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singletonList(DriveScopes.DRIVE));
-        startActivityForResult(
-                account.newChooseAccountIntent(),
-                1000);
 
-    }
+        cuenta = "grupo110unlam@gmail.com";
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case 1000:
-                if (resultCode == RESULT_OK && data != null &&
-                        data.getExtras() != null) {
-                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                     cuenta = accountName;
-                        new AsyncTask<Void, Void, Void>() {
-                            protected Void doInBackground(Void... params) {
+        if (cuenta != null) {
 
-                                if (fileId != null && mail != null) {
+            new AsyncTask<Void, Void, Void>() {
+                protected Void doInBackground(Void... params) {
 
-                                    try {
-                                        account.setSelectedAccountName(cuenta);
-                                        Drive driveService =
-                                                new Drive.Builder(
-                                                        AndroidHttp.newCompatibleTransport(),
-                                                        JacksonFactory.getDefaultInstance(),
-                                                        account
-                                                ).setApplicationName("MiTouch").build();
+                    if (fileId != null && mail != null) {
 
-                                        Permission permission = new Permission();
-                                        permission.setEmailAddress(mail)
-                                                .setType("user").setRole("writer");
+                        try {
+                            account.setSelectedAccountName(cuenta);
+                            Drive driveService =
+                                    new Drive.Builder(
+                                            AndroidHttp.newCompatibleTransport(),
+                                            JacksonFactory.getDefaultInstance(),
+                                            account
+                                    ).setApplicationName("MiTouch").build();
+
+                            Permission permission = new Permission();
+                            permission.setEmailAddress(mail)
+                                    .setType("user").setRole("writer");
 
 
-                                        driveService.permissions().create(fileId, permission).setFields("id").execute();
+                            driveService.permissions().create(fileId, permission).setFields("id").execute();
+
+                            finish();
+
+                        } catch (UserRecoverableAuthIOException e) {
+                            startActivityForResult(e.getIntent(), 2);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                            result = 1;
+                            finish();
+                        }
+
+                    } else {
+
+                        if (fileId != null && grupo != null && user != 0 && list != null) {
+
+                            array = list.split("\\$");
+
+                            try {
+
+                                account.setSelectedAccountName(cuenta);
+                                Drive driveService =
+                                        new Drive.Builder(
+                                                AndroidHttp.newCompatibleTransport(),
+                                                JacksonFactory.getDefaultInstance(),
+                                                account
+                                        ).setApplicationName("MiTouch").build();
 
 
-                                        finish();
+                                for (int i = 0; i < array.length; i++) {
 
-                                    } catch (UserRecoverableAuthIOException e) {
-                                        startActivityForResult(e.getIntent(), 2);
-                                    } catch (Exception e1) {
-                                        e1.printStackTrace();
-                                        result = 1;
-                                        finish();
-                                    }
+                                    Permission permission = new Permission();
+                                    permission.setEmailAddress(array[i]).setType("user").setRole("writer");
 
-                                }else{
-
-                                    if(fileId != null && grupo != null && user != 0 && list != null){
-
-                                        array = list.split("\\$");
-
-                                        try {
-
-                                            account.setSelectedAccountName(cuenta);
-                                            Drive driveService =
-                                                    new Drive.Builder(
-                                                            AndroidHttp.newCompatibleTransport(),
-                                                            JacksonFactory.getDefaultInstance(),
-                                                            account
-                                                    ).setApplicationName("MiTouch").build();
-
-
-                                            for (int i = 0; i < array.length; i++) {
-
-                                                Permission permission = new Permission();
-                                                permission.setEmailAddress(array[i]).setType("user").setRole("writer");
-
-                                                driveService.permissions().create(fileId, permission).setFields("id").execute();
-
-                                            }
-
-                                            finish();
-                                        }catch (UserRecoverableAuthIOException e) {
-                                            startActivityForResult(e.getIntent(), 2);
-                                        } catch (Exception e1) {
-                                            e1.printStackTrace();
-
-                                            result = 1;
-                                            finish();
-                                        }
-                                    }
+                                    driveService.permissions().create(fileId, permission).setFields("id").execute();
 
                                 }
-                                return null;
 
+                                finish();
+                            } catch (UserRecoverableAuthIOException e) {
+                                startActivityForResult(e.getIntent(), 2);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+
+                                result = 1;
+                                finish();
                             }
+                        }
 
-                            protected void onPostExecute(Void param){
-
-                                if(result != 0){
-
-                                    Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
-
-                                }else{
-
-                                    Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
-                                }
-
-                            }
-
-                        }.execute();
                     }
-                    }
-                break;
+                    return null;
+
                 }
+
+                protected void onPostExecute(Void param) {
+
+                    if (result != 0) {
+
+                        Toast.makeText(ShareDriveActivity.this, R.string.error_share, Toast.LENGTH_LONG).show();
+
+                    } else {
+
+                        Toast.makeText(ShareDriveActivity.this, R.string.exito_share, Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }.execute();
         }
+
     }
+
+}
 

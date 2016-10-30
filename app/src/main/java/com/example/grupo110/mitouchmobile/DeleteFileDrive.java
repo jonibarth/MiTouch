@@ -38,64 +38,53 @@ public class DeleteFileDrive extends Activity {
         }
 
     account = GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singletonList(DriveScopes.DRIVE));
-    startActivityForResult(account.newChooseAccountIntent(), 1000);
+        cuenta = "grupo110unlam@gmail.com";
+        if (cuenta != null) {
 
-    }
+            new AsyncTask<Void, Void, Void>(){
+                protected Void doInBackground(Void... params) {
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case 1000:
-                if (resultCode == RESULT_OK && data != null &&
-                        data.getExtras() != null) {
-                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                        cuenta = accountName;
-                        new AsyncTask<Void, Void, Void>(){
-                            protected Void doInBackground(Void... params) {
+                    if(fileId != null){
+                        try {
 
-                                if(fileId != null){
-                                    try {
+                            account.setSelectedAccountName(cuenta);
 
-                                        account.setSelectedAccountName(cuenta);
+                            Drive driveService =
+                                    new Drive.Builder(
+                                            AndroidHttp.newCompatibleTransport(),
+                                            JacksonFactory.getDefaultInstance(),
+                                            account
+                                    ).setApplicationName("MiTouch").build();
 
-                                        Drive driveService =
-                                                new Drive.Builder(
-                                                        AndroidHttp.newCompatibleTransport(),
-                                                        JacksonFactory.getDefaultInstance(),
-                                                        account
-                                                ).setApplicationName("MiTouch").build();
+                            driveService.files().delete(fileId).execute();
+                            finish();
+                        }catch (UserRecoverableAuthIOException e) {
+                            startActivityForResult(e.getIntent(), 2);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                            result = 1;
+                            finish();
+                        }
+                    }
 
-                                        driveService.files().delete(fileId).execute();
-                                        finish();
-                                    }catch (UserRecoverableAuthIOException e) {
-                                        startActivityForResult(e.getIntent(), 2);
-                                    } catch (Exception e1) {
-                                        e1.printStackTrace();
-                                        result = 1;
-                                        finish();
-                                    }
-                                }
+                    return null;
+                }
 
-                                return null;
-                            }
+                protected void onPostExecute(Void param){
 
-                            protected void onPostExecute(Void param){
+                    if(result != 0){
 
-                                if(result != 0){
+                        Toast.makeText(DeleteFileDrive.this, R.string.error_delete, Toast.LENGTH_LONG).show();
 
-                                    Toast.makeText(DeleteFileDrive.this, R.string.error_delete, Toast.LENGTH_LONG).show();
+                    }else{
 
-                                }else{
-
-                                    Toast.makeText(DeleteFileDrive.this, R.string.exito_delete, Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                        }.execute();
-
+                        Toast.makeText(DeleteFileDrive.this, R.string.exito_delete, Toast.LENGTH_LONG).show();
                     }
                 }
+
+            }.execute();
+
         }
+
     }
 }
