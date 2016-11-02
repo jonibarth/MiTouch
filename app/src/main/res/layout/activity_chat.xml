@@ -31,7 +31,8 @@
        android:layout_height="wrap_content"
        android:id="@+id/textViewChat"
        android:layout_weight="0.83"
-       android:background="@color/colorGris"/>
+       android:background="@color/colorGris"
+       android:scrollbars = "vertical"/>
 
     <EditText
         android:id="@+id/EditText01"

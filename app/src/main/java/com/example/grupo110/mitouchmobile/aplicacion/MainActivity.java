@@ -1,6 +1,7 @@
 package com.example.grupo110.mitouchmobile.aplicacion;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
@@ -12,8 +13,6 @@ import android.widget.VideoView;
 
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
-import com.example.grupo110.mitouchmobile.chat.SocketCliente;
-import com.example.grupo110.mitouchmobile.chat.Utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,12 +27,13 @@ public class MainActivity extends Activity {
     private VideoView videoView;
     private ImageView imageView;
     int id_usuario=-1;
+    Context context;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        context = this;
         super.onCreate(savedInstanceState);
         // Set portrait orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -66,18 +66,18 @@ public class MainActivity extends Activity {
                 // si el archivo id_usuario que esta en el raw hay un numero, significa que hay un usuario conectado!
                 // Busco que ese usuario exista, sino que entre en el login
                 String texto = "null";
-                String[] archivos = fileList();
+                        String[] archivos = fileList();
 
-                if (existe(archivos, "notas.txt"))
-                    try {
-                        InputStreamReader archivo = new InputStreamReader(
-                                openFileInput("notas.txt"));
-                        BufferedReader br = new BufferedReader(archivo);
-                        String linea = br.readLine();
-                        String todo = "";
-                        todo =linea;
-                        br.close();
-                        archivo.close();
+                        if (existe(archivos, "notas.txt"))
+                            try {
+                                InputStreamReader archivo = new InputStreamReader(
+                                        openFileInput("notas.txt"));
+                                BufferedReader br = new BufferedReader(archivo);
+                                String linea = br.readLine();
+                                String todo = "";
+                                todo =linea;
+                                br.close();
+                                archivo.close();
                         texto =todo;
                     } catch (Exception e) {
                         System.out.println("error en el try que esta dentro del if");
@@ -93,9 +93,6 @@ public class MainActivity extends Activity {
                 if(!texto.equals("null")) {
                     id_usuario = Integer.parseInt(texto);
                     if (buscarUsuario()) {
-                        // creo el socket!
-                        System.out.println("Creo socket!");
-                        SocketCliente socketCliente = new SocketCliente(id_usuario);
                         IniciarPantalla();
                     }
                 }

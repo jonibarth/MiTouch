@@ -12,21 +12,16 @@ import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
-import com.example.grupo110.mitouchmobile.chat.SocketCliente;
 import com.example.grupo110.mitouchmobile.envioEmail.ForgotPasswordActivity;
 import com.example.grupo110.mitouchmobile.galeria.CompartirActivity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.sql.Date;
 import java.sql.ResultSet;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Set;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -179,9 +174,6 @@ public class LoginActivity extends AppCompatActivity {
                     }*/
 
                 id_usuario = resultSet.getInt("usu_id");
-                try {
-                    SocketCliente socketCliente = new SocketCliente(id_usuario);
-                }catch (Exception e){System.out.println("error socket cliente");}
 
                 modificar_usu_ultimo_log_in(id_usuario);
                 return true;

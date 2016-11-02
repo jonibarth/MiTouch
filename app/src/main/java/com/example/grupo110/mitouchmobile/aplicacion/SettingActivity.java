@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -23,13 +22,11 @@ import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
 import com.example.grupo110.mitouchmobile.envioEmail.EmailIdentifierGenerator;
 import com.example.grupo110.mitouchmobile.expandable_list.ExpandableListAdapter;
-import com.example.grupo110.mitouchmobile.aplicacion.SettingActivity;
 
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -44,8 +41,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import static com.example.grupo110.mitouchmobile.R.id.CustomViewEmail;
 
 public class SettingActivity extends AppCompatActivity {
 

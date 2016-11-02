@@ -1,28 +1,25 @@
 package com.example.grupo110.mitouchmobile.aplicacion;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.DriveActivity;
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
-import com.example.grupo110.mitouchmobile.chat.ChatActivity;
+import com.example.grupo110.mitouchmobile.chat.ConsultaSql;
+import com.example.grupo110.mitouchmobile.chat.SeleccionarChat;
 import com.example.grupo110.mitouchmobile.galeria.GaleriaActivity;
 import com.example.grupo110.mitouchmobile.google_calendar.GoogleCalendarActivity;
 
+import java.io.File;
 import java.io.OutputStreamWriter;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -30,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -41,6 +40,10 @@ public class MainMenuActivity extends AppCompatActivity {
     ImageView vChat;
     int id_usuario;
     String email;//Mail para compartir en Drive
+
+    boolean done = false;
+    final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia/chat";
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,10 +77,27 @@ public class MainMenuActivity extends AppCompatActivity {
         id_usuario = getIntent().getExtras().getInt("id");
         setListeners();
 
-        f_enviar_notificacion("Hola","Entro al menú");
     }
 
     protected void setListeners() {
+
+        deleteWithChildren(PATH_MOBILE);
+        TimerTask tt = new TimerTask() {
+
+            @Override
+            public void run() {
+                while(!done) {
+                    try {
+                        ConsultaSql consultaSql = new ConsultaSql(getApplicationContext(),id_usuario);
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        new Timer().schedule(tt, 500);
+
 
         ImageView vDrive = (ImageView) findViewById(R.id.viewDrive);
         ImageView vGallery = (ImageView) findViewById(R.id.viewGallery);
@@ -113,7 +133,7 @@ public class MainMenuActivity extends AppCompatActivity {
         vChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent mainIntent = new Intent(MainMenuActivity.this, ChatActivity.class);
+                Intent mainIntent = new Intent(MainMenuActivity.this, SeleccionarChat.class);
                 mainIntent.putExtra("id",id_usuario);
                 startActivity(mainIntent);
             }
@@ -167,8 +187,6 @@ public class MainMenuActivity extends AppCompatActivity {
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
         return;
-
-
     }
 
     public void grabar() {
@@ -181,25 +199,40 @@ public class MainMenuActivity extends AppCompatActivity {
         } catch (Exception e) {System.out.println("Error grabar archivo");
         }
     }
-
-    public void f_enviar_notificacion(String title, String text){
-
-        int mId = 1;
-        NotificationManager mNotificationManager;
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_chat_green)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setSound(defaultSoundUri);
-
-        mNotificationManager.notify(mId, mBuilder.build());
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        done = true;
     }
 
 
+    /**
+     * Deletes the given path and, if it is a directory, deletes all its children.
+     */
+    public boolean deleteWithChildren(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            return true;
+        }
+        if (!file.isDirectory()) {
+            return file.delete();
+        }
+        return this.deleteChildren(file) && file.delete();
+    }
+
+    private boolean deleteChildren(File dir) {
+        File[] children = dir.listFiles();
+        boolean childrenDeleted = true;
+        for (int i = 0; children != null && i < children.length; i++) {
+            File child = children[i];
+            if (child.isDirectory()) {
+                childrenDeleted = this.deleteChildren(child) && childrenDeleted;
+            }
+            if (child.exists()) {
+                childrenDeleted = child.delete() && childrenDeleted;
+            }
+        }
+        return childrenDeleted;
+    }
 
 }

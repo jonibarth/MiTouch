@@ -100,7 +100,9 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
                 <data android:mimeType="video/*" />
             </intent-filter>
@@ -108,41 +110,36 @@
         <activity
             android:name=".galeria.CompartirActivity"
             android:label="@string/title_activity_compartir2"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CompartirDrive"
             android:label="Compartir Documento"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".galeria.CompartirDesdePopUp"
             android:label="Compartir Documento"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-
-
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".galeria.DetailsActivity"
             android:label="@string/title_activity_details"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".DeleteFileDrive"></activity>
-
-        <activity android:name=".ShareDriveActivity"></activity>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".DeleteFileDrive" />
+        <activity android:name=".ShareDriveActivity" />
         <activity
             android:name=".galeria.AddDesdeGaleria"
             android:label="@string/title_activity_galeria_de_fotos"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity android:name=".OpenDriveFileActivity"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".OpenDriveFileActivity" />
+        <activity
+            android:name=".chat.SeleccionarChat"
+            android:label="@string/title_activity_seleccionar_chat"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
