@@ -2,6 +2,7 @@
 <resources>
     <color name="colorVerde">#00b159</color>
     <color name="colorNegro">#000000</color>
+    <color name="colorBlanco">#FFFFFF</color>
     <color name="colorGris">#B7B7B7</color>
     <color name="colorGrisOscuro">#313131</color>
 

@@ -8,6 +8,7 @@ import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
@@ -26,6 +27,8 @@ import android.widget.Toast;
 
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
+import com.example.grupo110.mitouchmobile.galeria.AddDesdeGaleria;
+import com.example.grupo110.mitouchmobile.galeria.DetailsActivity;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -42,7 +45,6 @@ import java.util.TimerTask;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private Button botonChat;
     private EditText textoAEnviar;
     private TextView textoPantalla;
     private int id_usuario_origen;
@@ -76,7 +78,8 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-        botonChat = (Button) findViewById(R.id.chatButton);
+
+
         textoAEnviar = (EditText) findViewById(R.id.EditText01);
 
         textoPantalla = new TextView(getApplicationContext());
@@ -100,39 +103,41 @@ public class ChatActivity extends AppCompatActivity {
                 }
         });
 
-        botonChat.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
+            public void onClick(View view) {
+                try {
+                    if(validacion(textoAEnviar.getText().toString())) {
+                        done = true;
+                        Date d = new Date();
+                        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+                        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 
-            public void onClick(View v) {
-                if(validacion()) {
-                    done = true;
-                    Date d = new Date();
-                    SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
-                    SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+                        texto = "[" + formatoFecha.format(d)+" " + formatoHora.format(d)+"] "+ usuario_origen + ": " +textoAEnviar.getText().toString();
+                        String textoText = textoPantalla.getText().toString();
 
-                    texto = "[" + formatoFecha.format(d)+" " + formatoHora.format(d)+"] "+ usuario_origen + ": " +textoAEnviar.getText().toString();
-                    String textoText = textoPantalla.getText().toString();
+                        textoPantalla.setTextSize(20);
+                        if(texto.length()<250) {
+                            textoPantalla.setText(textoText + "\n" + texto);
+                            EscribirFichero(texto);
+                            textoAEnviar.clearFocus();
+                            actualizarBaseDeDatos();
+                        }
+                        else
+                        {
+                            Toast toast = Toast.makeText( getApplicationContext(),"solo se admite menos de 255 caracterres",Toast.LENGTH_LONG);
+                            toast.show();
+                        }
 
-                    textoPantalla.setTextSize(20);
-                    if(texto.length()<250) {
-                        textoPantalla.setText(textoText + "\n" + texto);
-                        EscribirFichero(texto);
-                        textoAEnviar.clearFocus();
-                        actualizarBaseDeDatos();
+                        //  control = false;
                     }
-                    else
-                    {
-                        Toast toast = Toast.makeText( getApplicationContext(),"solo se admite menos de 255 caracterres",Toast.LENGTH_LONG);
-                        toast.show();
-                    }
-
-                  //  control = false;
-                }
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(textoAEnviar.getWindowToken(), 0);
-                done=false;
-                iniciarTarea();
-                }
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(textoAEnviar.getWindowToken(), 0);
+                    done=false;
+                    iniciarTarea();
+                }catch (Exception e ){System.out.println("el usuario se arrepintio");}
+            }
         });
     }
 
@@ -152,11 +157,18 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private boolean validacion() {
-        // Validar que el mensaje no contenga espacios tabs etc!
-        //if(control )
-            return true;
-       // return false;
+    private boolean validacion(String cadena) {
+
+        for(int i = 0; i < cadena.length(); ++i) {
+            char caracter = cadena.charAt(i);
+
+            if(!Character.isSpaceChar(caracter)) {
+                return true;
+            }
+
+        }
+        textoAEnviar.setText("");
+        return false;
     }
 
 
