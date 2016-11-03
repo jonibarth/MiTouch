@@ -1,13 +1,15 @@
 package com.example.grupo110.mitouchmobile.chat;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.example.grupo110.mitouchmobile.R;
 import com.example.grupo110.mitouchmobile.base_de_datos.PostgrestBD;
@@ -31,6 +33,7 @@ public class ConsultaSql {
 
     private final Context context;
     private final int id_usuario;
+    private final String nombre_usuario;
     private int id_origen;
     private int aux=-1;
     String mensaje="";
@@ -41,6 +44,7 @@ public class ConsultaSql {
 
     public ConsultaSql(Context context, int id_usuario) {
         this.context = context;
+        this.nombre_usuario = buscarUsuario(id_usuario);
         this.id_usuario = id_usuario;
         usuario = buscarUsuario(id_usuario);
         Haymensajes();
@@ -51,9 +55,6 @@ public class ConsultaSql {
         idNotificados = new ArrayList<>();
         comando = String.format("SELECT * FROM  \"MiTouch\".t_mensajes WHERE m_id_usuario_receptor ="+ id_usuario +";");
 
-        Date d = new Date();
-        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM");
 
         PostgrestBD baseDeDatos = new PostgrestBD();
         ResultSet resultSet = baseDeDatos.execute(comando);
@@ -66,7 +67,7 @@ public class ConsultaSql {
                     f_enviar_notificacion("Mitouch", "nuevo mensaje de: " + usuario_origen);
                     aux = 1;
                 }
-                EscribirFichero(formatoFecha.format(d) + " " + formatoHora.format(d) + " " +usuario_origen+": "+ resultSet.getString("m_mensaje"));
+                EscribirFichero(resultSet.getString("m_mensaje"));
                 eliminarMensaje(resultSet.getInt("m_id"));
             }
         } catch (Exception e) {
@@ -94,19 +95,7 @@ public class ConsultaSql {
         baseDeDatos.execute(comando);
     }
 
-    public void f_enviar_notificacion(String title, String text){
-        int mId = 1;
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_chat_green)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setSound(defaultSoundUri);
-        mNotificationManager.notify(mId, mBuilder.build());
-        mNotificationManager.cancelAll();
 
-    }
 
     private String buscarUsuario(int id_a_buscar) {
         String comando = "";
@@ -163,6 +152,44 @@ public class ConsultaSql {
         {
             Log.e("Ficheros", "Error al escribir fichero a memoria interna");
         }
+    }
+
+    public void f_enviar_notificacion(String title, String text){
+
+
+        Intent myIntent = new Intent(context, ChatActivity.class);
+        myIntent.putExtra("id",id_usuario);
+        myIntent.putExtra("id2", id_origen);
+        myIntent.putExtra("idnombre",nombre_usuario);
+        myIntent.putExtra("idnombre2",usuario_origen);
+
+
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+
+        int mId = 1;
+        NotificationManager mNotificationManager;
+        mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_chat_green)
+                .setSound(defaultSoundUri)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+
+
+        mNotificationManager.notify(mId, mBuilder.build());
+
     }
 
 }

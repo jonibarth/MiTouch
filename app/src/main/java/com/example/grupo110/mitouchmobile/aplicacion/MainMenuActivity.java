@@ -1,10 +1,14 @@
 package com.example.grupo110.mitouchmobile.aplicacion;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +47,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
     boolean done = false;
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia/chat";
+    Context context;
 
 
     @Override
@@ -75,12 +80,12 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainmenu);
         id_usuario = getIntent().getExtras().getInt("id");
+        context = this;
         setListeners();
 
     }
 
     protected void setListeners() {
-
         deleteWithChildren(PATH_MOBILE);
         TimerTask tt = new TimerTask() {
 
@@ -88,7 +93,7 @@ public class MainMenuActivity extends AppCompatActivity {
             public void run() {
                 while(!done) {
                     try {
-                        ConsultaSql consultaSql = new ConsultaSql(getApplicationContext(),id_usuario);
+                        ConsultaSql consultaSql = new ConsultaSql(context,id_usuario);
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -235,4 +240,18 @@ public class MainMenuActivity extends AppCompatActivity {
         return childrenDeleted;
     }
 
+
+    public void f_enviar_notificacion(String title, String text){
+        int mId = 1;
+        NotificationManager mNotificationManager;
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_chat_green)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSound(defaultSoundUri);
+
+        mNotificationManager.notify(mId, mBuilder.build());
+    }
 }

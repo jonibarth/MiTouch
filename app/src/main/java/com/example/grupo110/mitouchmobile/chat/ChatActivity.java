@@ -2,10 +2,12 @@ package com.example.grupo110.mitouchmobile.chat;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
@@ -14,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,13 +48,14 @@ public class ChatActivity extends AppCompatActivity {
     private int id_usuario_origen;
     private int id_usuario_destino;
     private String usuario=null;
-    private boolean control = false;
+    //private boolean control = false;
     private String usuario_origen;
     private String usuario_destino;
     private String texto="";
     final String PATH_MOBILE = "/storage/sdcard0/MiTouchMultimedia/chat";
     private boolean done=false;
     TimerTask tt;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,8 @@ public class ChatActivity extends AppCompatActivity {
         });
         botonChat = (Button) findViewById(R.id.chatButton);
         textoAEnviar = (EditText) findViewById(R.id.EditText01);
+
+        textoPantalla = new TextView(getApplicationContext());
         textoPantalla = (TextView) findViewById(R.id.textViewChat);
         textoPantalla.setMovementMethod(new ScrollingMovementMethod());
 
@@ -90,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 done = true;
                 textoAEnviar.setText("");
-                 control=true;
+               //  control=true;
                 }
         });
 
@@ -100,15 +106,17 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(validacion()) {
                     done = true;
-                    texto = textoAEnviar.getText().toString();
-                    String textoText = textoPantalla.getText().toString();
                     Date d = new Date();
-                    SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm");
-                    SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM");
+                    SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+                    SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+
+                    texto = "[" + formatoFecha.format(d)+" " + formatoHora.format(d)+"] "+ usuario_origen + ": " +textoAEnviar.getText().toString();
+                    String textoText = textoPantalla.getText().toString();
+
                     textoPantalla.setTextSize(20);
-                    if(texto.length()<255) {
-                        textoPantalla.setText(textoText + "\n" + formatoFecha.format(d) + " " + formatoHora.format(d) + " " + usuario_origen + ": " + texto);
-                        EscribirFichero(formatoFecha.format(d) + " " + formatoHora.format(d) + " " + usuario_origen + ": " + texto);
+                    if(texto.length()<250) {
+                        textoPantalla.setText(textoText + "\n" + texto);
+                        EscribirFichero(texto);
                         textoAEnviar.clearFocus();
                         actualizarBaseDeDatos();
                     }
@@ -118,8 +126,10 @@ public class ChatActivity extends AppCompatActivity {
                         toast.show();
                     }
 
-                    control = false;
+                  //  control = false;
                 }
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(textoAEnviar.getWindowToken(), 0);
                 done=false;
                 iniciarTarea();
                 }
@@ -144,9 +154,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private boolean validacion() {
         // Validar que el mensaje no contenga espacios tabs etc!
-        if(control )
+        //if(control )
             return true;
-        return false;
+       // return false;
     }
 
 
@@ -194,6 +204,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     public void LeerFichero(String ruta) {
+        texto="";
         CrearDirectorio();
         String cadena;
         try {
@@ -204,6 +215,8 @@ public class ChatActivity extends AppCompatActivity {
             }
             b.close();
         }catch (Exception e){System.out.println("Error leer fichero");}
+
+        System.out.println(texto);
     }
 
     private void iniciarTarea() {
@@ -214,16 +227,12 @@ public class ChatActivity extends AppCompatActivity {
                 public void run() {
                     while (!done) {
                         try {
-                            try {
-                                texto="";
-                                LeerFichero(PATH_MOBILE + "/" + id_usuario_destino + ".txt");
-                                System.out.println("el texto es: " + texto);
-                                textoPantalla.setText(texto);
-                            }catch (Exception e ){System.out.println("Algo fallo");}
+                            LeerFichero(PATH_MOBILE + "/" + id_usuario_destino + ".txt");
+                            System.out.println("el texto es: " + texto);
+                            mHandler.postDelayed(hMyTimeTask, 1000);
                             Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                            mHandler.removeCallbacks(hMyTimeTask);
+                        }catch (Exception e ){System.out.println("Algo fallo");}
                     }
                 }
             };
@@ -231,4 +240,24 @@ public class ChatActivity extends AppCompatActivity {
         }catch (Exception e){System.out.println("hlasdasd");}
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        done=true;
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        done=true;
+        finish();
+    }
+
+    private Runnable hMyTimeTask = new Runnable() {
+        public void run() {
+            textoPantalla.setText(texto);
+        }
+    };
 }

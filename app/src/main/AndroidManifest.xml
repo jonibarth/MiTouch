@@ -139,7 +139,7 @@
             android:name=".chat.SeleccionarChat"
             android:label="@string/title_activity_seleccionar_chat"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

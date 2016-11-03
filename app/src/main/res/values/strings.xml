@@ -134,4 +134,6 @@
     <string name="exito_delete">El archivo se eliminó exitosamente</string>
     <string name="error_delete">Ocurrió un error al eliminar el archivo</string>
     <string name="title_activity_seleccionar_chat">SeleccionarChat</string>
+    <string name="title_activity_notification_receiver">NotificationReceiverActivity</string>
+    <string name="title_activity_action_notification">ActionNotification</string>
 </resources>

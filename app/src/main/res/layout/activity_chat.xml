@@ -42,6 +42,7 @@
         android:imeOptions="actionUnspecified"
         android:inputType="text"
         android:maxLines="1"
+        android:maxLength="200"
         android:singleLine="true"
         android:textColorHint="@color/colorVerde"
         android:textStyle="bold"

@@ -106,7 +106,7 @@ public class SeleccionarChat extends AppCompatActivity {
                 mainIntent.putExtra("idnombre",usuario);
                 mainIntent.putExtra("idnombre2",usuario2);
                 startActivity(mainIntent);
-
+                finish();
                 return false;
             }
         });
@@ -155,42 +155,51 @@ public class SeleccionarChat extends AppCompatActivity {
 
         try {
             while (resultSet.next()) {
-                if(aux != resultSet.getInt(1)){
-                    if(aux == -1){
-                        grupo=resultSet.getString("gru_nombre");
-                        listDataHeader.add(grupo);
-                        //grupodeUsuario.add(grupo);
-                        //grupodeUsuarioID.add(resultSet.getString("ugru_id_grupo"));
-                        if(!resultSet.getString("ugru_id_usuario").equals(id_usuario+"")) {
+                if (!resultSet.getString("ugru_id_usuario").equals(id_usuario + "")) {
+                    if (aux != resultSet.getInt(1)) {
+                        if (aux == -1) {
+                            try {
+                                if (!resultSet.getString("ugru_id_usuario").equals(null)) {
+                                    grupo = resultSet.getString("gru_nombre");
+                                    listDataHeader.add(grupo);
+                                    //grupodeUsuario.add(grupo);
+                                    //grupodeUsuarioID.add(resultSet.getString("ugru_id_grupo"));
+                                    if (!resultSet.getString("ugru_id_usuario").equals(id_usuario + "")) {
+                                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                                        grupodeUsuarioID.add(resultSet.getString("ugru_id_usuario"));
+                                    }
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Error try");
+                            }
+                            aux = resultSet.getInt(1);
+                        } else {
+                            listDataChild.put(grupo, grupodeUsuario);
+                            listDataID.put(grupo, grupodeUsuarioID);
+                            grupodeUsuario = new ArrayList<>();
+                            grupodeUsuarioID = new ArrayList<>();
+
+                            try {
+                                if (!resultSet.getString("ugru_id_usuario").equals(null)) {
+                                    grupo = resultSet.getString("gru_nombre");
+                                    listDataHeader.add(grupo);
+                                    //grupodeUsuario.add(grupo);
+                                    //grupodeUsuarioID.add(resultSet.getString("ugru_id_grupo"));
+                                    if (!resultSet.getString("ugru_id_usuario").equals(id_usuario + "")) {
+                                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                                        grupodeUsuarioID.add(resultSet.getString("ugru_id_usuario"));
+                                    }
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Error try");
+                            }
+                            aux = resultSet.getInt(1);
+                        }
+                    } else {
+                        if (!resultSet.getString("ugru_id_usuario").equals(id_usuario + "")) {
                             grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
                             grupodeUsuarioID.add(resultSet.getString("ugru_id_usuario"));
                         }
-                        aux = resultSet.getInt(1);
-                    }
-                    else
-                    {
-                        listDataChild.put(grupo, grupodeUsuario);
-                        listDataID.put(grupo, grupodeUsuarioID);
-                        grupodeUsuario = new ArrayList<>();
-                        grupodeUsuarioID = new ArrayList<>();
-
-                        grupo = resultSet.getString("gru_nombre");
-                        listDataHeader.add(grupo);
-                        //grupodeUsuario.add(grupo);
-                        //grupodeUsuarioID.add(resultSet.getString("ugru_id_grupo"));
-
-                        if(!resultSet.getString("ugru_id_usuario").equals(id_usuario+"")) {
-                            grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                            grupodeUsuarioID.add(resultSet.getString("ugru_id_usuario"));
-                        }
-                        aux = resultSet.getInt(1);
-                    }
-                }
-                else
-                {
-                    if(!resultSet.getString("ugru_id_usuario").equals(id_usuario+"")) {
-                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                        grupodeUsuarioID.add(resultSet.getString("ugru_id_usuario"));
                     }
                 }
             }
