@@ -74,7 +74,7 @@ public class CompartirDesdePopUp extends AppCompatActivity {
             }
         });
         progress = new ProgressDialog(this, R.style.MyTheme);
-        progress.setMessage("Descargando..");
+        progress.setMessage("Compartiendo..");
         dumpIntent(getIntent());
         try{
             id_usuario = getIntent().getExtras().getInt("id");

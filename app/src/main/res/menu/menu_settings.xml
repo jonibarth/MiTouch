@@ -7,6 +7,5 @@
     <item android:id="@+id/action_back"
         android:title="volver"
         android:icon="@drawable/ic_previous"
-
         app:showAsAction="always" />
 </menu>

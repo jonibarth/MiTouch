@@ -62,6 +62,7 @@ public class MainMenuActivity extends AppCompatActivity {
             case R.id.action_logout:
                 modificar_usu_ultimo_log_out(id_usuario);
                 grabar();
+                deleteWithChildren(PATH_MOBILE);
                 Intent mainIntent = new Intent(MainMenuActivity.this, LoginActivity.class);
                 startActivity(mainIntent);
                 finish();
@@ -86,7 +87,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     protected void setListeners() {
-        deleteWithChildren(PATH_MOBILE);
+
         TimerTask tt = new TimerTask() {
 
             @Override

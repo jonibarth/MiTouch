@@ -117,7 +117,7 @@ public class ChatActivity extends AppCompatActivity {
                         texto = "[" + formatoFecha.format(d)+" " + formatoHora.format(d)+"] "+ usuario_origen + ": " +textoAEnviar.getText().toString();
                         String textoText = textoPantalla.getText().toString();
 
-                        textoPantalla.setTextSize(20);
+                        //textoPantalla.setTextSize(20);
                         if(texto.length()<250) {
                             textoPantalla.setText(textoText + "\n" + texto);
                             EscribirFichero(texto);

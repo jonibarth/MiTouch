@@ -86,16 +86,15 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_main2">Main2Activity</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_menu_activity_grid_view">Menu</string>
-    <string name="title_activity_setting">Setting</string>
+    <string name="title_activity_setting">Configuración</string>
     <string name="title_activity_probando_layout">MiTouch</string>
     <string name="title_activity_google_drive">GoogleDrive</string>
     <string name="title_activity_google_calendar">Google Calendar</string>
     <string name="title_activity_galeria">Galeria</string>
     <string name="title_activity_chat">Chat</string>
-    <string name="title_activity_settings_con_pestania">Settings</string>
+    <string name="title_activity_settings_con_pestania">Configuración</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -118,6 +117,7 @@
     <string name="crear_evento">Crear evento</string>
     <string name="title_activity_compartir">MiTouch</string>
     <string name="title_activity_compartir2">Compartir</string>
+    <string name="title_activity_compartir3">Compartir</string>
     <string name="title_activity_explorador">Explorador</string>
 
 
@@ -133,7 +133,7 @@
     <string name="error_share">Ocurrió un error al compartir</string>
     <string name="exito_delete">El archivo se eliminó exitosamente</string>
     <string name="error_delete">Ocurrió un error al eliminar el archivo</string>
-    <string name="title_activity_seleccionar_chat">SeleccionarChat</string>
+    <string name="title_activity_seleccionar_chat">Seleccionar chat</string>
     <string name="title_activity_notification_receiver">NotificationReceiverActivity</string>
     <string name="title_activity_action_notification">ActionNotification</string>
 </resources>
