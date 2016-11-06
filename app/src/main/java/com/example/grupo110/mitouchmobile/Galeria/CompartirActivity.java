@@ -261,34 +261,15 @@ public class CompartirActivity extends AppCompatActivity {
         ResultSet resultSet;
         int aux = -1;
 
-        comando ="DROP VIEW tablaVista ;";
-        baseDeDatos = new PostgrestBD();
-        try{
-            baseDeDatos.execute(comando);
-        }catch (Exception e){System.out.println("Error drop vista: "+ e );}
 
-
-        comando = "CREATE VIEW tablaVista AS " +
-                "SELECT ugru_id_grupo " +
+        comando = "SELECT ugru_id_grupo, gru_nombre, gru_id_galeria, ugru_id_usuario, usu_nombre_usuario, usu_id_galeria " +
                 "FROM \"MiTouch\".t_usuarios_grupo " +
-                "WHERE ugru_id_usuario='"+id_usuario+"';";
-        baseDeDatos = new PostgrestBD();
-        try{
-            baseDeDatos.execute(comando);
-        }catch (Exception e){System.out.println("Error creacion vista: "+ e );}
-
-
-
-
-
-        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, gru_id_galeria, usu_id_galeria " +
-                "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
                 "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
-                //"WHERE  usu_id<>"+id_usuario+" "+
-                "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario;";
+                "ORDER BY ugru_id_grupo, gru_nombre, gru_id_galeria, ugru_id_usuario, usu_nombre_usuario, usu_id_galeria;";
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);
+        System.out.println(comando);
         System.out.println("El id de la galeria personal es: " + id_carpetausuario);
 
         grupo="Carpeta Personal";
@@ -301,6 +282,7 @@ public class CompartirActivity extends AppCompatActivity {
 
         try {
             while (resultSet.next()) {
+
                 if(aux != resultSet.getInt(1)){
                     if(aux == -1)
                     {
@@ -339,7 +321,7 @@ public class CompartirActivity extends AppCompatActivity {
                         grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
                         grupodeUsuarioID.add(resultSet.getString("usu_id_galeria"));
                     }
-                }
+               }
             }
 
             listDataChild.put(grupo, grupodeUsuario);

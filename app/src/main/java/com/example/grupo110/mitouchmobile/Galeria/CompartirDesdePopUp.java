@@ -115,7 +115,7 @@ public class CompartirDesdePopUp extends AppCompatActivity {
                         listDataHeader.get(groupPosition)).get(
                         childPosition);
                 Toast toast;
-                progress.show();
+
                 System.out.println("id_usuario "+id_usuario);
                 System.out.println("nombreArchivo "+nombreArchivo);
                 System.out.println("idCarpetaOrigen "+idCarpetaOrigen);
@@ -123,6 +123,7 @@ public class CompartirDesdePopUp extends AppCompatActivity {
                 obtenerIdDelArchivo();
 
                 if(!ArchivoExiteEnBD()){
+                    progress.show();
                     ActualizarBaseDeDatos();
                     toast= Toast.makeText(getApplicationContext(),"El archivo fue compartido con exito", Toast.LENGTH_LONG);
                     toast.show();
@@ -203,34 +204,6 @@ public class CompartirDesdePopUp extends AppCompatActivity {
         ResultSet resultSet;
         int aux = -1;
 
-        comando ="DROP VIEW tablaVista ;";
-        baseDeDatos = new PostgrestBD();
-        try{
-            baseDeDatos.execute(comando);
-        }catch (Exception e){System.out.println("Error drop vista: "+ e );}
-
-
-        comando = "CREATE VIEW tablaVista AS " +
-                "SELECT ugru_id_grupo " +
-                "FROM \"MiTouch\".t_usuarios_grupo " +
-                "WHERE ugru_id_usuario='"+id_usuario+"';";
-        baseDeDatos = new PostgrestBD();
-        try{
-            baseDeDatos.execute(comando);
-        }catch (Exception e){System.out.println("Error creacion vista: "+ e );}
-/*
-        comando = "SELECT * FROM tablaVista;";
-        baseDeDatos = new PostgrestBD();
-        resultSet = baseDeDatos.execute(comando);
-        try {
-            while (resultSet.next())
-                System.out.println(resultSet.getInt("ugru_id_grupo"));
-        } catch (SQLException e) {
-            System.out.println("Error select vista" + e);
-        }
-
-        System.out.println("pase la vista");
-*/
 
         buscarUsuario();
         System.out.println("El id de la galeria personal es: " + id_carpetausuario);
@@ -249,15 +222,11 @@ public class CompartirDesdePopUp extends AppCompatActivity {
 
 
 
-        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, gru_id_galeria, usu_id_galeria " +
-                "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
-                "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
-
+        comando = "SELECT ugru_id_grupo, gru_nombre, gru_id_galeria, ugru_id_usuario, usu_nombre_usuario, usu_id_galeria " +
+                "FROM \"MiTouch\".t_usuarios_grupo " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
-
-                //"WHERE  usu_id<>"+id_usuario+" "+
-
-                "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario,gru_id_galeria, usu_id_galeria;";
+                "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
+                "ORDER BY ugru_id_grupo, gru_nombre, gru_id_galeria, ugru_id_usuario, usu_nombre_usuario, usu_id_galeria;";
 
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);

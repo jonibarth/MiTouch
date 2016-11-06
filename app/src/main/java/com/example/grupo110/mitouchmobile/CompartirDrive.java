@@ -128,18 +128,6 @@ public class CompartirDrive extends AppCompatActivity {
                 returnIntent.putExtra("grupo",grupo);
                 setResult(Activity.RESULT_OK,returnIntent);
                 finish();
-
-                /*System.out.println("Nombre cabecera "+listDataHeader.get(groupPosition));
-
-                System.out.println("Nombre del usuario "+listDataChild.get(
-                        listDataHeader.get(groupPosition)).get(
-                        childPosition));
-                System.out.println("ID del usuario "+ listDataID.get(
-                        listDataHeader.get(groupPosition)).get(
-                        childPosition));
-                System.out.println("Email del usuario "+listDataEmailUsuario.get(
-                        listDataHeader.get(groupPosition)).get(
-                        childPosition));*/
                 return false;
             }
         });
@@ -164,28 +152,13 @@ public class CompartirDrive extends AppCompatActivity {
         ResultSet resultSet;
         int aux = -1;
 
-        comando ="DROP VIEW tablaVista ;";
-        baseDeDatos = new PostgrestBD();
-        try{
-            baseDeDatos.execute(comando);
-        }catch (Exception e){System.out.println("Error drop vista: "+ e );}
-
-
-        comando = "CREATE VIEW tablaVista AS " +
-                "SELECT ugru_id_grupo " +
-                "FROM \"MiTouch\".t_usuarios_grupo " +
-                "WHERE ugru_id_usuario='"+id_usuario+"';";
-        baseDeDatos = new PostgrestBD();
-        try{
-            baseDeDatos.execute(comando);
-        }catch (Exception e){System.out.println("Error creacion vista: "+ e );}
-
         comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, usu_mail, gru_id_carpeta " +
-                "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
+                "FROM \"MiTouch\".t_usuarios_grupo " +
                 "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
                 "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
                 "WHERE  usu_id<>"+id_usuario+" "+
                 "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario, usu_mail, gru_id_carpeta;";
+
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);
 
