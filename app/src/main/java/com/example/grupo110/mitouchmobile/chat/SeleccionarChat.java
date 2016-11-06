@@ -125,88 +125,22 @@ public class SeleccionarChat extends AppCompatActivity {
         String comando,grupo=null;
         PostgrestBD baseDeDatos;
         ResultSet resultSet;
-        int aux = -1;
 
-        comando ="DROP VIEW tablaVista ;";
-        baseDeDatos = new PostgrestBD();
-        try{
-            baseDeDatos.execute(comando);
-        }catch (Exception e){System.out.println("Error drop vista: "+ e );}
-
-
-        comando = "CREATE VIEW tablaVista AS " +
-                "SELECT ugru_id_grupo " +
-                "FROM \"MiTouch\".t_usuarios_grupo " +
-                "WHERE ugru_id_usuario='"+id_usuario+"';";
-        baseDeDatos = new PostgrestBD();
-        try{
-            baseDeDatos.execute(comando);
-        }catch (Exception e){System.out.println("Error creacion vista: "+ e );}
-
-
-        comando = "SELECT ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario " +
-                "FROM tablaVista NATURAL JOIN \"MiTouch\".t_usuarios_grupo " +
-                "INNER JOIN \"MiTouch\".t_usuarios ON ugru_id_usuario = usu_id " +
-                "INNER JOIN \"MiTouch\".t_grupos ON ugru_id_grupo = gru_id " +
-                "ORDER BY ugru_id_grupo, gru_nombre ,ugru_id_usuario, usu_nombre_usuario;";
+        comando = "SELECT usu_id, usu_nombre_usuario " +
+                "FROM \"MiTouch\".t_usuarios ;";
         baseDeDatos = new PostgrestBD();
         resultSet = baseDeDatos.execute(comando);
-
-
+        grupo = "Lista de Usuarios";
+        listDataHeader.add(grupo);
         try {
-            while (resultSet.next()) {
-                if (!resultSet.getString("ugru_id_usuario").equals(id_usuario + "")) {
-                    if (aux != resultSet.getInt(1)) {
-                        if (aux == -1) {
-                            try {
-                                if (!resultSet.getString("ugru_id_usuario").equals(null)) {
-                                    grupo = resultSet.getString("gru_nombre");
-                                    listDataHeader.add(grupo);
-                                    //grupodeUsuario.add(grupo);
-                                    //grupodeUsuarioID.add(resultSet.getString("ugru_id_grupo"));
-                                    if (!resultSet.getString("ugru_id_usuario").equals(id_usuario + "")) {
-                                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                                        grupodeUsuarioID.add(resultSet.getString("ugru_id_usuario"));
-                                    }
-                                }
-                            } catch (Exception e) {
-                                System.out.println("Error try");
-                            }
-                            aux = resultSet.getInt(1);
-                        } else {
-                            listDataChild.put(grupo, grupodeUsuario);
-                            listDataID.put(grupo, grupodeUsuarioID);
-                            grupodeUsuario = new ArrayList<>();
-                            grupodeUsuarioID = new ArrayList<>();
-
-                            try {
-                                if (!resultSet.getString("ugru_id_usuario").equals(null)) {
-                                    grupo = resultSet.getString("gru_nombre");
-                                    listDataHeader.add(grupo);
-                                    //grupodeUsuario.add(grupo);
-                                    //grupodeUsuarioID.add(resultSet.getString("ugru_id_grupo"));
-                                    if (!resultSet.getString("ugru_id_usuario").equals(id_usuario + "")) {
-                                        grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                                        grupodeUsuarioID.add(resultSet.getString("ugru_id_usuario"));
-                                    }
-                                }
-                            } catch (Exception e) {
-                                System.out.println("Error try");
-                            }
-                            aux = resultSet.getInt(1);
-                        }
-                    } else {
-                        if (!resultSet.getString("ugru_id_usuario").equals(id_usuario + "")) {
-                            grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
-                            grupodeUsuarioID.add(resultSet.getString("ugru_id_usuario"));
-                        }
-                    }
+            while (resultSet.next())
+                if (!resultSet.getString("usu_id").equals(id_usuario + "")) {
+                    System.out.println(resultSet.getInt("usu_id")+" " +resultSet.getString("usu_nombre_usuario") );
+                    grupodeUsuario.add(resultSet.getString("usu_nombre_usuario"));
+                    grupodeUsuarioID.add(resultSet.getInt("usu_id")+"");
                 }
-            }
-
             listDataChild.put(grupo, grupodeUsuario);
             listDataID.put(grupo, grupodeUsuarioID);
-
         } catch (Exception e) {
             System.err.println("Error crear explist: " + e );
         }
